@@ -17,7 +17,7 @@ const Features = () => {
     description: "Your memories are yours—keep them private or choose what to share."
   }];
 
-  return <section className="py-20 px-6 bg-white relative">      
+  return <section className="py-10 px-6 bg-white relative">      
       <div className="max-w-7xl mx-auto relative z-10">
         <div className="grid md:grid-cols-3 gap-12 mb-20">
           {features.map((feature, index) => <div key={index} className="text-center p-8 rounded-xl bg-gradient-to-b from-gray-100 to-gray-50 shadow-lg transition-all duration-500 hover:scale-105 hover:bg-gradient-to-b hover:from-gray-50 hover:to-white hover:shadow-xl" style={{
