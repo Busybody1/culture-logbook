@@ -67,7 +67,7 @@ const Hero = () => {
               </p>
             </div>
             <div>
-              <h3 className="text-xl font-bold mb-3">Speech Integration</h3>
+              <h3 className="text-xl font-bold mb-3">Social Media Integration</h3>
               <p className="text-gray-600">
                 Incorporate your voice as narration to personalize your culinary stories.
               </p>
