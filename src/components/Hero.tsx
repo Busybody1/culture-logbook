@@ -1,6 +1,8 @@
+
 import React from 'react';
 import { Button } from './ui/button';
 import { Utensils, MessageSquare, Layout } from 'lucide-react';
+
 const Hero = () => {
   return <section className="py-16 px-6 bg-white mt-20">
       {/* Added mt-20 class above to create space for the fixed header */}
@@ -17,31 +19,37 @@ const Hero = () => {
         {/* Feature cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
           {/* Card 1 */}
-          <div className="text-white p-8 rounded-xl bg-[#ff9344]">
+          <div className="text-white p-8 rounded-xl bg-[#ff9344] flex flex-col h-full">
             <h3 className="text-xl font-bold mb-3">Start Documenting Your Culinary Adventures</h3>
-            <p className="mb-6 text-gray-950">
+            <p className="mb-6 text-gray-950 flex-grow">
               Craft compelling food journals from your experiences, bringing your gastronomic narratives to life.
             </p>
-            <Button variant="outline" className="text-black border-black hover:bg-black hover:text-white">
-              Get Started Now
-            </Button>
+            <div>
+              <Button variant="outline" className="text-black border-black hover:bg-black hover:text-white">
+                Get Started Now
+              </Button>
+            </div>
           </div>
 
           {/* Card 2 */}
-          <div className="p-8 rounded-xl bg-[#ff9344]/[0.44]">
+          <div className="p-8 rounded-xl bg-[#ff9344]/[0.44] flex flex-col h-full">
             <h3 className="text-xl font-bold mb-3">Save Your Precious Moments</h3>
-            <p className="text-gray-600 mb-6">Tag, rate, and arrange your experiences so they will be remembered for ever.</p>
-            <Button variant="outline" className="text-black border-black hover:text-white bg-black">Try It Now</Button>
+            <p className="text-gray-600 mb-6 flex-grow">Tag, rate, and arrange your experiences so they will be remembered for ever.</p>
+            <div>
+              <Button variant="outline" className="text-black border-black hover:text-white bg-black">Try It Now</Button>
+            </div>
           </div>
 
           {/* Card 3 */}
-          <div className="bg-white border border-gray-200 p-8 rounded-xl overflow-hidden relative">
-            
-            <div className="relative z-10 w-1/2">
+          <div className="bg-white border border-gray-200 p-8 rounded-xl overflow-hidden relative flex flex-col h-full">
+            <div className="relative z-10 flex-grow">
               <h3 className="text-xl font-bold mb-3">Share Your Journey</h3>
-              <p className="text-gray-600">
+              <p className="text-gray-600 mb-6">
                 Connect with fellow food enthusiasts.
               </p>
+            </div>
+            <div>
+              <Button variant="outline" className="text-black border-black hover:bg-accent">Join Community</Button>
             </div>
           </div>
         </div>
@@ -100,4 +108,5 @@ const Hero = () => {
       </div>
     </section>;
 };
+
 export default Hero;
