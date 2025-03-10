@@ -78,6 +78,7 @@ const Auth = () => {
           data: {
             full_name: signupName,
           },
+          emailRedirectTo: window.location.origin + '/auth'
         },
       });
 
@@ -90,9 +91,8 @@ const Auth = () => {
       } else {
         toast({
           title: "Account created successfully",
-          description: "Welcome to Culture Vulture!",
+          description: "Please check your email to confirm your account.",
         });
-        navigate('/');
       }
     } catch (error) {
       toast({
