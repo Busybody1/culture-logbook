@@ -4,21 +4,21 @@ import React from 'react';
 const ExperiencesGrid = () => {
   // Array of paths to the food images
   const images = [
-    '/e3e1eb70-a39a-4da8-9f31-0043ae850d78.png',
-    '/07bd027b-40d5-41a6-85ab-5d9510d5f0c9.png',
-    '/81549b6b-7805-42c5-b6a8-fb180643aa01.png',
-    '/83f01ee8-a5f1-4ceb-8a3a-c9343c0bb31e.png',
-    '/4a7a7acc-e06c-4370-a5e6-eb74218cb130.png',
-    '/6584da40-cd9c-4444-82d0-bb782dac51ff.png',
-    '/0763f2b1-7ed3-43f7-9398-92b572d534df.png',
-    '/9ef0bc5b-d4ac-41ad-a794-d5366808ac10.png',
-    '/021bb57f-6547-46f3-b3f8-896bab5421aa.png',
-    '/5fe8f820-526b-4490-874b-5b3b5967bc0d.png',
-    '/f5784055-2d4b-4de5-a60b-e8a2781f5524.png',
-    '/e98b33d0-9a03-4ee4-88ad-07ed8309ed9c.png',
-    '/15e4f099-395f-43fd-83a4-866197c75ab8.png',
-    '/540569d9-5a79-4466-b4cf-b69d9bf0262e.png',
-    '/40cfb3fa-341d-49d1-ac05-12282967ff08.png'
+    '/lovable-uploads/e3e1eb70-a39a-4da8-9f31-0043ae850d78.png',
+    '/lovable-uploads/07bd027b-40d5-41a6-85ab-5d9510d5f0c9.png',
+    '/lovable-uploads/81549b6b-7805-42c5-b6a8-fb180643aa01.png',
+    '/lovable-uploads/83f01ee8-a5f1-4ceb-8a3a-c9343c0bb31e.png',
+    '/lovable-uploads/4a7a7acc-e06c-4370-a5e6-eb74218cb130.png',
+    '/lovable-uploads/6584da40-cd9c-4444-82d0-bb782dac51ff.png',
+    '/lovable-uploads/0763f2b1-7ed3-43f7-9398-92b572d534df.png',
+    '/lovable-uploads/9ef0bc5b-d4ac-41ad-a794-d5366808ac10.png',
+    '/lovable-uploads/021bb57f-6547-46f3-b3f8-896bab5421aa.png',
+    '/lovable-uploads/5fe8f820-526b-4490-874b-5b3b5967bc0d.png',
+    '/lovable-uploads/f5784055-2d4b-4de5-a60b-e8a2781f5524.png',
+    '/lovable-uploads/e98b33d0-9a03-4ee4-88ad-07ed8309ed9c.png',
+    '/lovable-uploads/15e4f099-395f-43fd-83a4-866197c75ab8.png',
+    '/lovable-uploads/540569d9-5a79-4466-b4cf-b69d9bf0262e.png',
+    '/lovable-uploads/40cfb3fa-341d-49d1-ac05-12282967ff08.png'
   ];
 
   // Food descriptions for accessibility
@@ -48,9 +48,9 @@ const ExperiencesGrid = () => {
           <p className="text-lg text-gray-600">A mosaic of our gastronomic explorations</p>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
           {/* First column - varied sizes */}
-          <div className="space-y-3 flex flex-col">
+          <div className="space-y-2 flex flex-col">
             <div className="overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
               <img 
                 src={images[0]} 
@@ -86,7 +86,7 @@ const ExperiencesGrid = () => {
           </div>
 
           {/* Second column - different aspect ratios */}
-          <div className="space-y-3 flex flex-col">
+          <div className="space-y-2 flex flex-col">
             <div className="overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 h-80">
               <img 
                 src={images[4]} 
@@ -130,7 +130,7 @@ const ExperiencesGrid = () => {
           </div>
 
           {/* Third column - mix of heights */}
-          <div className="space-y-3 flex flex-col">
+          <div className="space-y-2 flex flex-col">
             <div className="overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 h-72">
               <img 
                 src={images[9]} 
