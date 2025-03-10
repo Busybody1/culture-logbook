@@ -31,15 +31,15 @@ const Features = () => {
           {features.map((feature, index) => (
             <div 
               key={index}
-              className="text-center p-8 rounded-xl bg-gradient-to-b from-gray-100 to-gray-50 shadow-lg transform hover:translate-y-1 transition-all duration-300 animate-float"
+              className="text-center p-8 rounded-xl bg-gradient-to-b from-gray-100 to-gray-50 shadow-lg transition-all duration-500 animate-float hover:scale-105 hover:bg-gradient-to-b hover:from-gray-50 hover:to-white hover:shadow-xl"
               style={{ 
                 animation: `float 6s ease-in-out ${index * 1}s infinite`,
                 boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05), inset 0 -3px 0 rgba(0, 0, 0, 0.1)'
               }}
             >
               <div className="text-accent mb-4 flex justify-center">
-                <div className="p-3 bg-white rounded-full shadow-md">
-                  {feature.icon}
+                <div className="p-3 bg-white rounded-full shadow-md hover:shadow-lg transition-all duration-300">
+                  {React.cloneElement(feature.icon, { className: "w-8 h-8 text-black" })}
                 </div>
               </div>
               <h3 className="text-xl font-semibold mb-3 text-text">
