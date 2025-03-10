@@ -41,7 +41,9 @@ const Hero = () => {
           {/* Card 3 */}
           <div className="bg-white border border-gray-200 p-8 rounded-xl overflow-hidden relative flex flex-col h-full">
             <div className="relative z-10 flex-grow">
-              <h3 className="text-xl font-bold mb-3">Share Your Journey</h3>
+              <h3 className="text-xl font-bold mb-3">Share Your Journey
+
+            </h3>
               <p className="text-gray-600 mb-6">Turn your favorite food and travel memories into shareable stories. With one click, post your adventures on social media!</p>
             </div>
             <div className="flex space-x-2">
