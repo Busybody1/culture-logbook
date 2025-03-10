@@ -17,7 +17,7 @@ const Hero = () => {
         {/* Feature cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
           {/* Card 1 */}
-          <div className="bg-black text-white p-8 rounded-xl">
+          <div className="text-white p-8 rounded-xl bg-[#ff9344]">
             <h3 className="text-xl font-bold mb-3">Start Documenting Your Culinary Adventures</h3>
             <p className="text-gray-300 mb-6">
               Craft compelling food journals from your experiences, bringing your gastronomic narratives to life.
