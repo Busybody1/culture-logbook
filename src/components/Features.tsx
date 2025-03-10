@@ -1,10 +1,11 @@
+
 import React from 'react';
-import { Book, Share2, Star } from 'lucide-react';
+import { Camera, Share2, Star } from 'lucide-react';
 const Features = () => {
   const features = [{
-    icon: <Book className="w-8 h-8" />,
-    title: "Personal Food Diary",
-    description: "Keep track of your culinary adventures with our easy-to-use diary tool."
+    icon: <Camera className="w-8 h-8" />,
+    title: "Capture & Store Memories",
+    description: "Upload photos from your adventures and keep them safe in your personal diary."
   }, {
     icon: <Star className="w-8 h-8" />,
     title: "Rate & Review",
@@ -36,7 +37,7 @@ const Features = () => {
               <h3 className="text-xl font-semibold mb-3 text-text">
                 {feature.title}
               </h3>
-              <p className="text-text/80">
+              <p className="text-black">
                 {feature.description}
               </p>
             </div>)}
