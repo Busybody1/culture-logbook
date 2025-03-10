@@ -75,20 +75,23 @@ const EntryForm: React.FC<EntryFormProps> = ({
     }
     
     const newFiles = Array.from(files);
-    setImageFiles(prevFiles => [...prevFiles, ...newFiles]);
+    // Fix: Explicitly type the return value as File[]
+    setImageFiles((prevFiles: File[]) => [...prevFiles, ...newFiles] as File[]);
     
     newFiles.forEach(file => {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setImagePreviews(prevPreviews => [...prevPreviews, reader.result as string]);
+        // Fix: Explicitly type the return value as string[]
+        setImagePreviews((prevPreviews: string[]) => [...prevPreviews, reader.result as string] as string[]);
       };
       reader.readAsDataURL(file);
     });
   };
 
   const removeImage = (index: number) => {
-    setImageFiles(prevFiles => prevFiles.filter((_, i) => i !== index));
-    setImagePreviews(prevPreviews => prevPreviews.filter((_, i) => i !== index));
+    // Fix: Explicitly type the return values and make sure they match expected types
+    setImageFiles((prevFiles: File[]) => prevFiles.filter((_, i) => i !== index) as File[]);
+    setImagePreviews((prevPreviews: string[]) => prevPreviews.filter((_, i) => i !== index) as string[]);
   };
 
   const handleAddTag = (tag: string) => {

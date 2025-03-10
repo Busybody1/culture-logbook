@@ -55,7 +55,7 @@ export const useDiaryEntry = () => {
         description: "Please provide a title for your entry",
         variant: "destructive",
       });
-      return;
+      return false;
     }
 
     try {
