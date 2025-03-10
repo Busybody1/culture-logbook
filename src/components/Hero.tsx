@@ -1,8 +1,6 @@
-
 import React from 'react';
 import { Button } from './ui/button';
 import { Utensils, MessageSquare, Layout } from 'lucide-react';
-
 const Hero = () => {
   return <section className="py-16 px-6 bg-white mt-20">
       {/* Added mt-20 class above to create space for the fixed header */}
@@ -34,7 +32,7 @@ const Hero = () => {
           {/* Card 2 */}
           <div className="p-8 rounded-xl bg-[#ff9344]/[0.44] flex flex-col h-full">
             <h3 className="text-xl font-bold mb-3">Save Your Precious Moments</h3>
-            <p className="text-gray-600 mb-6 flex-grow">Tag, rate, and arrange your experiences so they will be remembered for ever.</p>
+            <p className="text-gray-600 mb-6 flex-grow">Tag, rate, and organize your experiences so you never forget them.</p>
             <div>
               <Button variant="outline" className="text-black border-black hover:text-white bg-black">Try It Now</Button>
             </div>
@@ -108,5 +106,4 @@ const Hero = () => {
       </div>
     </section>;
 };
-
 export default Hero;
