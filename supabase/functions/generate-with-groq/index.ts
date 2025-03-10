@@ -2,7 +2,7 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
-const groqApiKey = Deno.env.get('GROQ_API_KEY');
+const groqApiKey = Deno.env.get('GROQ_API_KEY') || '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';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -16,6 +16,8 @@ serve(async (req) => {
 
   try {
     const { prompt, type } = await req.json();
+
+    console.log(`Processing ${type} request with prompt: ${prompt.substring(0, 50)}...`);
 
     let systemPrompt = '';
     switch (type) {
@@ -35,27 +37,37 @@ serve(async (req) => {
         systemPrompt = "Generate engaging content based on the provided context.";
     }
 
-    const response = await fetch('https://api.groq.com/v1/chat/completions', {
+    console.log(`Using system prompt for ${type}: ${systemPrompt.substring(0, 50)}...`);
+
+    const payload = {
+      model: "deepseek-r1-distill-qwen-32b",
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: prompt }
+      ],
+    };
+
+    console.log("Sending request to Groq API...");
+    
+    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${groqApiKey}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        model: "deepseek-r1-distill-qwen-32b",
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: prompt }
-        ],
-      }),
+      body: JSON.stringify(payload),
     });
 
     if (!response.ok) {
-      throw new Error(`Groq API error: ${response.status}`);
+      const errorText = await response.text();
+      console.error(`Groq API error: ${response.status} - ${errorText}`);
+      throw new Error(`Groq API error: ${response.status} - ${errorText}`);
     }
 
     const data = await response.json();
     const generatedText = data.choices[0].message.content;
+
+    console.log(`Successfully generated content: ${generatedText.substring(0, 50)}...`);
 
     return new Response(JSON.stringify({ generatedText }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },

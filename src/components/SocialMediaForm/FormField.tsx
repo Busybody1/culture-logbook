@@ -39,7 +39,7 @@ const FormField = ({
   
   return (
     <div className={className}>
-      <Label htmlFor={id} className="flex justify-between">
+      <Label htmlFor={id} className="flex justify-between items-center mb-1">
         <span>{label}</span>
         {onGenerate && (
           <Button
@@ -48,10 +48,10 @@ const FormField = ({
             variant="outline"
             onClick={onGenerate}
             disabled={isGenerating}
-            className="h-7 gap-1 text-xs"
+            className="h-8 gap-1 px-3 text-sm bg-slate-50 hover:bg-slate-100 border border-slate-200"
           >
-            <Sparkle className="h-3 w-3" />
-            {isGenerating ? 'Generating...' : 'AI Generate'}
+            <Sparkle className="h-4 w-4" />
+            {isGenerating ? 'Generating...' : 'Enhance with AI'}
           </Button>
         )}
       </Label>
