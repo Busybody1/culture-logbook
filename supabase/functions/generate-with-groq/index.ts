@@ -65,8 +65,11 @@ serve(async (req) => {
     }
 
     const data = await response.json();
-    const generatedText = data.choices[0].message.content;
-
+    let generatedText = data.choices[0].message.content;
+    
+    // Remove any <think>...</think> tags and their content
+    generatedText = generatedText.replace(/<think>[\s\S]*?<\/think>/g, '').trim();
+    
     console.log(`Successfully generated content: ${generatedText.substring(0, 50)}...`);
 
     return new Response(JSON.stringify({ generatedText }), {
