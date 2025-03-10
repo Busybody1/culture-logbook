@@ -55,7 +55,7 @@ const Hero = () => {
         {/* Key features section */}
         <div className="mb-16">
           <div className="flex items-center justify-center gap-2 mb-10">
-            <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
+            <div className="w-3 h-3 rounded-full bg-[#ce19bc]"></div>
             <span className="font-medium text-gray-700">KEY FEATURES</span>
           </div>
 
