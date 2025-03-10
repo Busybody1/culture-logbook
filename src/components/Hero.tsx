@@ -1,8 +1,6 @@
-
 import React from 'react';
 import { Button } from './ui/button';
 import { Utensils, MessageSquare, Layout, Book, Share2, Palette } from 'lucide-react';
-
 const Hero = () => {
   return <section className="py-16 px-6 bg-white mt-20">
       {/* Added mt-20 class above to create space for the fixed header */}
@@ -62,36 +60,32 @@ const Hero = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
             <div className="text-center p-8 rounded-xl bg-gradient-to-b from-gray-100 to-gray-50 shadow-lg transition-all duration-500 hover:scale-105 hover:bg-gradient-to-b hover:from-gray-50 hover:to-white hover:shadow-xl" style={{
-              boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05), inset 0 -3px 0 rgba(0, 0, 0, 0.1)'
-            }}>
+            boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05), inset 0 -3px 0 rgba(0, 0, 0, 0.1)'
+          }}>
               <div className="text-accent mb-4 flex justify-center">
                 <div className="p-3 bg-gray-100 rounded-full shadow-md hover:shadow-lg transition-all duration-300">
                   <Book className="w-8 h-8 text-black" />
                 </div>
               </div>
-              <h3 className="text-xl font-semibold mb-3 text-text">Memory Diary</h3>
-              <p className="text-text/80">
-                Seamlessly turn your food photos into dynamic, detailed recipes.
-              </p>
+              <h3 className="text-xl font-semibold mb-3 text-text">Personal Food Diary</h3>
+              <p className="text-slate-950">Save your favorite meals and cultural experiences in one place, so you never forget them.</p>
             </div>
             
             <div className="text-center p-8 rounded-xl bg-gradient-to-b from-gray-100 to-gray-50 shadow-lg transition-all duration-500 hover:scale-105 hover:bg-gradient-to-b hover:from-gray-50 hover:to-white hover:shadow-xl" style={{
-              boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05), inset 0 -3px 0 rgba(0, 0, 0, 0.1)'
-            }}>
+            boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05), inset 0 -3px 0 rgba(0, 0, 0, 0.1)'
+          }}>
               <div className="text-accent mb-4 flex justify-center">
                 <div className="p-3 bg-gray-100 rounded-full shadow-md hover:shadow-lg transition-all duration-300">
                   <Share2 className="w-8 h-8 text-black" />
                 </div>
               </div>
-              <h3 className="text-xl font-semibold mb-3 text-text">Social Media Integration</h3>
-              <p className="text-text/80">
-                Incorporate your voice as narration to personalize your culinary stories.
-              </p>
+              <h3 className="text-xl font-semibold mb-3 text-text">Social Media Sharing</h3>
+              <p className="text-slate-950">Turn your experiences into posts and share them on Instagram, Facebook, or TikTok with one click.</p>
             </div>
             
             <div className="text-center p-8 rounded-xl bg-gradient-to-b from-gray-100 to-gray-50 shadow-lg transition-all duration-500 hover:scale-105 hover:bg-gradient-to-b hover:from-gray-50 hover:to-white hover:shadow-xl" style={{
-              boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05), inset 0 -3px 0 rgba(0, 0, 0, 0.1)'
-            }}>
+            boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05), inset 0 -3px 0 rgba(0, 0, 0, 0.1)'
+          }}>
               <div className="text-accent mb-4 flex justify-center">
                 <div className="p-3 bg-gray-100 rounded-full shadow-md hover:shadow-lg transition-all duration-300">
                   <Palette className="w-8 h-8 text-black" />
