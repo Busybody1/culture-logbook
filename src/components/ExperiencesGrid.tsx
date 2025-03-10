@@ -2,7 +2,7 @@
 import React from 'react';
 
 const ExperiencesGrid = () => {
-  // Array of placeholder images - these will be replaced later
+  // Array of placeholder images
   const images = [
     'photo-1469474968028-56623f02e42e',
     'photo-1470813740244-df37b8c1edcb',
@@ -10,29 +10,75 @@ const ExperiencesGrid = () => {
     'photo-1500375592092-40eb2168fd21',
     'photo-1458668383970-8ddd3927deed',
     'photo-1504893524553-b855bce32c67',
-  ].reduce((acc, img) => [...acc, img, img, img], []); // Repeat images to get 18 total
+  ];
 
   return (
-    <section className="py-20 px-6 bg-white">
+    <section className="pt-7 pb-20 px-6 bg-white"> {/* Reduced top padding */}
       <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-12">
+        <div className="text-center mb-6"> {/* Reduced bottom margin */}
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900">Some of Our Experiences</h2>
         </div>
         
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-          {images.slice(0, 18).map((image, index) => (
-            <div 
-              key={index}
-              className="aspect-square overflow-hidden rounded-xl transition-transform duration-300 hover:scale-105"
-            >
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-2"> {/* Reduced gap between images */}
+          {/* First column */}
+          <div className="space-y-2"> {/* Reduced vertical gap */}
+            <div className="aspect-square overflow-hidden rounded-lg transition-transform duration-300 hover:scale-105">
               <img
-                src={`https://images.unsplash.com/${image}?auto=format&fit=crop&w=400&h=400`}
-                alt={`Experience ${index + 1}`}
+                src={`https://images.unsplash.com/${images[0]}?auto=format&fit=crop&w=600&h=600`}
+                alt="Experience 1"
                 className="w-full h-full object-cover"
                 loading="lazy"
               />
             </div>
-          ))}
+            <div className="aspect-[4/5] overflow-hidden rounded-lg transition-transform duration-300 hover:scale-105">
+              <img
+                src={`https://images.unsplash.com/${images[1]}?auto=format&fit=crop&w=600&h=750`}
+                alt="Experience 2"
+                className="w-full h-full object-cover"
+                loading="lazy"
+              />
+            </div>
+          </div>
+
+          {/* Second column - larger center image */}
+          <div className="space-y-2"> {/* Reduced vertical gap */}
+            <div className="aspect-[3/4] overflow-hidden rounded-lg transition-transform duration-300 hover:scale-105 h-full">
+              <img
+                src={`https://images.unsplash.com/${images[2]}?auto=format&fit=crop&w=600&h=800`}
+                alt="Experience 3"
+                className="w-full h-full object-cover"
+                loading="lazy"
+              />
+            </div>
+          </div>
+
+          {/* Third column */}
+          <div className="space-y-2"> {/* Reduced vertical gap */}
+            <div className="aspect-[1/1] overflow-hidden rounded-lg transition-transform duration-300 hover:scale-105">
+              <img
+                src={`https://images.unsplash.com/${images[3]}?auto=format&fit=crop&w=600&h=600`}
+                alt="Experience 4"
+                className="w-full h-full object-cover"
+                loading="lazy"
+              />
+            </div>
+            <div className="aspect-[4/3] overflow-hidden rounded-lg transition-transform duration-300 hover:scale-105">
+              <img
+                src={`https://images.unsplash.com/${images[4]}?auto=format&fit=crop&w=600&h=450`}
+                alt="Experience 5"
+                className="w-full h-full object-cover"
+                loading="lazy"
+              />
+            </div>
+            <div className="aspect-[1/1] overflow-hidden rounded-lg transition-transform duration-300 hover:scale-105">
+              <img
+                src={`https://images.unsplash.com/${images[5]}?auto=format&fit=crop&w=600&h=600`}
+                alt="Experience 6"
+                className="w-full h-full object-cover"
+                loading="lazy"
+              />
+            </div>
+          </div>
         </div>
       </div>
     </section>
