@@ -29,7 +29,7 @@ const Hero = () => {
 
           {/* Card 2 */}
           <div className="p-8 rounded-xl bg-[#ff9344]/[0.44]">
-            <h3 className="text-xl font-bold mb-3">Text-to-Recipe Generate</h3>
+            <h3 className="text-xl font-bold mb-3">Save Your Precious Moments</h3>
             <p className="text-gray-600 mb-6">
               Craft delicious recipes from textual descriptions, bringing your food ideas to reality.
             </p>
