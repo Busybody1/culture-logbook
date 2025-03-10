@@ -1,18 +1,13 @@
-
 import React from 'react';
 import { Button } from './ui/button';
 import { Utensils, MessageSquare, Layout } from 'lucide-react';
-
 const Hero = () => {
-  return (
-    <section className="py-16 px-6 bg-white mt-20">
+  return <section className="py-16 px-6 bg-white mt-20">
       {/* Added mt-20 class above to create space for the fixed header */}
       <div className="max-w-7xl mx-auto">
         {/* Header content */}
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <h1 className="text-4xl md:text-5xl font-bold mb-3 text-gray-900">
-            AI-Powered Food Discovery
-          </h1>
+          <h1 className="text-4xl md:text-5xl font-bold mb-3 text-gray-900">The Culture Vulture</h1>
           <h2 className="text-2xl md:text-3xl font-medium mb-6 text-gray-700">
             Culinary Exploration Made Simple
           </h2>
@@ -48,11 +43,7 @@ const Hero = () => {
 
           {/* Card 3 */}
           <div className="bg-white border border-gray-200 p-8 rounded-xl overflow-hidden relative">
-            <img
-              src="/lovable-uploads/557edcd2-bac8-4d4f-a070-6a2ed372847a.png"
-              alt="Person enjoying food"
-              className="absolute right-0 top-0 h-full w-2/3 object-cover object-left"
-            />
+            <img src="/lovable-uploads/557edcd2-bac8-4d4f-a070-6a2ed372847a.png" alt="Person enjoying food" className="absolute right-0 top-0 h-full w-2/3 object-cover object-left" />
             <div className="relative z-10 w-1/2">
               <h3 className="text-xl font-bold mb-3">Share Your Journey</h3>
               <p className="text-gray-600">
@@ -114,8 +105,6 @@ const Hero = () => {
           </div>
         </div>
       </div>
-    </section>
-  );
+    </section>;
 };
-
 export default Hero;
