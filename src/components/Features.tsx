@@ -22,17 +22,25 @@ const Features = () => {
   ];
 
   return (
-    <section className="py-20 px-6 bg-white">
-      <div className="max-w-7xl mx-auto">
+    <section className="py-20 px-6 bg-white relative overflow-hidden">
+      <div className="absolute inset-0 opacity-5 bg-repeat" 
+           style={{ backgroundImage: "url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgdmlld0JveD0iMCAwIDYwIDYwIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGZpbGw9IiNGRjkzNDQiIGQ9Ik0zNiAzNGMwIDEuMTA0LS44OTYgMi0yIDJzLTItLjg5Ni0yLTJjMC0uNzQtLjQtMS4zOC0xLTEuNzMyVjE4YzAtLjU1Mi40NDgtMSAxLTFzMSAuNDQ4IDEgMXYxNC4yNjhjLjYuMzUyIDEgLjk5MiAxIDEuNzMyeiIvPjxwYXRoIHN0cm9rZT0iI0NFMTlCQyIgc3Ryb2tlLXdpZHRoPSIyIiBkPSJNNDggMzBjMCA5Ljk0MS04LjA1OSAxOC0xOCAxOFMxMiAzOS45NDEgMTIgMzBjMC05Ljk0MSA4LjA1OS0xOCAxOC0xOHMxOCA4LjA1OSAxOCAxOHoiLz48cGF0aCBmaWxsPSIjMjdBRDk1IiBkPSJNMjQgMjJjMC0xLjEwNC44OTYtMiAyLTJzMiAuODk2IDIgMmMwIC43NC40IDEuMzggMSAxLjczMlY0MGMwIC41NTItLjQ0OCAxLTEgMS0uNTUyIDAtMS0uNDQ4LTEtMVYyMy43MzJjLS42LS4zNTItMS0uOTkyLTEtMS43MzJ6Ii8+PC9nPjwvc3ZnPg==')" }}
+      />
+      <div className="max-w-7xl mx-auto relative z-10">
         <div className="grid md:grid-cols-3 gap-12">
           {features.map((feature, index) => (
             <div 
               key={index}
-              className="text-center p-6 rounded-lg animate-slide-up"
-              style={{ animationDelay: `${index * 0.2}s` }}
+              className="text-center p-8 rounded-xl bg-gradient-to-b from-gray-100 to-gray-50 shadow-lg transform hover:translate-y-1 transition-all duration-300 animate-float"
+              style={{ 
+                animation: `float 6s ease-in-out ${index * 1}s infinite`,
+                boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05), inset 0 -3px 0 rgba(0, 0, 0, 0.1)'
+              }}
             >
               <div className="text-accent mb-4 flex justify-center">
-                {feature.icon}
+                <div className="p-3 bg-white rounded-full shadow-md">
+                  {feature.icon}
+                </div>
               </div>
               <h3 className="text-xl font-semibold mb-3 text-text">
                 {feature.title}
