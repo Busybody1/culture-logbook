@@ -1,9 +1,8 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Star, Plus, List, Grid3X3, Search, Trash2 } from 'lucide-react';
+import { Star, Plus, List, Grid3X3, Search, Trash2, Pencil } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { toast } from '@/hooks/use-toast';
 import Header from '@/components/Header';
@@ -105,9 +104,7 @@ const DiaryEntries = () => {
 
   const handleDelete = async (entryId: string) => {
     try {
-      // Check if the entry is from mock data (string IDs like '1', '2', etc.)
       if (!entryId.includes('-')) {
-        // For mock data, just filter it out locally
         setEntries(prevEntries => prevEntries.filter(entry => entry.id !== entryId));
         
         toast({
@@ -117,7 +114,6 @@ const DiaryEntries = () => {
         return;
       }
 
-      // For real database entries (UUID format)
       const { error } = await supabase
         .from('diary_entries')
         .delete()
@@ -139,6 +135,10 @@ const DiaryEntries = () => {
         variant: "destructive",
       });
     }
+  };
+
+  const handleEdit = (entryId: string) => {
+    navigate(`/edit-entry/${entryId}`);
   };
 
   return (
@@ -291,6 +291,14 @@ const DiaryEntries = () => {
                     <Button 
                       variant="ghost" 
                       size="sm"
+                      onClick={() => handleEdit(entry.id)}
+                      className="text-[#FF9344] hover:text-[#FF9344]/90 hover:bg-orange-50"
+                    >
+                      <Pencil className="h-4 w-4" />
+                    </Button>
+                    <Button 
+                      variant="ghost" 
+                      size="sm"
                       onClick={() => handleDelete(entry.id)}
                       className="text-red-500 hover:text-red-700 hover:bg-red-50"
                     >
@@ -342,14 +350,24 @@ const DiaryEntries = () => {
                           </Badge>
                         ))}
                       </div>
-                      <Button 
-                        variant="ghost" 
-                        size="sm"
-                        onClick={() => handleDelete(entry.id)}
-                        className="text-red-500 hover:text-red-700 hover:bg-red-50"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
+                      <div className="flex gap-2">
+                        <Button 
+                          variant="ghost" 
+                          size="sm"
+                          onClick={() => handleEdit(entry.id)}
+                          className="text-[#FF9344] hover:text-[#FF9344]/90 hover:bg-orange-50"
+                        >
+                          <Pencil className="h-4 w-4" />
+                        </Button>
+                        <Button 
+                          variant="ghost" 
+                          size="sm"
+                          onClick={() => handleDelete(entry.id)}
+                          className="text-red-500 hover:text-red-700 hover:bg-red-50"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 </div>
