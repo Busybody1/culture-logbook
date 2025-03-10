@@ -31,7 +31,7 @@ serve(async (req) => {
         systemPrompt = "Generate a short, catchy title that captures the essence of this content. Keep it under 60 characters.";
         break;
       case 'experience':
-        systemPrompt = "You are a diary assistant helping users create coherent descriptions from their notes or keywords. Transform their input into a well-written, personal experience using simple language. Focus on sensory details and emotions. Keep it concise yet vivid.";
+        systemPrompt = "Transform these notes/keywords into a personal diary entry. Write in first-person, using sensory details and emotions. Max 5 sentences. Be direct - no introductions or thinking notes, just the final text.";
         break;
       default:
         systemPrompt = "Generate engaging content based on the provided context.";
