@@ -8,7 +8,7 @@ const Hero = () => {
       <div className="max-w-7xl mx-auto relative z-20">
         <div className="text-center max-w-3xl mx-auto animate-fade-in">
           <h1 className="text-5xl md:text-6xl font-bold mb-6 text-text">The Culture Vulture</h1>
-          <p className="text-xl md:text-2xl text-text/80 mb-8">
+          <p className="text-xl md:text-2xl text-text/80 mb-8 font-semibold">
             Document your culinary adventures, share your experiences, and connect with fellow food enthusiasts.
           </p>
         </div>
