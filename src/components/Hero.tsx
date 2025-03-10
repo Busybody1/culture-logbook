@@ -11,10 +11,7 @@ const Hero = () => {
           <h2 className="text-2xl md:text-3xl font-medium mb-6 text-gray-700">
             Culinary Exploration Made Simple
           </h2>
-          <p className="text-gray-600 mb-8 max-w-xl mx-auto">
-            Unlock the power of artificial intelligence to discover amazing cuisines
-            and create captivating food journeys effortlessly.
-          </p>
+          <p className="text-gray-600 mb-8 max-w-xl mx-auto">Document your culinary adventures, share your experiences, and connect with fellow food enthusiasts.</p>
         </div>
 
         {/* Feature cards */}
