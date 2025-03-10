@@ -1,25 +1,26 @@
+
 import React from 'react';
 
 const ExperiencesGrid = () => {
-  // Array of real food images - removing the "public/" prefix
+  // Array of paths to the food images
   const images = [
-    '/lovable-uploads/892677d8-0b11-4aee-b574-a6cbb8cab946.png',
-    '/lovable-uploads/95eadac5-cdaa-4dbd-92f3-d283df8670b6.png',
-    '/lovable-uploads/f0ff1966-096f-4971-99ae-35e70ddd70d5.png',
-    '/lovable-uploads/ea061cef-c254-458e-8da3-245a46051fe0.png',
-    '/lovable-uploads/02c95d1b-cefd-4ebc-be1c-3666d95abf0f.png',
-    '/lovable-uploads/a7f60adf-6825-4354-912f-d7dfce083f90.png',
-    '/lovable-uploads/c614be28-8f18-4716-b255-aaa648b4300a.png',
-    '/lovable-uploads/935c5872-0469-4b88-9b9d-cca99ddb3ec8.png',
-    '/lovable-uploads/b1658ed1-5da9-4f6b-971a-a0f40f451d84.png',
-    '/lovable-uploads/a1510407-8d50-4fa6-9949-c96d09e441b3.png',
-    '/lovable-uploads/b8c1f51f-7252-4b30-8de1-d4d72ff985f5.png',
-    '/lovable-uploads/b6f7ede3-c167-430e-9881-ec6d41f531e0.png',
-    '/lovable-uploads/6376c924-1f8a-46f9-9c0d-82e3f1f7397a.png',
-    '/lovable-uploads/a3a7a9ce-5e5b-49f1-84b7-8c6240570117.png',
-    '/lovable-uploads/6c574d24-5a48-46bc-bada-c580ffa34357.png'
+    '/e3e1eb70-a39a-4da8-9f31-0043ae850d78.png',
+    '/07bd027b-40d5-41a6-85ab-5d9510d5f0c9.png',
+    '/81549b6b-7805-42c5-b6a8-fb180643aa01.png',
+    '/83f01ee8-a5f1-4ceb-8a3a-c9343c0bb31e.png',
+    '/4a7a7acc-e06c-4370-a5e6-eb74218cb130.png',
+    '/6584da40-cd9c-4444-82d0-bb782dac51ff.png',
+    '/0763f2b1-7ed3-43f7-9398-92b572d534df.png',
+    '/9ef0bc5b-d4ac-41ad-a794-d5366808ac10.png',
+    '/021bb57f-6547-46f3-b3f8-896bab5421aa.png',
+    '/5fe8f820-526b-4490-874b-5b3b5967bc0d.png',
+    '/f5784055-2d4b-4de5-a60b-e8a2781f5524.png',
+    '/e98b33d0-9a03-4ee4-88ad-07ed8309ed9c.png',
+    '/15e4f099-395f-43fd-83a4-866197c75ab8.png',
+    '/540569d9-5a79-4466-b4cf-b69d9bf0262e.png',
+    '/40cfb3fa-341d-49d1-ac05-12282967ff08.png'
   ];
-  
+
   // Food descriptions for accessibility
   const descriptions = [
     'Tender roast beef with potatoes and vegetables in gravy',
@@ -40,52 +41,127 @@ const ExperiencesGrid = () => {
   ];
 
   return (
-    <section className="pt-5 pb-20 px-6 bg-white">
+    <section className="pt-8 pb-20 px-4 md:px-6 bg-white">
       <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-6">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900">Some of Our Experiences</h2>
+        <div className="text-center mb-10">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">Culinary Adventures</h2>
+          <p className="text-lg text-gray-600">A mosaic of our gastronomic explorations</p>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {/* First column */}
-          <div className="space-y-4">
-            <div className="aspect-[4/3] overflow-hidden rounded-lg transition-transform duration-300 hover:scale-105">
-              <img src={images[0]} alt={descriptions[0]} className="w-full h-full object-cover" loading="lazy" />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+          {/* First column - varied sizes */}
+          <div className="space-y-3 flex flex-col">
+            <div className="overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
+              <img 
+                src={images[0]} 
+                alt={descriptions[0]} 
+                className="w-full h-full object-cover"
+                loading="lazy"
+              />
             </div>
-            <div className="aspect-square overflow-hidden rounded-lg transition-transform duration-300 hover:scale-105">
-              <img src={images[1]} alt={descriptions[1]} className="w-full h-full object-cover" loading="lazy" />
+            <div className="overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 h-64">
+              <img 
+                src={images[1]} 
+                alt={descriptions[1]} 
+                className="w-full h-full object-cover"
+                loading="lazy"
+              />
             </div>
-            <div className="aspect-[3/4] overflow-hidden rounded-lg transition-transform duration-300 hover:scale-105">
-              <img src={images[2]} alt={descriptions[2]} className="w-full h-full object-cover" loading="lazy" />
+            <div className="overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 h-80">
+              <img 
+                src={images[2]} 
+                alt={descriptions[2]} 
+                className="w-full h-full object-cover"
+                loading="lazy"
+              />
+            </div>
+            <div className="overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 h-72">
+              <img 
+                src={images[3]} 
+                alt={descriptions[3]} 
+                className="w-full h-full object-cover"
+                loading="lazy"
+              />
             </div>
           </div>
 
-          {/* Second column */}
-          <div className="space-y-4">
-            <div className="aspect-[4/5] overflow-hidden rounded-lg transition-transform duration-300 hover:scale-105">
-              <img src={images[3]} alt={descriptions[3]} className="w-full h-full object-cover" loading="lazy" />
+          {/* Second column - different aspect ratios */}
+          <div className="space-y-3 flex flex-col">
+            <div className="overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 h-80">
+              <img 
+                src={images[4]} 
+                alt={descriptions[4]} 
+                className="w-full h-full object-cover"
+                loading="lazy"
+              />
             </div>
-            <div className="aspect-square overflow-hidden rounded-lg transition-transform duration-300 hover:scale-105">
-              <img src={images[4]} alt={descriptions[4]} className="w-full h-full object-cover" loading="lazy" />
+            <div className="overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 h-56">
+              <img 
+                src={images[5]} 
+                alt={descriptions[5]} 
+                className="w-full h-full object-cover"
+                loading="lazy"
+              />
             </div>
-            <div className="aspect-[3/4] overflow-hidden rounded-lg transition-transform duration-300 hover:scale-105">
-              <img src={images[5]} alt={descriptions[5]} className="w-full h-full object-cover" loading="lazy" />
+            <div className="overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 h-60">
+              <img 
+                src={images[6]} 
+                alt={descriptions[6]} 
+                className="w-full h-full object-cover"
+                loading="lazy"
+              />
             </div>
-            <div className="aspect-[4/3] overflow-hidden rounded-lg transition-transform duration-300 hover:scale-105">
-              <img src={images[6]} alt={descriptions[6]} className="w-full h-full object-cover" loading="lazy" />
+            <div className="overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
+              <img 
+                src={images[7]} 
+                alt={descriptions[7]} 
+                className="w-full h-full object-cover"
+                loading="lazy"
+              />
+            </div>
+            <div className="overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 h-64">
+              <img 
+                src={images[8]} 
+                alt={descriptions[8]} 
+                className="w-full h-full object-cover"
+                loading="lazy"
+              />
             </div>
           </div>
 
-          {/* Third column */}
-          <div className="space-y-4">
-            <div className="aspect-[3/4] overflow-hidden rounded-lg transition-transform duration-300 hover:scale-105">
-              <img src={images[7]} alt={descriptions[7]} className="w-full h-full object-cover" loading="lazy" />
+          {/* Third column - mix of heights */}
+          <div className="space-y-3 flex flex-col">
+            <div className="overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 h-72">
+              <img 
+                src={images[9]} 
+                alt={descriptions[9]} 
+                className="w-full h-full object-cover"
+                loading="lazy"
+              />
             </div>
-            <div className="aspect-square overflow-hidden rounded-lg transition-transform duration-300 hover:scale-105">
-              <img src={images[8]} alt={descriptions[8]} className="w-full h-full object-cover" loading="lazy" />
+            <div className="overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 h-56">
+              <img 
+                src={images[10]} 
+                alt={descriptions[10]} 
+                className="w-full h-full object-cover" 
+                loading="lazy"
+              />
             </div>
-            <div className="aspect-[4/3] overflow-hidden rounded-lg transition-transform duration-300 hover:scale-105">
-              <img src={images[9]} alt={descriptions[9]} className="w-full h-full object-cover" loading="lazy" />
+            <div className="overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 h-64">
+              <img 
+                src={images[11]} 
+                alt={descriptions[11]} 
+                className="w-full h-full object-cover"
+                loading="lazy" 
+              />
+            </div>
+            <div className="overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 h-80">
+              <img 
+                src={images[12]} 
+                alt={descriptions[12]} 
+                className="w-full h-full object-cover"
+                loading="lazy"
+              />
             </div>
           </div>
         </div>
