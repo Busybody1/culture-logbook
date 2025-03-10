@@ -1,6 +1,6 @@
-
 import React from 'react';
 import { Camera, Share2, Star } from 'lucide-react';
+
 const Features = () => {
   const features = [{
     icon: <Camera className="w-8 h-8" />,
@@ -8,13 +8,14 @@ const Features = () => {
     description: "Upload photos from your adventures and keep them safe in your personal diary."
   }, {
     icon: <Star className="w-8 h-8" />,
-    title: "Rate & Review",
-    description: "Rate your experiences and add detailed notes to remember every flavor."
+    title: "Rate & Remember",
+    description: "Tag, rate, and organize your experiences for quick recall anytime."
   }, {
     icon: <Share2 className="w-8 h-8" />,
-    title: "Share Your Journey",
-    description: "Share your food stories on social media with just one click."
+    title: "Secure & Private",
+    description: "Your memories are yours—keep them private or choose what to share."
   }];
+
   return <section className="py-20 px-6 bg-white relative overflow-hidden">
       {/* Background texture */}
       <div style={{
@@ -45,4 +46,5 @@ const Features = () => {
       </div>
     </section>;
 };
+
 export default Features;
