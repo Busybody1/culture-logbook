@@ -1,40 +1,114 @@
 
 import React from 'react';
+import { Button } from './ui/button';
+import { Utensils, MessageSquare, Layout } from 'lucide-react';
 
 const Hero = () => {
   return (
-    <section className="pt-32 pb-20 px-6 relative overflow-hidden bg-gradient-to-b from-white via-gray-50 to-white">
-      {/* Textured background */}
-      <div 
-        className="absolute inset-0 opacity-10" 
-        style={{
-          backgroundImage: "url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgdmlld0JveD0iMCAwIDYwIDYwIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGZpbGw9IiNGRjkzNDQiIGQ9Ik0zNiAzNGMwIDEuMTA0LS44OTYgMi0yIDJzLTItLjg5Ni0yLTJjMC0uNzQtLjQtMS4zOC0xLTEuNzMyVjE4YzAtLjU1Mi40NDgtMSAxLTFzMSAuNDQ4IDEgMXYxNC4yNjhjLjYuMzUyIDEgLjk5MiAxIDEuNzMyeiIvPjxwYXRoIHN0cm9rZT0iI0NFMTlCQyIgc3Ryb2tlLXdpZHRoPSIyIiBkPSJNNDggMzBjMCA5Ljk0MS04LjA1OSAxOC0xOCAxOFMxMiAzOS45NDEgMTIgMzBjMC05Ljk0MSA4LjA1OS0xOCAxOC0xOHMxOCA4LjA1OSAxOCAxOHoiLz48cGF0aCBmaWxsPSIjMjdBRDk1IiBkPSJNMjQgMjJjMC0xLjEwNC44OTYtMiAyLTJzMiAuODk2IDIgMmMwIC43NC40IDEuMzggMSAxLjczMlY0MGMwIC41NTItLjQ0OCAxLTEgMS0uNTUyIDAtMS0uNDQ4LTEtMVYyMy43MzJjLS42LS4zNTItMS0uOTkyLTEtMS43MzJ6Ii8+PC9nPjwvc3ZnPg==')",
-          backgroundRepeat: "repeat"
-        }}
-      />
-      
-      {/* Cultural accent - travel stamps */}
-      <div className="absolute top-10 left-10 opacity-20 rotate-12">
-        <div className="w-20 h-20 rounded-full border-2 border-text flex items-center justify-center">
-          <span className="text-xs font-bold text-text">PARIS</span>
+    <section className="py-16 px-6 bg-white">
+      <div className="max-w-7xl mx-auto">
+        {/* Header content */}
+        <div className="text-center max-w-3xl mx-auto mb-16">
+          <h1 className="text-4xl md:text-5xl font-bold mb-3 text-gray-900">
+            AI-Powered Food Discovery
+          </h1>
+          <h2 className="text-2xl md:text-3xl font-medium mb-6 text-gray-700">
+            Culinary Exploration Made Simple
+          </h2>
+          <p className="text-gray-600 mb-8 max-w-xl mx-auto">
+            Unlock the power of artificial intelligence to discover amazing cuisines
+            and create captivating food journeys effortlessly.
+          </p>
         </div>
-      </div>
-      
-      <div className="absolute bottom-10 right-10 opacity-20 -rotate-12">
-        <div className="w-16 h-16 rounded-full border-2 border-header flex items-center justify-center">
-          <span className="text-xs font-bold text-header">TOKYO</span>
-        </div>
-      </div>
-      
-      <div className="max-w-7xl mx-auto relative z-20">
-        <div className="text-center max-w-3xl mx-auto">
-          <div className="mb-8 relative p-4 rounded-lg overflow-hidden">
-            <div className="absolute inset-0 bg-white/40 backdrop-blur-sm rounded-lg"></div>
-            <div className="relative">
-              <h1 className="text-5xl md:text-6xl font-bold mb-6 text-text animate-fade-in">The Culture Vulture</h1>
-              <p className="text-xl md:text-2xl text-text/80 mb-8 font-semibold animate-slide-up" style={{animationDelay: "0.3s"}}>
-                Document your culinary adventures, share your experiences, and connect with fellow food enthusiasts.
+
+        {/* Feature cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
+          {/* Card 1 */}
+          <div className="bg-black text-white p-8 rounded-xl">
+            <h3 className="text-xl font-bold mb-3">Start Documenting Your Culinary Adventures</h3>
+            <p className="text-gray-300 mb-6">
+              Craft compelling food journals from your experiences, bringing your gastronomic narratives to life.
+            </p>
+            <Button variant="outline" className="text-white border-white hover:bg-white hover:text-black">
+              Get Started Now
+            </Button>
+          </div>
+
+          {/* Card 2 */}
+          <div className="bg-gray-100 p-8 rounded-xl">
+            <h3 className="text-xl font-bold mb-3">Text-to-Recipe Generate</h3>
+            <p className="text-gray-600 mb-6">
+              Craft delicious recipes from textual descriptions, bringing your food ideas to reality.
+            </p>
+            <Button variant="outline" className="text-black border-black">
+              Try OpenAI Now
+            </Button>
+          </div>
+
+          {/* Card 3 */}
+          <div className="bg-white border border-gray-200 p-8 rounded-xl overflow-hidden relative">
+            <img
+              src="/lovable-uploads/557edcd2-bac8-4d4f-a070-6a2ed372847a.png"
+              alt="Person enjoying food"
+              className="absolute right-0 top-0 h-full w-2/3 object-cover object-left"
+            />
+            <div className="relative z-10 w-1/2">
+              <h3 className="text-xl font-bold mb-3">Share Your Journey</h3>
+              <p className="text-gray-600">
+                Connect with fellow food enthusiasts.
               </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Key features section */}
+        <div className="mb-16">
+          <div className="flex items-center justify-center gap-2 mb-10">
+            <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
+            <span className="font-medium text-gray-700">KEY FEATURES</span>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+            <div>
+              <h3 className="text-xl font-bold mb-3">Image-to-recipe Conversion</h3>
+              <p className="text-gray-600">
+                Seamlessly turn your food photos into dynamic, detailed recipes.
+              </p>
+            </div>
+            <div>
+              <h3 className="text-xl font-bold mb-3">Speech Integration</h3>
+              <p className="text-gray-600">
+                Incorporate your voice as narration to personalize your culinary stories.
+              </p>
+            </div>
+            <div>
+              <h3 className="text-xl font-bold mb-3">Customizable Templates</h3>
+              <p className="text-gray-600">
+                Choose from a variety of professionally designed templates for your food journals.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Stats section */}
+        <div className="flex flex-col md:flex-row gap-6 justify-center">
+          <div className="bg-gray-100 p-6 rounded-xl flex items-center gap-4">
+            <div className="bg-white rounded-lg p-3">
+              <Utensils className="h-6 w-6 text-amber-500" />
+            </div>
+            <div>
+              <div className="text-2xl font-bold">300k</div>
+              <div className="text-gray-600 text-sm">Satisfied users</div>
+            </div>
+          </div>
+          
+          <div className="bg-gray-100 p-6 rounded-xl flex items-center gap-4">
+            <div className="bg-white rounded-lg p-3">
+              <MessageSquare className="h-6 w-6 text-green-500" />
+            </div>
+            <div>
+              <div className="text-2xl font-bold">98.5%</div>
+              <div className="text-gray-600 text-sm">Positive reviews</div>
             </div>
           </div>
         </div>
