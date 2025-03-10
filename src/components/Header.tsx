@@ -2,6 +2,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import { Book } from 'lucide-react';
 
 const Header = () => {
   const navigate = useNavigate();
@@ -19,6 +20,14 @@ const Header = () => {
           </a>
         </div>
         <div className="flex items-center space-x-4">
+          <Button 
+            variant="outline" 
+            className="text-[#27AD95] border-[#27AD95] bg-white hover:bg-[#27AD95] hover:text-white transition-all duration-300 hover:scale-105 transform"
+            onClick={() => navigate('/diary')}
+          >
+            <Book className="mr-2 h-4 w-4" />
+            My Diary
+          </Button>
           <Button 
             variant="outline" 
             className="text-[#27AD95] border-[#27AD95] bg-white hover:bg-[#27AD95] hover:text-white transition-all duration-300 hover:scale-105 transform"
