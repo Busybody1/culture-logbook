@@ -9,59 +9,44 @@ import Header from '@/components/Header';
 import { format } from 'date-fns';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
-
-const MOCK_ENTRIES = [
-  {
-    id: '1',
-    title: 'Dinner at La Piazza',
-    type: 'restaurant',
-    date: new Date('2023-05-15'),
-    notes: 'Amazing Italian food with authentic flavors. The pasta was freshly made and the service was excellent.',
-    rating: 5,
-    tags: ['Italian', 'Fine Dining'],
-    imageUrl: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80',
-  },
-  {
-    id: '2',
-    title: 'Van Gogh Exhibition',
-    type: 'museum',
-    date: new Date('2023-06-02'),
-    notes: 'Incredible collection of Van Gogh\'s work. The immersive experience was breathtaking and educational.',
-    rating: 4,
-    tags: ['Modern Art', 'Temporary Exhibit'],
-    imageUrl: 'https://images.unsplash.com/photo-1582555172866-f73bb12a2ab3?ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80',
-  },
-  {
-    id: '3',
-    title: 'Sushi Delight',
-    type: 'restaurant',
-    date: new Date('2023-06-20'),
-    notes: 'Fresh sushi with interesting combinations. The ambiance was peaceful and the presentation was beautiful.',
-    rating: 4,
-    tags: ['Japanese', 'Street Food'],
-    imageUrl: 'https://images.unsplash.com/photo-1579871494447-9811cf80d66c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80',
-  },
-  {
-    id: '4',
-    title: 'Natural History Museum',
-    type: 'museum',
-    date: new Date('2023-07-10'),
-    notes: 'Fascinating dinosaur exhibits and interactive displays. Great for both kids and adults.',
-    rating: 5,
-    tags: ['Natural History', 'Family Friendly'],
-    imageUrl: 'https://images.unsplash.com/photo-1574068624578-d6e7a8497f4e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80',
-  },
-];
+import { seedDiaryEntries } from '@/utils/seedDiaryEntries';
 
 const DiaryEntries = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const [entries, setEntries] = useState(MOCK_ENTRIES);
-  const [filteredEntries, setFilteredEntries] = useState(MOCK_ENTRIES);
+  const [entries, setEntries, ] = useState([]);
+  const [filteredEntries, setFilteredEntries] = useState([]);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedType, setSelectedType] = useState<'all' | 'restaurant' | 'museum'>('all');
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchEntries = async () => {
+      if (!user) return;
+
+      const { data, error } = await supabase
+        .from('diary_entries')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('date', { ascending: false });
+
+      if (error) {
+        console.error('Error fetching entries:', error);
+        toast({
+          title: "Error loading entries",
+          description: "Failed to load your diary entries. Please try again.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      setEntries(data || []);
+      setFilteredEntries(data || []);
+    };
+
+    fetchEntries();
+  }, [user]);
 
   useEffect(() => {
     let filtered = [...entries];
@@ -69,8 +54,8 @@ const DiaryEntries = () => {
     if (searchTerm) {
       filtered = filtered.filter(entry => 
         entry.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
-        entry.notes.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        entry.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()))
+        entry.notes?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        entry.tags?.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()))
       );
     }
     
@@ -80,7 +65,7 @@ const DiaryEntries = () => {
     
     if (selectedTag) {
       filtered = filtered.filter(entry => 
-        entry.tags.some(tag => tag.toLowerCase() === selectedTag.toLowerCase())
+        entry.tags?.some(tag => tag.toLowerCase() === selectedTag.toLowerCase())
       );
     }
     
@@ -90,7 +75,7 @@ const DiaryEntries = () => {
   const getAllTags = () => {
     const tagSet = new Set<string>();
     entries.forEach(entry => {
-      entry.tags.forEach(tag => tagSet.add(tag));
+      entry.tags?.forEach(tag => tagSet.add(tag));
     });
     return Array.from(tagSet);
   };
@@ -104,16 +89,6 @@ const DiaryEntries = () => {
 
   const handleDelete = async (entryId: string) => {
     try {
-      if (!entryId.includes('-')) {
-        setEntries(prevEntries => prevEntries.filter(entry => entry.id !== entryId));
-        
-        toast({
-          title: "Entry deleted",
-          description: "Your diary entry has been deleted successfully.",
-        });
-        return;
-      }
-
       const { error } = await supabase
         .from('diary_entries')
         .delete()
@@ -139,6 +114,37 @@ const DiaryEntries = () => {
 
   const handleEdit = (entryId: string) => {
     navigate(`/edit-entry/${entryId}`);
+  };
+
+  const handleSeedData = async () => {
+    if (!user) return;
+    
+    const success = await seedDiaryEntries(user.id);
+    
+    if (success) {
+      toast({
+        title: "Sample entries added",
+        description: "Sample diary entries have been added to your account.",
+      });
+      
+      // Refresh the entries
+      const { data, error } = await supabase
+        .from('diary_entries')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('date', { ascending: false });
+
+      if (!error && data) {
+        setEntries(data);
+        setFilteredEntries(data);
+      }
+    } else {
+      toast({
+        title: "Error",
+        description: "Failed to add sample entries. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
@@ -241,14 +247,22 @@ const DiaryEntries = () => {
 
         {filteredEntries.length === 0 ? (
           <div className="text-center py-12">
-            <p className="text-gray-500">No entries found. Create your first entry!</p>
-            <Button 
-              onClick={() => navigate('/new-entry')}
-              className="mt-4 bg-[#27AD95] hover:bg-[#27AD95]/90"
-            >
-              <Plus className="mr-2 h-4 w-4" />
-              Create New Entry
-            </Button>
+            <p className="text-gray-500 mb-4">No entries found. Create your first entry or add some sample entries!</p>
+            <div className="flex justify-center gap-4">
+              <Button 
+                onClick={() => navigate('/new-entry')}
+                className="bg-[#27AD95] hover:bg-[#27AD95]/90"
+              >
+                <Plus className="mr-2 h-4 w-4" />
+                Create New Entry
+              </Button>
+              <Button
+                variant="outline"
+                onClick={handleSeedData}
+              >
+                Add Sample Entries
+              </Button>
+            </div>
           </div>
         ) : viewMode === 'grid' ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -256,7 +270,7 @@ const DiaryEntries = () => {
               <div key={entry.id} className="bg-white rounded-lg shadow-sm border overflow-hidden hover:shadow-md transition-shadow">
                 <div className="relative h-48">
                   <img 
-                    src={entry.imageUrl} 
+                    src={entry.image_url} 
                     alt={entry.title} 
                     className="w-full h-full object-cover"
                   />
@@ -273,15 +287,15 @@ const DiaryEntries = () => {
                       {Array.from({ length: 5 }).map((_, i) => (
                         <Star 
                           key={i} 
-                          className={`h-4 w-4 ${i < entry.rating ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`} 
+                          className={`h-4 w-4 ${i < (entry.rating || 0) ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`} 
                         />
                       ))}
                     </div>
                   </div>
-                  <p className="text-sm text-gray-500 mb-2">{format(entry.date, 'MMMM d, yyyy')}</p>
+                  <p className="text-sm text-gray-500 mb-2">{format(new Date(entry.date), 'MMMM d, yyyy')}</p>
                   <p className="text-sm text-gray-700 mb-3 line-clamp-3">{entry.notes}</p>
                   <div className="flex flex-wrap gap-1 mb-3">
-                    {entry.tags.map(tag => (
+                    {entry.tags?.map(tag => (
                       <Badge key={tag} variant="outline" className="text-xs">
                         {tag}
                       </Badge>
@@ -316,7 +330,7 @@ const DiaryEntries = () => {
                 <div className="flex flex-col md:flex-row">
                   <div className="md:w-48 h-48">
                     <img 
-                      src={entry.imageUrl} 
+                      src={entry.image_url} 
                       alt={entry.title} 
                       className="w-full h-full object-cover"
                     />
@@ -330,13 +344,13 @@ const DiaryEntries = () => {
                             {entry.type === 'restaurant' ? 'Restaurant' : 'Museum'}
                           </Badge>
                         </div>
-                        <p className="text-sm text-gray-500 mb-2">{format(entry.date, 'MMMM d, yyyy')}</p>
+                        <p className="text-sm text-gray-500 mb-2">{format(new Date(entry.date), 'MMMM d, yyyy')}</p>
                       </div>
                       <div className="flex items-center mb-2 md:mb-0">
                         {Array.from({ length: 5 }).map((_, i) => (
                           <Star 
                             key={i} 
-                            className={`h-4 w-4 ${i < entry.rating ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`} 
+                            className={`h-4 w-4 ${i < (entry.rating || 0) ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`} 
                           />
                         ))}
                       </div>
@@ -344,7 +358,7 @@ const DiaryEntries = () => {
                     <p className="text-sm text-gray-700 mb-3">{entry.notes}</p>
                     <div className="flex justify-between items-center">
                       <div className="flex flex-wrap gap-1">
-                        {entry.tags.map(tag => (
+                        {entry.tags?.map(tag => (
                           <Badge key={tag} variant="outline" className="text-xs">
                             {tag}
                           </Badge>
