@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Star, Plus, List, Grid3X3, Search, Trash2, Pencil } from 'lucide-react';
+import { Star, Plus, List, Grid3X3, Search, Trash2, Pencil, ImageOff } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { toast } from '@/hooks/use-toast';
 import Header from '@/components/Header';
@@ -269,11 +269,17 @@ const DiaryEntries = () => {
             {filteredEntries.map(entry => (
               <div key={entry.id} className="bg-white rounded-lg shadow-sm border overflow-hidden hover:shadow-md transition-shadow">
                 <div className="relative h-48">
-                  <img 
-                    src={entry.image_url} 
-                    alt={entry.title} 
-                    className="w-full h-full object-cover"
-                  />
+                  {entry.image_url ? (
+                    <img 
+                      src={entry.image_url} 
+                      alt={entry.title} 
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-gray-100 flex items-center justify-center">
+                      <ImageOff className="h-12 w-12 text-gray-400" />
+                    </div>
+                  )}
                   <div className="absolute top-2 right-2 bg-white rounded-full p-1">
                     <Badge variant={entry.type === 'restaurant' ? 'default' : 'secondary'}>
                       {entry.type === 'restaurant' ? 'Restaurant' : 'Museum'}
@@ -329,11 +335,17 @@ const DiaryEntries = () => {
               <div key={entry.id} className="bg-white rounded-lg shadow-sm border overflow-hidden hover:shadow-md transition-shadow">
                 <div className="flex flex-col md:flex-row">
                   <div className="md:w-48 h-48">
-                    <img 
-                      src={entry.image_url} 
-                      alt={entry.title} 
-                      className="w-full h-full object-cover"
-                    />
+                    {entry.image_url ? (
+                      <img 
+                        src={entry.image_url} 
+                        alt={entry.title} 
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gray-100 flex items-center justify-center">
+                        <ImageOff className="h-12 w-12 text-gray-400" />
+                      </div>
+                    )}
                   </div>
                   <div className="flex-1 p-4">
                     <div className="flex flex-col md:flex-row md:justify-between md:items-start">
