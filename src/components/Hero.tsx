@@ -34,7 +34,7 @@ const Hero = () => {
             <h3 className="text-xl font-bold mb-3">Save Your Precious Moments</h3>
             <p className="text-gray-600 mb-6 flex-grow">Tag, rate, and organize your experiences so you never forget them.</p>
             <div>
-              <Button variant="outline" className="text-black border-black hover:text-white bg-black">Try It Now</Button>
+              <Button variant="outline" className="text-black border-black hover:bg-black hover:text-white">Try It Now</Button>
             </div>
           </div>
 
