@@ -1,15 +1,15 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Star, Plus, List, Grid3X3, Search, Share2 } from 'lucide-react';
+import { Star, Plus, List, Grid3X3, Search, Share2, Trash2 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { toast } from '@/hooks/use-toast';
 import Header from '@/components/Header';
 import { format } from 'date-fns';
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/contexts/AuthContext';
 
-// Mock data for diary entries
 const MOCK_ENTRIES = [
   {
     id: '1',
@@ -55,6 +55,7 @@ const MOCK_ENTRIES = [
 
 const DiaryEntries = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [entries, setEntries] = useState(MOCK_ENTRIES);
   const [filteredEntries, setFilteredEntries] = useState(MOCK_ENTRIES);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
@@ -62,11 +63,9 @@ const DiaryEntries = () => {
   const [selectedType, setSelectedType] = useState<'all' | 'restaurant' | 'museum'>('all');
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
 
-  // Effect to handle filtering
   useEffect(() => {
     let filtered = [...entries];
     
-    // Filter by search term
     if (searchTerm) {
       filtered = filtered.filter(entry => 
         entry.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
@@ -75,12 +74,10 @@ const DiaryEntries = () => {
       );
     }
     
-    // Filter by type
     if (selectedType !== 'all') {
       filtered = filtered.filter(entry => entry.type === selectedType);
     }
     
-    // Filter by tag
     if (selectedTag) {
       filtered = filtered.filter(entry => 
         entry.tags.some(tag => tag.toLowerCase() === selectedTag.toLowerCase())
@@ -90,7 +87,6 @@ const DiaryEntries = () => {
     setFilteredEntries(filtered);
   }, [searchTerm, selectedType, selectedTag, entries]);
 
-  // Function to get all unique tags from entries
   const getAllTags = () => {
     const tagSet = new Set<string>();
     entries.forEach(entry => {
@@ -100,11 +96,34 @@ const DiaryEntries = () => {
   };
 
   const handleShare = (entryId: string) => {
-    // In a real app, we would generate a sharing link and open a share dialog
     toast({
       title: "Sharing options opened",
       description: "Choose a platform to share your entry.",
     });
+  };
+
+  const handleDelete = async (entryId: string) => {
+    try {
+      const { error } = await supabase
+        .from('diary_entries')
+        .delete()
+        .eq('id', entryId);
+
+      if (error) throw error;
+
+      setEntries(prevEntries => prevEntries.filter(entry => entry.id !== entryId));
+      
+      toast({
+        title: "Entry deleted",
+        description: "Your diary entry has been deleted successfully.",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to delete the entry. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
@@ -122,7 +141,6 @@ const DiaryEntries = () => {
           </Button>
         </div>
 
-        {/* Filters and search */}
         <div className="mb-6 bg-white p-4 rounded-lg shadow-sm border">
           <div className="flex flex-col md:flex-row gap-4">
             <div className="flex-1">
@@ -182,7 +200,6 @@ const DiaryEntries = () => {
             </div>
           </div>
 
-          {/* Tags filter */}
           <div className="mt-4">
             <div className="flex flex-wrap gap-2">
               {selectedTag && (
@@ -207,7 +224,6 @@ const DiaryEntries = () => {
           </div>
         </div>
 
-        {/* Entries display */}
         {filteredEntries.length === 0 ? (
           <div className="text-center py-12">
             <p className="text-gray-500">No entries found. Create your first entry!</p>
@@ -265,6 +281,14 @@ const DiaryEntries = () => {
                       <Share2 className="h-4 w-4 mr-1" />
                       Share
                     </Button>
+                    <Button 
+                      variant="ghost" 
+                      size="sm"
+                      onClick={() => handleDelete(entry.id)}
+                      className="text-red-500 hover:text-red-700 hover:bg-red-50"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
                   </div>
                 </div>
               </div>
@@ -311,14 +335,24 @@ const DiaryEntries = () => {
                           </Badge>
                         ))}
                       </div>
-                      <Button 
-                        variant="ghost" 
-                        size="sm"
-                        onClick={() => handleShare(entry.id)}
-                      >
-                        <Share2 className="h-4 w-4 mr-1" />
-                        Share
-                      </Button>
+                      <div className="flex space-x-2">
+                        <Button 
+                          variant="ghost" 
+                          size="sm"
+                          onClick={() => handleShare(entry.id)}
+                        >
+                          <Share2 className="h-4 w-4 mr-1" />
+                          Share
+                        </Button>
+                        <Button 
+                          variant="ghost" 
+                          size="sm"
+                          onClick={() => handleDelete(entry.id)}
+                          className="text-red-500 hover:text-red-700 hover:bg-red-50"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 </div>
