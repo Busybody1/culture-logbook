@@ -8,7 +8,7 @@ import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
-import { CalendarIcon, Star, StarOff, Image, X, Share } from 'lucide-react';
+import { CalendarIcon, Star, StarOff, Image, X, Share, Plus } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { toast } from '@/hooks/use-toast';
@@ -20,6 +20,8 @@ const PREDEFINED_TAGS = [
   'Contemporary Art', 'Natural History', 'Temporary Exhibit'
 ];
 
+const MAX_IMAGES = 10;
+
 const NewEntry = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -29,27 +31,43 @@ const NewEntry = () => {
   const [rating, setRating] = useState<number>(0);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [customTag, setCustomTag] = useState('');
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const [image, setImage] = useState<File | null>(null);
+  const [imageFiles, setImageFiles] = useState<File[]>([]);
+  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const [isRestaurant, setIsRestaurant] = useState(true);
   const [isGeneratingCaption, setIsGeneratingCaption] = useState(false);
   const [generatedCaption, setGeneratedCaption] = useState<string | null>(null);
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setImage(file);
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+    
+    // Check if adding these files would exceed the maximum
+    if (imageFiles.length + files.length > MAX_IMAGES) {
+      toast({
+        title: "Too many images",
+        description: `You can only upload a maximum of ${MAX_IMAGES} images`,
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    // Add the new files to our state
+    const newFiles = Array.from(files);
+    setImageFiles(prevFiles => [...prevFiles, ...newFiles]);
+    
+    // Generate previews for each new file
+    newFiles.forEach(file => {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setImagePreview(reader.result as string);
+        setImagePreviews(prevPreviews => [...prevPreviews, reader.result as string]);
       };
       reader.readAsDataURL(file);
-    }
+    });
   };
 
-  const removeImage = () => {
-    setImage(null);
-    setImagePreview(null);
+  const removeImage = (index: number) => {
+    setImageFiles(prevFiles => prevFiles.filter((_, i) => i !== index));
+    setImagePreviews(prevPreviews => prevPreviews.filter((_, i) => i !== index));
   };
 
   const handleAddTag = (tag: string) => {
@@ -332,55 +350,83 @@ const NewEntry = () => {
             </div>
           </div>
 
-          {/* Image Upload */}
+          {/* Multiple Image Upload */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Upload Image
-            </label>
-            <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
-              <div className="space-y-1 text-center">
-                {imagePreview ? (
-                  <div className="relative">
+            <div className="flex justify-between items-center mb-2">
+              <label className="block text-sm font-medium text-gray-700">
+                Upload Images ({imagePreviews.length}/{MAX_IMAGES})
+              </label>
+              <span className="text-xs text-gray-500">
+                PNG, JPG, GIF up to 10MB each
+              </span>
+            </div>
+            
+            {/* Image preview grid */}
+            {imagePreviews.length > 0 && (
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mb-4">
+                {imagePreviews.map((preview, index) => (
+                  <div key={index} className="relative aspect-square rounded-md overflow-hidden border border-gray-200">
                     <img
-                      src={imagePreview}
-                      alt="Preview"
-                      className="mx-auto h-32 object-cover rounded"
+                      src={preview}
+                      alt={`Image ${index + 1}`}
+                      className="w-full h-full object-cover"
                     />
                     <button
                       type="button"
-                      onClick={removeImage}
-                      className="absolute top-0 right-0 bg-red-500 text-white rounded-full p-1"
+                      onClick={() => removeImage(index)}
+                      className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 shadow-md hover:bg-red-600 transition-colors"
                     >
                       <X className="h-4 w-4" />
                     </button>
                   </div>
-                ) : (
-                  <>
-                    <Image className="mx-auto h-12 w-12 text-gray-400" />
-                    <div className="flex text-sm text-gray-600">
-                      <label
-                        htmlFor="file-upload"
-                        className="relative cursor-pointer bg-white rounded-md font-medium text-[#27AD95] hover:text-[#27AD95]/80 focus-within:outline-none"
-                      >
-                        <span>Upload a file</span>
-                        <input
-                          id="file-upload"
-                          name="file-upload"
-                          type="file"
-                          accept="image/*"
-                          className="sr-only"
-                          onChange={handleImageUpload}
-                        />
-                      </label>
-                      <p className="pl-1">or drag and drop</p>
-                    </div>
-                    <p className="text-xs text-gray-500">
-                      PNG, JPG, GIF up to 10MB
-                    </p>
-                  </>
+                ))}
+                
+                {/* Add more images button - only show if under max limit */}
+                {imagePreviews.length < MAX_IMAGES && (
+                  <label className="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-md p-4 aspect-square cursor-pointer hover:bg-gray-50 transition-colors">
+                    <Plus className="h-8 w-8 text-gray-400 mb-2" />
+                    <span className="text-sm text-gray-500">Add image</span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="sr-only"
+                      multiple
+                      onChange={handleImageUpload}
+                    />
+                  </label>
                 )}
               </div>
-            </div>
+            )}
+            
+            {/* Upload area - only show if no images yet */}
+            {imagePreviews.length === 0 && (
+              <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
+                <div className="space-y-1 text-center">
+                  <Image className="mx-auto h-12 w-12 text-gray-400" />
+                  <div className="flex text-sm text-gray-600">
+                    <label
+                      htmlFor="file-upload"
+                      className="relative cursor-pointer bg-white rounded-md font-medium text-[#27AD95] hover:text-[#27AD95]/80 focus-within:outline-none"
+                    >
+                      <span>Upload files</span>
+                      <input
+                        id="file-upload"
+                        name="file-upload"
+                        type="file"
+                        multiple
+                        accept="image/*"
+                        className="sr-only"
+                        onChange={handleImageUpload}
+                      />
+                    </label>
+                    <p className="pl-1">or drag and drop</p>
+                  </div>
+                  <p className="text-xs text-gray-500">
+                    PNG, JPG, GIF up to 10MB each
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Save Button */}
