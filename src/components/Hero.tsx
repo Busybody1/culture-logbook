@@ -31,7 +31,7 @@ const Hero = () => {
           <div className="p-8 rounded-xl bg-[#ff9344]/[0.44]">
             <h3 className="text-xl font-bold mb-3">Save Your Precious Moments</h3>
             <p className="text-gray-600 mb-6">Tag, rate, and arrange your experiences so they will be remembered for ever.</p>
-            <Button variant="outline" className="text-black border-black">Try It Now</Button>
+            <Button variant="outline" className="text-black border-black hover:text-white bg-black">Try It Now</Button>
           </div>
 
           {/* Card 3 */}
