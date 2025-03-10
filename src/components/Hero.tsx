@@ -88,7 +88,7 @@ const Hero = () => {
               <Utensils className="h-6 w-6 text-amber-500" />
             </div>
             <div>
-              <div className="text-2xl font-bold">300k</div>
+              <div className="text-2xl font-bold">300+</div>
               <div className="text-gray-600 text-sm">Satisfied users</div>
             </div>
           </div>
