@@ -61,7 +61,7 @@ const Hero = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
             <div>
-              <h3 className="text-xl font-bold mb-3">Image-to-recipe Conversion</h3>
+              <h3 className="text-xl font-bold mb-3">Memory Diary</h3>
               <p className="text-gray-600">
                 Seamlessly turn your food photos into dynamic, detailed recipes.
               </p>
