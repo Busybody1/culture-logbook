@@ -5,6 +5,7 @@ import Hero from '@/components/Hero';
 import Features from '@/components/Features';
 import Newsletter from '@/components/Newsletter';
 import Footer from '@/components/Footer';
+import { Toaster } from '@/components/ui/toaster';
 
 const Index = () => {
   return (
@@ -16,6 +17,7 @@ const Index = () => {
         <Newsletter />
       </main>
       <Footer />
+      <Toaster />
     </div>
   );
 };
