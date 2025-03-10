@@ -13,15 +13,15 @@ const ExperiencesGrid = () => {
   ];
 
   return (
-    <section className="pt-7 pb-20 px-6 bg-white"> {/* Reduced top padding */}
+    <section className="pt-7 pb-20 px-6 bg-white">
       <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-6"> {/* Reduced bottom margin */}
+        <div className="text-center mb-6">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900">Some of Our Experiences</h2>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-2"> {/* Reduced gap between images */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* First column */}
-          <div className="space-y-2"> {/* Reduced vertical gap */}
+          <div className="space-y-4">
             <div className="aspect-square overflow-hidden rounded-lg transition-transform duration-300 hover:scale-105">
               <img
                 src={`https://images.unsplash.com/${images[0]}?auto=format&fit=crop&w=600&h=600`}
@@ -41,7 +41,7 @@ const ExperiencesGrid = () => {
           </div>
 
           {/* Second column - larger center image */}
-          <div className="space-y-2"> {/* Reduced vertical gap */}
+          <div className="space-y-4">
             <div className="aspect-[3/4] overflow-hidden rounded-lg transition-transform duration-300 hover:scale-105 h-full">
               <img
                 src={`https://images.unsplash.com/${images[2]}?auto=format&fit=crop&w=600&h=800`}
@@ -53,7 +53,7 @@ const ExperiencesGrid = () => {
           </div>
 
           {/* Third column */}
-          <div className="space-y-2"> {/* Reduced vertical gap */}
+          <div className="space-y-4">
             <div className="aspect-[1/1] overflow-hidden rounded-lg transition-transform duration-300 hover:scale-105">
               <img
                 src={`https://images.unsplash.com/${images[3]}?auto=format&fit=crop&w=600&h=600`}
