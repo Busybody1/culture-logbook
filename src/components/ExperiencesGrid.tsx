@@ -1,7 +1,8 @@
+
 import React from 'react';
 
 const ExperiencesGrid = () => {
-  // Array of paths to the food images
+  // Array of paths to the food images - using the correct paths with blob URLs
   const images = [
     '/lovable-uploads/6b523868-089f-427c-bd04-8a4e70fb552a.png',
     '/lovable-uploads/8626e6f7-c80c-4c9d-a419-21f5d7403495.png',
@@ -47,9 +48,9 @@ const ExperiencesGrid = () => {
           <p className="text-lg text-gray-600">A mosaic of our gastronomic explorations</p>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
           {/* First column - varied sizes */}
-          <div className="space-y-2 flex flex-col">
+          <div className="space-y-3 flex flex-col">
             <div className="overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
               <img 
                 src={images[0]} 
@@ -82,10 +83,18 @@ const ExperiencesGrid = () => {
                 loading="lazy"
               />
             </div>
+            <div className="overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 h-48">
+              <img 
+                src={images[12]} 
+                alt={descriptions[12]} 
+                className="w-full h-full object-cover"
+                loading="lazy"
+              />
+            </div>
           </div>
 
           {/* Second column - different aspect ratios */}
-          <div className="space-y-2 flex flex-col">
+          <div className="space-y-3 flex flex-col">
             <div className="overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 h-80">
               <img 
                 src={images[4]} 
@@ -110,7 +119,7 @@ const ExperiencesGrid = () => {
                 loading="lazy"
               />
             </div>
-            <div className="overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
+            <div className="overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 h-70">
               <img 
                 src={images[7]} 
                 alt={descriptions[7]} 
@@ -129,7 +138,7 @@ const ExperiencesGrid = () => {
           </div>
 
           {/* Third column - mix of heights */}
-          <div className="space-y-2 flex flex-col">
+          <div className="space-y-3 flex flex-col">
             <div className="overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 h-72">
               <img 
                 src={images[9]} 
@@ -156,8 +165,16 @@ const ExperiencesGrid = () => {
             </div>
             <div className="overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 h-80">
               <img 
-                src={images[12]} 
-                alt={descriptions[12]} 
+                src={images[13]} 
+                alt={descriptions[13]} 
+                className="w-full h-full object-cover"
+                loading="lazy"
+              />
+            </div>
+            <div className="overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 h-60">
+              <img 
+                src={images[14]} 
+                alt={descriptions[14]} 
                 className="w-full h-full object-cover"
                 loading="lazy"
               />
