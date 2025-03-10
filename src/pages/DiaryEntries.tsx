@@ -1,8 +1,9 @@
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Star, Plus, List, Grid3X3, Search, Share2, Trash2 } from 'lucide-react';
+import { Star, Plus, List, Grid3X3, Search, Trash2 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { toast } from '@/hooks/use-toast';
 import Header from '@/components/Header';
@@ -104,6 +105,19 @@ const DiaryEntries = () => {
 
   const handleDelete = async (entryId: string) => {
     try {
+      // Check if the entry is from mock data (string IDs like '1', '2', etc.)
+      if (!entryId.includes('-')) {
+        // For mock data, just filter it out locally
+        setEntries(prevEntries => prevEntries.filter(entry => entry.id !== entryId));
+        
+        toast({
+          title: "Entry deleted",
+          description: "Your diary entry has been deleted successfully.",
+        });
+        return;
+      }
+
+      // For real database entries (UUID format)
       const { error } = await supabase
         .from('diary_entries')
         .delete()
@@ -118,6 +132,7 @@ const DiaryEntries = () => {
         description: "Your diary entry has been deleted successfully.",
       });
     } catch (error) {
+      console.error('Delete error:', error);
       toast({
         title: "Error",
         description: "Failed to delete the entry. Please try again.",
