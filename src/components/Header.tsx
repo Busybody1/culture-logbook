@@ -18,12 +18,12 @@ const Header = () => {
         <div className="flex items-center space-x-4">
           <Button 
             variant="outline" 
-            className="text-[#27AD95] border-[#27AD95] bg-white hover:bg-[#27AD95] hover:text-white transition-colors"
+            className="text-[#27AD95] border-[#27AD95] bg-white hover:bg-[#27AD95] hover:text-white transition-all duration-300 hover:scale-105 transform"
           >
             Log in
           </Button>
           <Button 
-            className="bg-[#27AD95] text-white hover:bg-[#27AD95]/90 transition-colors"
+            className="bg-[#27AD95] text-white hover:bg-[#27AD95]/90 transition-all duration-300 hover:scale-105 transform"
           >
             Sign up
           </Button>
