@@ -92,9 +92,7 @@ const Hero = () => {
                 </div>
               </div>
               <h3 className="text-xl font-semibold mb-3 text-text"> Customizable Entries</h3>
-              <p className="text-text/80">
-                Choose from a variety of professionally designed templates for your food journals.
-              </p>
+              <p className="text-slate-950">Personalize your diary with templates, tags, and notes that reflect your unique experiences.</p>
             </div>
           </div>
         </div>
