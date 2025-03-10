@@ -1,43 +1,42 @@
-
 import React from 'react';
 
 const ExperiencesGrid = () => {
   // Array of paths to the food images
   const images = [
-    '/lovable-uploads/e3e1eb70-a39a-4da8-9f31-0043ae850d78.png',
-    '/lovable-uploads/07bd027b-40d5-41a6-85ab-5d9510d5f0c9.png',
-    '/lovable-uploads/81549b6b-7805-42c5-b6a8-fb180643aa01.png',
-    '/lovable-uploads/83f01ee8-a5f1-4ceb-8a3a-c9343c0bb31e.png',
-    '/lovable-uploads/4a7a7acc-e06c-4370-a5e6-eb74218cb130.png',
-    '/lovable-uploads/6584da40-cd9c-4444-82d0-bb782dac51ff.png',
-    '/lovable-uploads/0763f2b1-7ed3-43f7-9398-92b572d534df.png',
-    '/lovable-uploads/9ef0bc5b-d4ac-41ad-a794-d5366808ac10.png',
-    '/lovable-uploads/021bb57f-6547-46f3-b3f8-896bab5421aa.png',
-    '/lovable-uploads/5fe8f820-526b-4490-874b-5b3b5967bc0d.png',
-    '/lovable-uploads/f5784055-2d4b-4de5-a60b-e8a2781f5524.png',
-    '/lovable-uploads/e98b33d0-9a03-4ee4-88ad-07ed8309ed9c.png',
-    '/lovable-uploads/15e4f099-395f-43fd-83a4-866197c75ab8.png',
-    '/lovable-uploads/540569d9-5a79-4466-b4cf-b69d9bf0262e.png',
-    '/lovable-uploads/40cfb3fa-341d-49d1-ac05-12282967ff08.png'
+    '/lovable-uploads/6b523868-089f-427c-bd04-8a4e70fb552a.png',
+    '/lovable-uploads/8626e6f7-c80c-4c9d-a419-21f5d7403495.png',
+    '/lovable-uploads/71b99daf-22a6-4c53-98ce-55eaa7798bc7.png',
+    '/lovable-uploads/02d8d9f6-9b24-4a35-988a-686bb47849de.png',
+    '/lovable-uploads/d3a2518b-217d-41a7-aaf6-dfa7639358a7.png',
+    '/lovable-uploads/d7ab5ee4-1b30-4256-97a0-b3b282f18429.png',
+    '/lovable-uploads/2193510c-3766-4025-a958-a4ebad2dcda0.png',
+    '/lovable-uploads/1464b913-2153-4350-94b8-205253915060.png',
+    '/lovable-uploads/33572675-d7fa-4d26-a864-f2cf418a674c.png',
+    '/lovable-uploads/a1d8ef3f-cfb1-4d94-82c4-60d4663ac467.png',
+    '/lovable-uploads/8b9d8ae6-521c-4335-b108-43cef81f0a9d.png',
+    '/lovable-uploads/08602336-a632-47b4-a31a-500b67fc0340.png',
+    '/lovable-uploads/3509b12c-7a0f-4d54-aa43-ec180b2798e3.png',
+    '/lovable-uploads/99f6b3ec-d9e3-4b45-a170-cc5d981565ee.png',
+    '/lovable-uploads/5ac4cc39-d40b-4fe9-92a2-093815b29954.png'
   ];
 
   // Food descriptions for accessibility
   const descriptions = [
-    'Tender roast beef with potatoes and vegetables in gravy',
-    'Pasta dish with herbs and parmesan cheese crisps',
-    'Assorted sushi rolls with pickled ginger and wasabi',
-    'Gourmet pizzas with fresh toppings and prosciutto salad',
-    'Grilled meat with orange sauce on a white plate',
-    'Dim sum with green garnish in a bamboo steamer',
-    'Oysters on ice with sauce in a green bowl',
-    'Japanese bento box with assorted seafood and delicacies',
-    'Fine dining beef dish on a black plate with colorful sauces',
-    'Grilled fish on orange sauce on a gray plate',
-    'Artistic green dessert in reflective gold display',
-    'Caviar with pancakes and cream in an elegant setting',
-    'Spanish paella with seafood in a traditional pan',
-    'Restaurant interior with gourmet appetizer in the foreground',
-    'Asian fusion dish with seafood and rice'
+    'Premium roast beef with vegetables and potatoes in a rich gravy',
+    'Artisanal pasta with fresh herbs and parmesan crisps',
+    'Elegant sushi platter with assorted rolls and garnishes',
+    'Gourmet Neapolitan pizzas with fresh toppings and prosciutto',
+    'Grilled meat with orange reduction sauce',
+    'Modern dim sum presentation with decorative garnish',
+    'Fresh oysters on ice with citrus accompaniment',
+    'Japanese bento box with seasonal delicacies',
+    'Fine dining beef presentation with artistic sauces',
+    'Grilled mackerel with carrot puree',
+    'Contemporary green tea dessert display',
+    'Premium caviar service with traditional accompaniments',
+    'Traditional Spanish seafood paella',
+    'Restaurant ambiance with elegant table setting',
+    'Modern Asian fusion seafood dish'
   ];
 
   return (
