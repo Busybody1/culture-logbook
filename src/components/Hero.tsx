@@ -19,7 +19,7 @@ const Hero = () => {
           {/* Card 1 */}
           <div className="text-white p-8 rounded-xl bg-[#ff9344]">
             <h3 className="text-xl font-bold mb-3">Start Documenting Your Culinary Adventures</h3>
-            <p className="text-gray-300 mb-6">
+            <p className="mb-6 text-gray-950">
               Craft compelling food journals from your experiences, bringing your gastronomic narratives to life.
             </p>
             <Button variant="outline" className="text-white border-white hover:bg-white hover:text-black">
