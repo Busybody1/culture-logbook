@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -13,6 +12,8 @@ import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { toast } from '@/hooks/use-toast';
 import Header from '@/components/Header';
+import SocialMediaPreview from '@/components/SocialMediaPreview';
+import SocialMediaForm from '@/components/SocialMediaForm';
 
 const PREDEFINED_TAGS = [
   'Italian', 'Street Food', 'Fine Dining', 'Modern Art', 'History Museum', 
@@ -36,12 +37,29 @@ const NewEntry = () => {
   const [isRestaurant, setIsRestaurant] = useState(true);
   const [isGeneratingCaption, setIsGeneratingCaption] = useState(false);
   const [generatedCaption, setGeneratedCaption] = useState<string | null>(null);
+  const [socialMediaData, setSocialMediaData] = useState({
+    Facebook: {
+      title: '',
+      caption: '',
+      location: '',
+      hashtags: [],
+    },
+    Instagram: {
+      caption: '',
+      location: '',
+      hashtags: [],
+    },
+    TikTok: {
+      caption: '',
+      location: '',
+      hashtags: [],
+    }
+  });
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
     
-    // Check if adding these files would exceed the maximum
     if (imageFiles.length + files.length > MAX_IMAGES) {
       toast({
         title: "Too many images",
@@ -51,11 +69,9 @@ const NewEntry = () => {
       return;
     }
     
-    // Add the new files to our state
     const newFiles = Array.from(files);
     setImageFiles(prevFiles => [...prevFiles, ...newFiles]);
     
-    // Generate previews for each new file
     newFiles.forEach(file => {
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -98,7 +114,6 @@ const NewEntry = () => {
     setIsGeneratingCaption(true);
     
     try {
-      // Simulate AI caption generation
       await new Promise(resolve => setTimeout(resolve, 1500));
       
       const tagText = selectedTags.length > 0 ? selectedTags.join(', ') : isRestaurant ? 'restaurant' : 'museum';
@@ -138,7 +153,6 @@ const NewEntry = () => {
       return;
     }
 
-    // Simulate saving to database
     try {
       await new Promise(resolve => setTimeout(resolve, 1000));
       
@@ -147,12 +161,10 @@ const NewEntry = () => {
         description: "Your diary entry has been saved.",
       });
       
-      // Generate caption for sharing
       if (!generatedCaption) {
         await generateAICaption();
       }
       
-      // Redirect to diary entries page after successful save
       setTimeout(() => {
         navigate('/diary');
       }, 1500);
@@ -165,11 +177,15 @@ const NewEntry = () => {
     }
   };
 
-  const shareToSocial = (platform: string) => {
-    if (!generatedCaption) {
-      generateAICaption();
-      return;
-    }
+  const handleSocialMediaUpdate = (platform: 'Facebook' | 'Instagram' | 'TikTok', data: any) => {
+    setSocialMediaData(prev => ({
+      ...prev,
+      [platform]: data
+    }));
+  };
+
+  const shareToSocial = (platform: 'Facebook' | 'Instagram' | 'TikTok') => {
+    const postData = socialMediaData[platform];
     
     toast({
       title: `Shared to ${platform}!`,
@@ -208,7 +224,6 @@ const NewEntry = () => {
         </div>
 
         <div className="space-y-6 bg-white p-6 rounded-lg shadow-sm border">
-          {/* Title Input */}
           <div>
             <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">
               Title
@@ -222,7 +237,6 @@ const NewEntry = () => {
             />
           </div>
 
-          {/* Date Picker */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Date
@@ -252,7 +266,6 @@ const NewEntry = () => {
             </Popover>
           </div>
 
-          {/* Notes */}
           <div>
             <label htmlFor="notes" className="block text-sm font-medium text-gray-700 mb-1">
               Notes/Experience
@@ -267,7 +280,6 @@ const NewEntry = () => {
             />
           </div>
 
-          {/* Rating */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Rating
@@ -293,7 +305,6 @@ const NewEntry = () => {
             </div>
           </div>
 
-          {/* Tags */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Tags
@@ -350,7 +361,6 @@ const NewEntry = () => {
             </div>
           </div>
 
-          {/* Multiple Image Upload */}
           <div>
             <div className="flex justify-between items-center mb-2">
               <label className="block text-sm font-medium text-gray-700">
@@ -361,7 +371,6 @@ const NewEntry = () => {
               </span>
             </div>
             
-            {/* Image preview grid */}
             {imagePreviews.length > 0 && (
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mb-4">
                 {imagePreviews.map((preview, index) => (
@@ -381,7 +390,6 @@ const NewEntry = () => {
                   </div>
                 ))}
                 
-                {/* Add more images button - only show if under max limit */}
                 {imagePreviews.length < MAX_IMAGES && (
                   <label className="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-md p-4 aspect-square cursor-pointer hover:bg-gray-50 transition-colors">
                     <Plus className="h-8 w-8 text-gray-400 mb-2" />
@@ -398,7 +406,6 @@ const NewEntry = () => {
               </div>
             )}
             
-            {/* Upload area - only show if no images yet */}
             {imagePreviews.length === 0 && (
               <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
                 <div className="space-y-1 text-center">
@@ -429,7 +436,6 @@ const NewEntry = () => {
             )}
           </div>
 
-          {/* Save Button */}
           <div className="flex justify-end space-x-3">
             <Button
               variant="outline"
@@ -447,59 +453,44 @@ const NewEntry = () => {
           </div>
         </div>
 
-        {/* Social Sharing Section */}
         <div className="mt-8 bg-gray-50 p-6 rounded-lg border">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-lg font-semibold">Share Your Experience</h2>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={generateAICaption}
-              disabled={isGeneratingCaption}
-            >
-              {isGeneratingCaption ? "Generating..." : "Generate Caption"}
-            </Button>
           </div>
-          
-          {generatedCaption && (
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Caption
-              </label>
-              <Textarea
-                value={generatedCaption}
-                onChange={(e) => setGeneratedCaption(e.target.value)}
-                rows={3}
-                className="w-full mb-2"
-              />
-            </div>
-          )}
-          
-          <div className="flex space-x-4">
-            <Button
-              variant="outline"
-              className="flex-1 bg-[#1877F2] text-white hover:bg-[#1877F2]/90"
-              onClick={() => shareToSocial('Facebook')}
-            >
-              <Share className="mr-2 h-4 w-4" />
-              Facebook
-            </Button>
-            <Button
-              variant="outline"
-              className="flex-1 bg-[#E1306C] text-white hover:bg-[#E1306C]/90"
-              onClick={() => shareToSocial('Instagram')}
-            >
-              <Share className="mr-2 h-4 w-4" />
-              Instagram
-            </Button>
-            <Button
-              variant="outline"
-              className="flex-1 bg-[#000000] text-white hover:bg-[#000000]/90"
-              onClick={() => shareToSocial('TikTok')}
-            >
-              <Share className="mr-2 h-4 w-4" />
-              TikTok
-            </Button>
+
+          <div className="space-y-8">
+            {['Facebook', 'Instagram', 'TikTok'].map((platform) => (
+              <div key={platform} className="border-b pb-8 last:border-b-0">
+                <h3 className="text-lg font-medium mb-4">{platform}</h3>
+                
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div>
+                    <SocialMediaForm
+                      platform={platform as 'Facebook' | 'Instagram' | 'TikTok'}
+                      onUpdate={(data) => handleSocialMediaUpdate(platform as 'Facebook' | 'Instagram' | 'TikTok', data)}
+                    />
+                    
+                    <Button
+                      className="mt-4 w-full"
+                      onClick={() => shareToSocial(platform as 'Facebook' | 'Instagram' | 'TikTok')}
+                    >
+                      Share to {platform}
+                    </Button>
+                  </div>
+                  
+                  <div>
+                    <SocialMediaPreview
+                      platform={platform as 'Facebook' | 'Instagram' | 'TikTok'}
+                      title={platform === 'Facebook' ? socialMediaData.Facebook.title : undefined}
+                      caption={socialMediaData[platform as keyof typeof socialMediaData].caption}
+                      location={socialMediaData[platform as keyof typeof socialMediaData].location}
+                      images={imagePreviews}
+                      hashtags={socialMediaData[platform as keyof typeof socialMediaData].hashtags}
+                    />
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
