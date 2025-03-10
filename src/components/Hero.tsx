@@ -5,7 +5,8 @@ import { Utensils, MessageSquare, Layout } from 'lucide-react';
 
 const Hero = () => {
   return (
-    <section className="py-16 px-6 bg-white">
+    <section className="py-16 px-6 bg-white mt-20">
+      {/* Added mt-20 class above to create space for the fixed header */}
       <div className="max-w-7xl mx-auto">
         {/* Header content */}
         <div className="text-center max-w-3xl mx-auto mb-16">
