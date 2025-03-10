@@ -2,23 +2,23 @@
 import React from 'react';
 
 const ExperiencesGrid = () => {
-  // Array of paths to the food images - using the correct paths with blob URLs
+  // Using placeholder images from Unsplash that will work reliably
   const images = [
-    '/lovable-uploads/6b523868-089f-427c-bd04-8a4e70fb552a.png',
-    '/lovable-uploads/8626e6f7-c80c-4c9d-a419-21f5d7403495.png',
-    '/lovable-uploads/71b99daf-22a6-4c53-98ce-55eaa7798bc7.png',
-    '/lovable-uploads/02d8d9f6-9b24-4a35-988a-686bb47849de.png',
-    '/lovable-uploads/d3a2518b-217d-41a7-aaf6-dfa7639358a7.png',
-    '/lovable-uploads/d7ab5ee4-1b30-4256-97a0-b3b282f18429.png',
-    '/lovable-uploads/2193510c-3766-4025-a958-a4ebad2dcda0.png',
-    '/lovable-uploads/1464b913-2153-4350-94b8-205253915060.png',
-    '/lovable-uploads/33572675-d7fa-4d26-a864-f2cf418a674c.png',
-    '/lovable-uploads/a1d8ef3f-cfb1-4d94-82c4-60d4663ac467.png',
-    '/lovable-uploads/8b9d8ae6-521c-4335-b108-43cef81f0a9d.png',
-    '/lovable-uploads/08602336-a632-47b4-a31a-500b67fc0340.png',
-    '/lovable-uploads/3509b12c-7a0f-4d54-aa43-ec180b2798e3.png',
-    '/lovable-uploads/99f6b3ec-d9e3-4b45-a170-cc5d981565ee.png',
-    '/lovable-uploads/5ac4cc39-d40b-4fe9-92a2-093815b29954.png'
+    'https://images.unsplash.com/photo-1618160702438-9b02ab6515c9',
+    'https://images.unsplash.com/photo-1482938289607-e9573fc25ebb',
+    'https://images.unsplash.com/photo-1500375592092-40eb2168fd21',
+    'https://images.unsplash.com/photo-1506744038136-46273834b3fb',
+    'https://images.unsplash.com/photo-1512621776951-a57141f2eefd',
+    'https://images.unsplash.com/photo-1574484284002-952d92456975',
+    'https://images.unsplash.com/photo-1546069901-ba9599a7e63c',
+    'https://images.unsplash.com/photo-1504674900247-0877df9cc836',
+    'https://images.unsplash.com/photo-1540189549336-e6e99c3679fe',
+    'https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445',
+    'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38',
+    'https://images.unsplash.com/photo-1565958011703-44f9829ba187',
+    'https://images.unsplash.com/photo-1606787366850-de6330128bfc',
+    'https://images.unsplash.com/photo-1414235077428-338989a2e8c0',
+    'https://images.unsplash.com/photo-1543339308-43e59d6b73a6'
   ];
 
   // Food descriptions for accessibility
