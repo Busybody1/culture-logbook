@@ -30,11 +30,6 @@ const Features = () => {
         }} 
         className="absolute inset-0 opacity-5 bg-repeat bg-white" 
       />
-
-      {/* Cultural accent - brush strokes as section divider */}
-      <div className="absolute top-0 left-0 right-0 h-8 overflow-hidden">
-        <div className="w-full h-16 bg-[#FF9344]/10 transform -skew-y-3"></div>
-      </div>
       
       <div className="max-w-7xl mx-auto relative z-10">
         <div className="grid md:grid-cols-3 gap-12">
@@ -48,7 +43,7 @@ const Features = () => {
               }}
             >
               <div className="text-accent mb-4 flex justify-center">
-                <div className="p-3 bg-white rounded-full shadow-md hover:shadow-lg transition-all duration-300">
+                <div className="p-3 bg-gray-100 rounded-full shadow-md hover:shadow-lg transition-all duration-300">
                   {React.cloneElement(feature.icon, {
                     className: "w-8 h-8 text-black"
                   })}
