@@ -1,12 +1,11 @@
+
 import React, { useState } from 'react';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label';
-import { Button } from '@/components/ui/button';
-import { MapPin, Copy, Sparkle } from 'lucide-react';
+import { MapPin } from 'lucide-react';
 import { useClipboard } from '@/hooks/useClipboard';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
+import FormField from '@/components/SocialMediaForm/FormField';
+import { Button } from '@/components/ui/button';
 
 interface SocialMediaFormProps {
   platform: 'Facebook' | 'Instagram' | 'TikTok';
@@ -114,127 +113,51 @@ const SocialMediaForm = ({ platform, onUpdate, diaryData }: SocialMediaFormProps
   return (
     <div className="space-y-4">
       {platform === 'Facebook' && (
-        <div>
-          <Label htmlFor="title">Title</Label>
-          <div className="relative">
-            <Input
-              id="title"
-              name="title"
-              value={formData.title}
-              onChange={handleChange}
-              placeholder="Enter a title for your post..."
-              className="pr-20"
-            />
-            <div className="absolute right-2 top-2.5 flex gap-1">
-              <Button
-                type="button"
-                size="icon"
-                variant="ghost"
-                onClick={() => handleCopy(formData.title, 'Title')}
-              >
-                <Copy className="h-4 w-4" />
-              </Button>
-              <Button
-                type="button"
-                size="icon"
-                variant="ghost"
-                onClick={() => generateWithAI('title')}
-              >
-                <Sparkle className="h-4 w-4" />
-              </Button>
-            </div>
-          </div>
-        </div>
+        <FormField
+          id="title"
+          name="title"
+          label="Title"
+          value={formData.title}
+          onChange={handleChange}
+          placeholder="Enter a title for your post..."
+          onCopy={() => handleCopy(formData.title, 'Title')}
+          onGenerate={() => generateWithAI('title')}
+        />
       )}
 
-      <div>
-        <Label htmlFor="caption">Caption</Label>
-        <div className="relative">
-          <Textarea
-            id="caption"
-            name="caption"
-            value={formData.caption}
-            onChange={handleChange}
-            placeholder="Write your caption..."
-            rows={3}
-            className="pr-20"
-          />
-          <div className="absolute right-2 top-2.5 flex gap-1">
-            <Button
-              type="button"
-              size="icon"
-              variant="ghost"
-              onClick={() => handleCopy(formData.caption, 'Caption')}
-            >
-              <Copy className="h-4 w-4" />
-            </Button>
-            <Button
-              type="button"
-              size="icon"
-              variant="ghost"
-              onClick={() => generateWithAI('caption')}
-            >
-              <Sparkle className="h-4 w-4" />
-            </Button>
-          </div>
-        </div>
-      </div>
+      <FormField
+        id="caption"
+        name="caption"
+        label="Caption"
+        value={formData.caption}
+        onChange={handleChange}
+        placeholder="Write your caption..."
+        isTextarea={true}
+        onCopy={() => handleCopy(formData.caption, 'Caption')}
+        onGenerate={() => generateWithAI('caption')}
+      />
 
-      <div>
-        <Label htmlFor="location">Location</Label>
-        <div className="relative">
-          <MapPin className="absolute left-2 top-3 h-4 w-4 text-gray-500" />
-          <Input
-            id="location"
-            name="location"
-            value={formData.location}
-            onChange={handleChange}
-            className="pl-8 pr-10"
-            placeholder="Add location..."
-          />
-          <Button
-            type="button"
-            size="icon"
-            variant="ghost"
-            className="absolute right-2 top-2"
-            onClick={() => handleCopy(formData.location, 'Location')}
-          >
-            <Copy className="h-4 w-4" />
-          </Button>
-        </div>
-      </div>
+      <FormField
+        id="location"
+        name="location"
+        label="Location"
+        value={formData.location}
+        onChange={handleChange}
+        placeholder="Add location..."
+        icon={<MapPin className="h-4 w-4" />}
+        onCopy={() => handleCopy(formData.location, 'Location')}
+      />
 
-      <div>
-        <Label htmlFor="hashtags">Hashtags</Label>
-        <div className="relative">
-          <Input
-            id="hashtags"
-            name="hashtags"
-            value={formData.hashtags}
-            onChange={handleChange}
-            placeholder="Enter hashtags separated by commas..."
-            className="pr-20"
-          />
-          <div className="absolute right-2 top-2.5 flex gap-1">
-            <Button
-              type="button"
-              size="icon"
-              variant="ghost"
-              onClick={() => handleCopy(formData.hashtags, 'Hashtags')}
-            >
-              <Copy className="h-4 w-4" />
-            </Button>
-            <Button
-              type="button"
-              size="icon"
-              variant="ghost"
-              onClick={() => generateWithAI('hashtags')}
-            >
-              <Sparkle className="h-4 w-4" />
-            </Button>
-          </div>
-        </div>
-      </div>
+      <FormField
+        id="hashtags"
+        name="hashtags"
+        label="Hashtags"
+        value={formData.hashtags}
+        onChange={handleChange}
+        placeholder="Enter hashtags separated by commas..."
+        onCopy={() => handleCopy(formData.hashtags, 'Hashtags')}
+        onGenerate={() => generateWithAI('hashtags')}
+      />
     </div>
   );
 };
