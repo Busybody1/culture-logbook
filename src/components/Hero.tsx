@@ -18,8 +18,8 @@ const Hero = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
           {/* Card 1 */}
           <div className="text-white p-8 rounded-xl bg-[#ff9344] flex flex-col h-full">
-            <h3 className="text-xl font-bold mb-3">Start Documenting Your Culinary Adventures</h3>
-            <p className="mb-6 text-gray-950 flex-grow">
+            <h3 className="text-xl font-bold mb-3 text-black">Start Documenting Your Culinary Adventures</h3>
+            <p className="mb-6 flex-grow text-gray-600">
               Craft compelling food journals from your experiences, bringing your gastronomic narratives to life.
             </p>
             <div>
