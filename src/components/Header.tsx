@@ -11,7 +11,7 @@ const Header = () => {
             <img 
               src="/lovable-uploads/56cc297b-dc89-4bd5-9255-dd56465e1c98.png" 
               alt="The Culture Vulture" 
-              className="h-12 hover:scale-105 transition-transform duration-300"
+              className="h-12 hover:scale-105 transition-transform duration-300 border-5 border-white rounded-full shadow-md"
             />
           </a>
         </div>

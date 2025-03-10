@@ -19,6 +19,9 @@ export default {
       },
     },
     extend: {
+      borderWidth: {
+        '5': '5px',
+      },
       colors: {
         header: "#CE19BC",
         accent: "#27AD95",
