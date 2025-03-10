@@ -10,6 +10,7 @@ import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 import DiaryEntries from "./pages/DiaryEntries";
 import NewEntry from "./pages/NewEntry";
+import EditEntry from "./pages/EditEntry";
 
 const queryClient = new QueryClient();
 
@@ -25,6 +26,7 @@ const App = () => (
             <Route path="/auth" element={<Auth />} />
             <Route path="/diary" element={<DiaryEntries />} />
             <Route path="/new-entry" element={<NewEntry />} />
+            <Route path="/edit-entry/:id" element={<EditEntry />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
