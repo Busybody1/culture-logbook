@@ -276,14 +276,6 @@ const DiaryEntries = () => {
                     <Button 
                       variant="ghost" 
                       size="sm"
-                      onClick={() => handleShare(entry.id)}
-                    >
-                      <Share2 className="h-4 w-4 mr-1" />
-                      Share
-                    </Button>
-                    <Button 
-                      variant="ghost" 
-                      size="sm"
                       onClick={() => handleDelete(entry.id)}
                       className="text-red-500 hover:text-red-700 hover:bg-red-50"
                     >
@@ -335,24 +327,14 @@ const DiaryEntries = () => {
                           </Badge>
                         ))}
                       </div>
-                      <div className="flex space-x-2">
-                        <Button 
-                          variant="ghost" 
-                          size="sm"
-                          onClick={() => handleShare(entry.id)}
-                        >
-                          <Share2 className="h-4 w-4 mr-1" />
-                          Share
-                        </Button>
-                        <Button 
-                          variant="ghost" 
-                          size="sm"
-                          onClick={() => handleDelete(entry.id)}
-                          className="text-red-500 hover:text-red-700 hover:bg-red-50"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </div>
+                      <Button 
+                        variant="ghost" 
+                        size="sm"
+                        onClick={() => handleDelete(entry.id)}
+                        className="text-red-500 hover:text-red-700 hover:bg-red-50"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
                     </div>
                   </div>
                 </div>
