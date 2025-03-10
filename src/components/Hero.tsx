@@ -22,7 +22,7 @@ const Hero = () => {
             <p className="mb-6 text-gray-950">
               Craft compelling food journals from your experiences, bringing your gastronomic narratives to life.
             </p>
-            <Button variant="outline" className="text-white border-white hover:bg-white hover:text-black">
+            <Button variant="outline" className="text-black border-black hover:bg-black hover:text-white">
               Get Started Now
             </Button>
           </div>
