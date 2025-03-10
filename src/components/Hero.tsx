@@ -30,17 +30,13 @@ const Hero = () => {
           {/* Card 2 */}
           <div className="p-8 rounded-xl bg-[#ff9344]/[0.44]">
             <h3 className="text-xl font-bold mb-3">Save Your Precious Moments</h3>
-            <p className="text-gray-600 mb-6">
-              Craft delicious recipes from textual descriptions, bringing your food ideas to reality.
-            </p>
-            <Button variant="outline" className="text-black border-black">
-              Try OpenAI Now
-            </Button>
+            <p className="text-gray-600 mb-6">Tag, rate, and arrange your experiences so they will be remembered for ever.</p>
+            <Button variant="outline" className="text-black border-black">Try It Now</Button>
           </div>
 
           {/* Card 3 */}
           <div className="bg-white border border-gray-200 p-8 rounded-xl overflow-hidden relative">
-            <img src="/lovable-uploads/557edcd2-bac8-4d4f-a070-6a2ed372847a.png" alt="Person enjoying food" className="absolute right-0 top-0 h-full w-2/3 object-cover object-left" />
+            
             <div className="relative z-10 w-1/2">
               <h3 className="text-xl font-bold mb-3">Share Your Journey</h3>
               <p className="text-gray-600">
