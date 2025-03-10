@@ -1,24 +1,23 @@
-
 import React from 'react';
 
 const ExperiencesGrid = () => {
-  // Array of real food images
+  // Array of real food images - removing the "public/" prefix
   const images = [
-    'public/lovable-uploads/892677d8-0b11-4aee-b574-a6cbb8cab946.png',
-    'public/lovable-uploads/95eadac5-cdaa-4dbd-92f3-d283df8670b6.png',
-    'public/lovable-uploads/f0ff1966-096f-4971-99ae-35e70ddd70d5.png',
-    'public/lovable-uploads/ea061cef-c254-458e-8da3-245a46051fe0.png',
-    'public/lovable-uploads/02c95d1b-cefd-4ebc-be1c-3666d95abf0f.png',
-    'public/lovable-uploads/a7f60adf-6825-4354-912f-d7dfce083f90.png',
-    'public/lovable-uploads/c614be28-8f18-4716-b255-aaa648b4300a.png',
-    'public/lovable-uploads/935c5872-0469-4b88-9b9d-cca99ddb3ec8.png',
-    'public/lovable-uploads/b1658ed1-5da9-4f6b-971a-a0f40f451d84.png',
-    'public/lovable-uploads/a1510407-8d50-4fa6-9949-c96d09e441b3.png',
-    'public/lovable-uploads/b8c1f51f-7252-4b30-8de1-d4d72ff985f5.png',
-    'public/lovable-uploads/b6f7ede3-c167-430e-9881-ec6d41f531e0.png',
-    'public/lovable-uploads/6376c924-1f8a-46f9-9c0d-82e3f1f7397a.png',
-    'public/lovable-uploads/a3a7a9ce-5e5b-49f1-84b7-8c6240570117.png',
-    'public/lovable-uploads/6c574d24-5a48-46bc-bada-c580ffa34357.png'
+    '/lovable-uploads/892677d8-0b11-4aee-b574-a6cbb8cab946.png',
+    '/lovable-uploads/95eadac5-cdaa-4dbd-92f3-d283df8670b6.png',
+    '/lovable-uploads/f0ff1966-096f-4971-99ae-35e70ddd70d5.png',
+    '/lovable-uploads/ea061cef-c254-458e-8da3-245a46051fe0.png',
+    '/lovable-uploads/02c95d1b-cefd-4ebc-be1c-3666d95abf0f.png',
+    '/lovable-uploads/a7f60adf-6825-4354-912f-d7dfce083f90.png',
+    '/lovable-uploads/c614be28-8f18-4716-b255-aaa648b4300a.png',
+    '/lovable-uploads/935c5872-0469-4b88-9b9d-cca99ddb3ec8.png',
+    '/lovable-uploads/b1658ed1-5da9-4f6b-971a-a0f40f451d84.png',
+    '/lovable-uploads/a1510407-8d50-4fa6-9949-c96d09e441b3.png',
+    '/lovable-uploads/b8c1f51f-7252-4b30-8de1-d4d72ff985f5.png',
+    '/lovable-uploads/b6f7ede3-c167-430e-9881-ec6d41f531e0.png',
+    '/lovable-uploads/6376c924-1f8a-46f9-9c0d-82e3f1f7397a.png',
+    '/lovable-uploads/a3a7a9ce-5e5b-49f1-84b7-8c6240570117.png',
+    '/lovable-uploads/6c574d24-5a48-46bc-bada-c580ffa34357.png'
   ];
   
   // Food descriptions for accessibility
