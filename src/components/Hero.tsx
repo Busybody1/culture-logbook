@@ -45,8 +45,8 @@ const Hero = () => {
               <p className="text-gray-600 mb-6">Turn your favorite food and travel memories into shareable stories. With one click, post your adventures on social media!</p>
             </div>
             <div className="flex space-x-2">
-              <Button variant="outline" className="text-black border-black hover:bg-black hover:text-white">Join Community</Button>
-              <Button variant="outline" className="text-black border-black hover:bg-black hover:text-white">Share Now</Button>
+              <Button variant="outline" className="text-black border-black hover:bg-black hover:text-white">Log Your Memories</Button>
+              
             </div>
           </div>
         </div>
