@@ -1,8 +1,11 @@
 
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 
 const Header = () => {
+  const navigate = useNavigate();
+
   return (
     <header className="py-4 px-6 fixed w-full top-0 z-50 bg-gradient-to-r from-header to-header/90">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
@@ -19,11 +22,13 @@ const Header = () => {
           <Button 
             variant="outline" 
             className="text-[#27AD95] border-[#27AD95] bg-white hover:bg-[#27AD95] hover:text-white transition-all duration-300 hover:scale-105 transform"
+            onClick={() => navigate('/auth')}
           >
             Log in
           </Button>
           <Button 
             className="bg-[#27AD95] text-white hover:bg-[#27AD95]/90 transition-all duration-300 hover:scale-105 transform"
+            onClick={() => navigate('/auth?tab=signup')}
           >
             Sign up
           </Button>

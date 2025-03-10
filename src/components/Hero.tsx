@@ -1,7 +1,11 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from './ui/button';
 import { Utensils, MessageSquare, Layout, Book, Share2, Palette } from 'lucide-react';
+
 const Hero = () => {
+  const navigate = useNavigate();
+
   return <section className="py-16 px-6 bg-white mt-20">
       {/* Added mt-20 class above to create space for the fixed header */}
       <div className="max-w-7xl mx-auto">
@@ -23,7 +27,11 @@ const Hero = () => {
               Craft compelling food journals from your experiences, bringing your gastronomic narratives to life.
             </p>
             <div>
-              <Button variant="outline" className="text-black border-black hover:bg-black hover:text-white">
+              <Button 
+                variant="outline" 
+                className="text-black border-black hover:bg-black hover:text-white"
+                onClick={() => navigate('/auth?tab=signup')}
+              >
                 Get Started Now
               </Button>
             </div>
@@ -34,21 +42,30 @@ const Hero = () => {
             <h3 className="text-xl font-bold mb-3">Save Your Precious Moments</h3>
             <p className="text-gray-600 mb-6 flex-grow">Tag, rate, and organize your experiences so you never forget them.</p>
             <div>
-              <Button variant="outline" className="text-black border-black hover:bg-black hover:text-white">Try It Now</Button>
+              <Button 
+                variant="outline" 
+                className="text-black border-black hover:bg-black hover:text-white"
+                onClick={() => navigate('/auth?tab=signup')}
+              >
+                Try It Now
+              </Button>
             </div>
           </div>
 
           {/* Card 3 */}
           <div className="bg-white border border-gray-200 p-8 rounded-xl overflow-hidden relative flex flex-col h-full">
             <div className="relative z-10 flex-grow">
-              <h3 className="text-xl font-bold mb-3">Share Your Journey
-
-            </h3>
+              <h3 className="text-xl font-bold mb-3">Share Your Journey</h3>
               <p className="text-gray-600 mb-6">Turn your favorite food and travel memories into shareable stories. With one click, post your adventures on social media!</p>
             </div>
             <div className="flex space-x-2">
-              <Button variant="outline" className="text-black border-black hover:bg-black hover:text-white">Log Your Memories</Button>
-              
+              <Button 
+                variant="outline" 
+                className="text-black border-black hover:bg-black hover:text-white"
+                onClick={() => navigate('/auth?tab=signup')}
+              >
+                Log Your Memories
+              </Button>
             </div>
           </div>
         </div>
@@ -124,4 +141,5 @@ const Hero = () => {
       </div>
     </section>;
 };
+
 export default Hero;

@@ -19,7 +19,7 @@ const Features = () => {
 
   return <section className="py-10 px-6 bg-white relative">      
       <div className="max-w-7xl mx-auto relative z-10">
-        <div className="grid md:grid-cols-3 gap-12 mb-20">
+        <div className="grid md:grid-cols-3 gap-12 mb-10">
           {features.map((feature, index) => <div key={index} className="text-center p-8 rounded-xl bg-gradient-to-b from-gray-100 to-gray-50 shadow-lg transition-all duration-500 hover:scale-105 hover:bg-gradient-to-b hover:from-gray-50 hover:to-white hover:shadow-xl" style={{
           animation: `float 6s ease-in-out ${index * 1}s infinite`,
           boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05), inset 0 -3px 0 rgba(0, 0, 0, 0.1)'
