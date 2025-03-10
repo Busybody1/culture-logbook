@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -6,7 +7,7 @@ import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
-import { CalendarIcon, Star, StarOff, Image, X, Plus } from 'lucide-react';
+import { CalendarIcon, Star, StarOff, Image, X, Plus, Sparkle } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 
@@ -165,17 +166,37 @@ const EntryForm: React.FC<EntryFormProps> = ({
       </div>
 
       <div>
-        <label htmlFor="notes" className="block text-sm font-medium text-gray-700 mb-1">
-          Notes/Experience
-        </label>
+        <div className="flex justify-between items-center mb-1">
+          <label htmlFor="notes" className="block text-sm font-medium text-gray-700">
+            Notes/Experience
+          </label>
+          <Button
+            type="button"
+            onClick={generateAICaption}
+            disabled={isGeneratingCaption || !notes.trim()}
+            size="sm"
+            variant="outline"
+            className="h-7 gap-1 text-xs"
+          >
+            <Sparkle className="h-3 w-3" />
+            {isGeneratingCaption ? 'Generating...' : 'Enhance with AI'}
+          </Button>
+        </div>
         <Textarea
           id="notes"
-          placeholder={isRestaurant ? "Describe your dining experience..." : "Share your thoughts about the exhibition..."}
+          placeholder={isRestaurant 
+            ? "Describe your dining experience or add keywords for AI to expand..." 
+            : "Share your thoughts about the exhibition or add keywords for AI to expand..."}
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
           rows={5}
           className="w-full"
         />
+        {isGeneratingCaption && (
+          <p className="text-xs text-muted-foreground mt-1 animate-pulse">
+            AI is enhancing your notes...
+          </p>
+        )}
       </div>
 
       <div>

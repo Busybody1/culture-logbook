@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from './use-toast';
@@ -126,31 +127,44 @@ export const useDiaryEntry = () => {
   };
 
   const generateAICaption = async () => {
+    if (!notes.trim()) {
+      toast({
+        title: "Input needed",
+        description: "Please enter some keywords or a brief description first.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
     setIsGeneratingCaption(true);
     
     try {
       const { data, error } = await supabase.functions.invoke('generate-with-groq', {
         body: { 
-          prompt: `Write a caption for this ${isRestaurant ? 'restaurant' : 'museum'} visit: ${title}. Include relevant details and make it engaging.`,
-          type: 'caption'
+          prompt: `I'm writing about my ${isRestaurant ? 'restaurant' : 'museum'} experience and want to expand on these notes or keywords: "${notes}". 
+                  Please create a coherent, engaging description that incorporates these words/phrases.
+                  Use simple, natural language and personal perspective (first-person).
+                  Focus on sensory details and emotions.
+                  Keep it approximately 3-4 sentences.`,
+          type: 'experience'
         }
       });
 
       if (error) throw error;
 
-      const generatedCaption = data.generatedText;
-      setGeneratedCaption(generatedCaption);
-      setNotes(prev => prev ? prev : generatedCaption);
+      const enhancedText = data.generatedText;
+      setGeneratedCaption(enhancedText);
+      setNotes(enhancedText);
       
       toast({
-        title: "Caption generated",
-        description: "AI has generated a caption for your entry.",
+        title: "AI Enhanced",
+        description: "Your notes have been expanded into a coherent description.",
       });
     } catch (error) {
-      console.error('Error generating caption:', error);
+      console.error('Error generating enhanced description:', error);
       toast({
         title: "Error",
-        description: "Failed to generate a caption. Please try again.",
+        description: "Failed to enhance your notes. Please try again.",
         variant: "destructive",
       });
     } finally {

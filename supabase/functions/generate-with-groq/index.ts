@@ -28,6 +28,9 @@ serve(async (req) => {
       case 'title':
         systemPrompt = "Generate a short, catchy title that captures the essence of this content. Keep it under 60 characters.";
         break;
+      case 'experience':
+        systemPrompt = "You are a diary assistant helping users create coherent descriptions from their notes or keywords. Transform their input into a well-written, personal experience using simple language. Focus on sensory details and emotions. Keep it concise yet vivid.";
+        break;
       default:
         systemPrompt = "Generate engaging content based on the provided context.";
     }

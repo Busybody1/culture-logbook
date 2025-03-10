@@ -17,6 +17,7 @@ interface FormFieldProps {
   icon?: React.ReactNode;
   onCopy: () => void;
   onGenerate?: () => void;
+  isGenerating?: boolean;
   className?: string;
 }
 
@@ -31,13 +32,29 @@ const FormField = ({
   icon,
   onCopy,
   onGenerate,
+  isGenerating = false,
   className = ''
 }: FormFieldProps) => {
   const InputComponent = isTextarea ? Textarea : Input;
   
   return (
     <div className={className}>
-      <Label htmlFor={id}>{label}</Label>
+      <Label htmlFor={id} className="flex justify-between">
+        <span>{label}</span>
+        {onGenerate && (
+          <Button
+            type="button"
+            size="sm"
+            variant="outline"
+            onClick={onGenerate}
+            disabled={isGenerating}
+            className="h-7 gap-1 text-xs"
+          >
+            <Sparkle className="h-3 w-3" />
+            {isGenerating ? 'Generating...' : 'AI Generate'}
+          </Button>
+        )}
+      </Label>
       <div className="relative">
         {icon && <div className="absolute left-2 top-3 text-gray-500">{icon}</div>}
         <InputComponent
@@ -58,16 +75,6 @@ const FormField = ({
           >
             <Copy className="h-4 w-4" />
           </Button>
-          {onGenerate && (
-            <Button
-              type="button"
-              size="icon"
-              variant="ghost"
-              onClick={onGenerate}
-            >
-              <Sparkle className="h-4 w-4" />
-            </Button>
-          )}
         </div>
       </div>
     </div>
