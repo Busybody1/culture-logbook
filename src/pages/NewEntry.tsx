@@ -14,6 +14,7 @@ import { toast } from '@/hooks/use-toast';
 import Header from '@/components/Header';
 import SocialMediaPreview from '@/components/SocialMediaPreview';
 import SocialMediaForm from '@/components/SocialMediaForm';
+import SocialMediaSelector from '@/components/SocialMediaSelector';
 
 const PREDEFINED_TAGS = [
   'Italian', 'Street Food', 'Fine Dining', 'Modern Art', 'History Museum', 
@@ -55,6 +56,8 @@ const NewEntry = () => {
       hashtags: [],
     }
   });
+  const [selectedPlatform, setSelectedPlatform] = useState<'Facebook' | 'Instagram' | 'TikTok' | null>(null);
+  const [showPostPreview, setShowPostPreview] = useState(false);
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -190,6 +193,23 @@ const NewEntry = () => {
     toast({
       title: `Shared to ${platform}!`,
       description: "Your entry has been shared.",
+    });
+  };
+
+  const handleGeneratePost = () => {
+    if (!selectedPlatform) {
+      toast({
+        title: "Please select a platform",
+        description: "Choose Facebook, Instagram, or TikTok to generate a post",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setShowPostPreview(true);
+    toast({
+      title: "Post Generated!",
+      description: `Your ${selectedPlatform} post has been generated`,
     });
   };
 
@@ -458,40 +478,51 @@ const NewEntry = () => {
             <h2 className="text-lg font-semibold">Share Your Experience</h2>
           </div>
 
-          <div className="space-y-8">
-            {['Facebook', 'Instagram', 'TikTok'].map((platform) => (
-              <div key={platform} className="border-b pb-8 last:border-b-0">
-                <h3 className="text-lg font-medium mb-4">{platform}</h3>
+          <SocialMediaSelector
+            selectedPlatform={selectedPlatform}
+            onSelectPlatform={setSelectedPlatform}
+          />
+
+          {selectedPlatform && (
+            <div className="grid md:grid-cols-2 gap-6">
+              <div>
+                <SocialMediaForm
+                  platform={selectedPlatform}
+                  onUpdate={(data) => {
+                    setSocialMediaData(prev => ({
+                      ...prev,
+                      [selectedPlatform]: data
+                    }));
+                  }}
+                  diaryData={{
+                    title,
+                    notes,
+                    tags: selectedTags,
+                  }}
+                />
                 
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div>
-                    <SocialMediaForm
-                      platform={platform as 'Facebook' | 'Instagram' | 'TikTok'}
-                      onUpdate={(data) => handleSocialMediaUpdate(platform as 'Facebook' | 'Instagram' | 'TikTok', data)}
-                    />
-                    
-                    <Button
-                      className="mt-4 w-full"
-                      onClick={() => shareToSocial(platform as 'Facebook' | 'Instagram' | 'TikTok')}
-                    >
-                      Share to {platform}
-                    </Button>
-                  </div>
-                  
-                  <div>
-                    <SocialMediaPreview
-                      platform={platform as 'Facebook' | 'Instagram' | 'TikTok'}
-                      title={platform === 'Facebook' ? socialMediaData.Facebook.title : undefined}
-                      caption={socialMediaData[platform as keyof typeof socialMediaData].caption}
-                      location={socialMediaData[platform as keyof typeof socialMediaData].location}
-                      images={imagePreviews}
-                      hashtags={socialMediaData[platform as keyof typeof socialMediaData].hashtags}
-                    />
-                  </div>
-                </div>
+                <Button
+                  className="mt-4 w-full"
+                  onClick={handleGeneratePost}
+                >
+                  Generate Post
+                </Button>
               </div>
-            ))}
-          </div>
+              
+              {showPostPreview && (
+                <div>
+                  <SocialMediaPreview
+                    platform={selectedPlatform}
+                    title={selectedPlatform === 'Facebook' ? socialMediaData.Facebook.title : undefined}
+                    caption={socialMediaData[selectedPlatform].caption}
+                    location={socialMediaData[selectedPlatform].location}
+                    images={imagePreviews}
+                    hashtags={socialMediaData[selectedPlatform].hashtags}
+                  />
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </div>
