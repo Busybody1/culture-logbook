@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 
 const Header = () => {
   return (
-    <header className="bg-header py-4 px-6 fixed w-full top-0 z-50">
+    <header className="py-4 px-6 fixed w-full top-0 z-50 bg-gradient-to-r from-header to-header/90">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         <div className="flex items-center">
           <a href="/" className="flex items-center">
