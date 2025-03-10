@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from './use-toast';
@@ -130,26 +129,23 @@ export const useDiaryEntry = () => {
     setIsGeneratingCaption(true);
     
     try {
-      // This is a mock function, in a real app you'd call an AI API
-      setTimeout(() => {
-        const captions = [
-          "Exploring the vibrant flavors of authentic cuisine in a cozy atmosphere.",
-          "An unforgettable culinary journey through traditional recipes with a modern twist.",
-          "Immersed in the rich history and cultural significance of ancient artifacts.",
-          "A fascinating exhibition showcasing the evolution of artistic expression across centuries."
-        ];
-        
-        const randomCaption = captions[Math.floor(Math.random() * captions.length)];
-        setGeneratedCaption(randomCaption);
-        setNotes(prev => prev ? prev : randomCaption);
-        
-        toast({
-          title: "Caption generated",
-          description: "AI has generated a caption for your entry.",
-        });
-        
-        setIsGeneratingCaption(false);
-      }, 1500);
+      const { data, error } = await supabase.functions.invoke('generate-with-groq', {
+        body: { 
+          prompt: `Write a caption for this ${isRestaurant ? 'restaurant' : 'museum'} visit: ${title}. Include relevant details and make it engaging.`,
+          type: 'caption'
+        }
+      });
+
+      if (error) throw error;
+
+      const generatedCaption = data.generatedText;
+      setGeneratedCaption(generatedCaption);
+      setNotes(prev => prev ? prev : generatedCaption);
+      
+      toast({
+        title: "Caption generated",
+        description: "AI has generated a caption for your entry.",
+      });
     } catch (error) {
       console.error('Error generating caption:', error);
       toast({
@@ -157,6 +153,7 @@ export const useDiaryEntry = () => {
         description: "Failed to generate a caption. Please try again.",
         variant: "destructive",
       });
+    } finally {
       setIsGeneratingCaption(false);
     }
   };

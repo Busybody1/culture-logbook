@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -7,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { MapPin, Copy, Sparkle } from 'lucide-react';
 import { useClipboard } from '@/hooks/useClipboard';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 
 interface SocialMediaFormProps {
   platform: 'Facebook' | 'Instagram' | 'TikTok';
@@ -62,38 +62,53 @@ const SocialMediaForm = ({ platform, onUpdate, diaryData }: SocialMediaFormProps
   const generateWithAI = async (field: 'title' | 'caption' | 'hashtags') => {
     if (!diaryData) return;
 
-    let generatedText = '';
-    
-    // Simulate AI generation based on diary data
+    let prompt = '';
     switch (field) {
       case 'title':
-        generatedText = `My experience at ${diaryData.title}`;
+        prompt = `Create a title for a ${platform} post about: ${diaryData.title}. Context: ${diaryData.notes}`;
         break;
       case 'caption':
-        generatedText = `${diaryData.notes.substring(0, 100)}...`;
+        prompt = `Write a ${platform} caption about: ${diaryData.title}. Details: ${diaryData.notes}`;
         break;
       case 'hashtags':
-        generatedText = diaryData.tags.map(tag => tag.replace(/\s+/g, '')).join(', ');
+        prompt = `Generate relevant hashtags for a ${platform} post about: ${diaryData.title}. Context: ${diaryData.notes}`;
         break;
     }
 
-    setFormData(prev => ({
-      ...prev,
-      [field]: generatedText
-    }));
+    try {
+      const { data, error } = await supabase.functions.invoke('generate-with-groq', {
+        body: { prompt, type: field }
+      });
 
-    onUpdate({
-      ...formData,
-      [field]: generatedText,
-      hashtags: field === 'hashtags' 
-        ? generatedText.split(',').map(tag => tag.trim().replace('#', ''))
-        : formData.hashtags.split(',').map(tag => tag.trim().replace('#', ''))
-    });
+      if (error) throw error;
 
-    toast({
-      title: "Generated!",
-      description: `${field.charAt(0).toUpperCase() + field.slice(1)} generated successfully`,
-    });
+      const generatedText = data.generatedText;
+
+      setFormData(prev => ({
+        ...prev,
+        [field]: generatedText
+      }));
+
+      onUpdate({
+        ...formData,
+        [field]: generatedText,
+        hashtags: field === 'hashtags' 
+          ? generatedText.split(',').map(tag => tag.trim().replace('#', ''))
+          : formData.hashtags.split(',').map(tag => tag.trim().replace('#', ''))
+      });
+
+      toast({
+        title: "Generated!",
+        description: `${field.charAt(0).toUpperCase() + field.slice(1)} generated successfully with AI`,
+      });
+    } catch (error) {
+      console.error('Error generating content:', error);
+      toast({
+        title: "Error",
+        description: "Failed to generate content. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
