@@ -25,7 +25,7 @@ serve(async (req) => {
         systemPrompt = "You are a social media expert. Generate relevant and trending hashtags for this content. Return only the hashtags with # symbols, like '#example #another', separated by spaces. Format each hashtag with the # symbol and no spaces between words.";
         break;
       case 'caption':
-        systemPrompt = "You are a social media content writer. Generate an engaging and natural-sounding caption for this content. Keep it concise and appealing.";
+        systemPrompt = "You are a social media content writer. Generate an engaging and natural-sounding caption for this content. Keep it concise and appealing. Do not include any hashtags in the caption as they will be generated separately.";
         break;
       case 'title':
         systemPrompt = "Generate a short, catchy title that captures the essence of this content. Keep it under 60 characters.";

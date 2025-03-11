@@ -45,22 +45,28 @@ const SocialMediaForm = ({ platform, onUpdate, diaryData }: SocialMediaFormProps
 
     if (name === 'hashtags') {
       // Convert hashtags string to array, keeping the # if present
-      const hashtagsArray = value.split(/[\s,]+/).filter(tag => tag.trim() !== '').map(tag => {
-        return tag.startsWith('#') ? tag.substring(1) : tag;
-      });
+      const hashtagsArray = value.split(/[\s,]+/)
+        .filter(tag => tag.trim() !== '')
+        .map(tag => tag.startsWith('#') ? tag.substring(1) : tag);
       
       onUpdate({
         ...formData,
         hashtags: hashtagsArray,
-        [name]: value
+        caption: formData.caption,
+        title: formData.title,
+        location: formData.location
       });
     } else {
+      const hashtagsArray = formData.hashtags.split(/[\s,]+/)
+        .filter(tag => tag.trim() !== '')
+        .map(tag => tag.startsWith('#') ? tag.substring(1) : tag);
+      
       onUpdate({
         ...formData,
-        hashtags: formData.hashtags.split(/[\s,]+/).filter(tag => tag.trim() !== '').map(tag => {
-          return tag.startsWith('#') ? tag.substring(1) : tag;
-        }),
-        [name]: value
+        hashtags: hashtagsArray,
+        caption: name === 'caption' ? value : formData.caption,
+        title: name === 'title' ? value : formData.title,
+        location: name === 'location' ? value : formData.location
       });
     }
   };
@@ -86,7 +92,7 @@ const SocialMediaForm = ({ platform, onUpdate, diaryData }: SocialMediaFormProps
         prompt = `Create a title for a ${platform} post about: ${diaryData.title}. Context: ${diaryData.notes}`;
         break;
       case 'caption':
-        prompt = `Write a ${platform} caption about: ${diaryData.title}. Details: ${diaryData.notes}`;
+        prompt = `Write a ${platform} caption about: ${diaryData.title}. Details: ${diaryData.notes}. Do not include any hashtags.`;
         break;
       case 'hashtags':
         prompt = `Generate relevant hashtags for a ${platform} post about: ${diaryData.title}. Context: ${diaryData.notes}`;
@@ -101,30 +107,34 @@ const SocialMediaForm = ({ platform, onUpdate, diaryData }: SocialMediaFormProps
       if (error) throw error;
 
       const generatedText = data.generatedText;
-
       setFormData(prev => ({
         ...prev,
         [field]: generatedText
       }));
 
       if (field === 'hashtags') {
-        // For hashtags, we need to convert the string with # symbols to an array without # symbols
-        const hashtagsArray = generatedText.split(/[\s,]+/).filter(tag => tag.trim() !== '').map(tag => {
-          return tag.startsWith('#') ? tag.substring(1) : tag;
-        });
+        const hashtagsArray = generatedText.split(/[\s,]+/)
+          .filter(tag => tag.trim() !== '')
+          .map(tag => tag.startsWith('#') ? tag.substring(1) : tag);
         
         onUpdate({
           ...formData,
           hashtags: hashtagsArray,
-          [field]: generatedText
+          title: formData.title,
+          caption: formData.caption,
+          location: formData.location
         });
       } else {
+        const hashtagsArray = formData.hashtags.split(/[\s,]+/)
+          .filter(tag => tag.trim() !== '')
+          .map(tag => tag.startsWith('#') ? tag.substring(1) : tag);
+        
         onUpdate({
           ...formData,
-          [field]: generatedText,
-          hashtags: formData.hashtags.split(/[\s,]+/).filter(tag => tag.trim() !== '').map(tag => {
-            return tag.startsWith('#') ? tag.substring(1) : tag;
-          })
+          hashtags: hashtagsArray,
+          title: field === 'title' ? generatedText : formData.title,
+          caption: field === 'caption' ? generatedText : formData.caption,
+          location: formData.location
         });
       }
 
