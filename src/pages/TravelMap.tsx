@@ -7,6 +7,8 @@ import Header from '@/components/Header';
 import { Button } from '@/components/ui/button';
 import WorldMap from '@/components/map/WorldMap';
 import { toast } from '@/hooks/use-toast';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { MapIcon } from 'lucide-react';
 
 interface Entry {
   id: string;
@@ -73,11 +75,14 @@ const TravelMap = () => {
   }, [user]);
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-gray-50">
       <Header />
       <div className="pt-24 pb-10 px-4 md:px-6 max-w-7xl mx-auto">
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold text-gray-900">My Travels</h1>
+          <div className="flex items-center gap-2">
+            <MapIcon className="h-6 w-6 text-[#FF9344]" />
+            <h1 className="text-2xl font-bold text-gray-900">My Travels</h1>
+          </div>
           <Button
             onClick={() => navigate('/diary')}
             variant="outline"
@@ -93,55 +98,68 @@ const TravelMap = () => {
         ) : user ? (
           entries.length > 0 ? (
             <div className="space-y-8">
-              <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
-                <WorldMap 
-                  countries={Object.keys(groupedEntries)} 
-                  entries={groupedEntries} 
-                />
-              </div>
+              <Card className="border-0 shadow-sm overflow-hidden">
+                <CardContent className="p-0">
+                  <WorldMap 
+                    countries={Object.keys(groupedEntries)} 
+                    entries={groupedEntries} 
+                  />
+                </CardContent>
+              </Card>
               
               <div className="space-y-4">
-                <h2 className="text-xl font-semibold text-gray-800">Countries Visited</h2>
+                <h2 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
+                  <span className="h-5 w-1 bg-[#FF9344] rounded-full"></span>
+                  Countries You've Visited
+                </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {Object.entries(groupedEntries).map(([country, countryEntries]) => (
-                    <div key={country} className="bg-white rounded-lg shadow-sm border overflow-hidden">
-                      <div className="p-4 border-b">
-                        <h3 className="text-lg font-medium">{country}</h3>
-                        <p className="text-sm text-gray-500">{countryEntries.length} {countryEntries.length === 1 ? 'entry' : 'entries'}</p>
-                      </div>
-                      <div className="p-4 grid grid-cols-3 gap-2">
-                        {countryEntries.slice(0, 3).map(entry => (
-                          <div 
-                            key={entry.id} 
-                            className="aspect-square rounded-md overflow-hidden cursor-pointer"
-                            onClick={() => navigate(`/edit-entry/${entry.id}`)}
-                          >
-                            {entry.image_url ? (
-                              <img 
-                                src={entry.image_url} 
-                                alt={entry.title} 
-                                className="w-full h-full object-cover"
-                              />
-                            ) : (
-                              <div className="w-full h-full bg-gray-100 flex items-center justify-center">
-                                <span className="text-xs text-gray-400">No image</span>
+                    <Card key={country} className="overflow-hidden hover:shadow-md transition-shadow">
+                      <CardHeader className="pb-2">
+                        <CardTitle className="text-lg">{country}</CardTitle>
+                        <CardDescription>{countryEntries.length} {countryEntries.length === 1 ? 'entry' : 'entries'}</CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="grid grid-cols-3 gap-2">
+                          {countryEntries.slice(0, 3).map(entry => (
+                            <div 
+                              key={entry.id} 
+                              className="aspect-square rounded-md overflow-hidden cursor-pointer group relative"
+                              onClick={() => navigate(`/edit-entry/${entry.id}`)}
+                            >
+                              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity z-10" />
+                              
+                              {entry.image_url ? (
+                                <img 
+                                  src={entry.image_url} 
+                                  alt={entry.title} 
+                                  className="w-full h-full object-cover"
+                                />
+                              ) : (
+                                <div className="w-full h-full bg-gray-100 flex items-center justify-center">
+                                  <span className="text-xs text-gray-400">No image</span>
+                                </div>
+                              )}
+                              
+                              <div className="absolute bottom-1 left-1 right-1 text-white text-xs opacity-0 group-hover:opacity-100 transition-opacity z-20 truncate">
+                                {entry.title}
                               </div>
-                            )}
-                          </div>
-                        ))}
-                        {countryEntries.length > 3 && (
-                          <div 
-                            className="aspect-square rounded-md overflow-hidden bg-gray-100 flex items-center justify-center cursor-pointer"
-                            onClick={() => {
-                              // Filter diary entries by this country
-                              navigate('/diary', { state: { filterCountry: country } });
-                            }}
-                          >
-                            <span className="text-sm font-medium text-gray-500">+{countryEntries.length - 3} more</span>
-                          </div>
-                        )}
-                      </div>
-                    </div>
+                            </div>
+                          ))}
+                          {countryEntries.length > 3 && (
+                            <div 
+                              className="aspect-square rounded-md overflow-hidden bg-gray-100 flex items-center justify-center cursor-pointer hover:bg-gray-200 transition-colors"
+                              onClick={() => {
+                                // Filter diary entries by this country
+                                navigate('/diary', { state: { filterCountry: country } });
+                              }}
+                            >
+                              <span className="text-sm font-medium text-gray-600">+{countryEntries.length - 3} more</span>
+                            </div>
+                          )}
+                        </div>
+                      </CardContent>
+                    </Card>
                   ))}
                 </div>
               </div>
