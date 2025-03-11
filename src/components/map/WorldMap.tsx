@@ -1,9 +1,16 @@
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MapPin } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import $ from 'jquery';
+import 'jvectormap-next';
+import 'jvectormap-next/jquery-jvectormap.css';
 
+// We need to import the map data - we'll create this file next
+import '@/lib/jquery-jvectormap-world-mill';
+
+// Define interfaces for our component props and data
 interface Entry {
   id: string;
   title: string;
@@ -18,173 +25,169 @@ interface WorldMapProps {
   entries: Record<string, Entry[]>;
 }
 
+// Map of country names to ISO country codes (required for jVectorMap)
+const countryToCode: Record<string, string> = {
+  'Afghanistan': 'AF', 'Albania': 'AL', 'Algeria': 'DZ', 'Angola': 'AO', 'Argentina': 'AR',
+  'Armenia': 'AM', 'Australia': 'AU', 'Austria': 'AT', 'Azerbaijan': 'AZ', 'Bahamas': 'BS',
+  'Bangladesh': 'BD', 'Belarus': 'BY', 'Belgium': 'BE', 'Belize': 'BZ', 'Benin': 'BJ',
+  'Bhutan': 'BT', 'Bolivia': 'BO', 'Bosnia and Herzegovina': 'BA', 'Botswana': 'BW', 'Brazil': 'BR',
+  'Brunei': 'BN', 'Bulgaria': 'BG', 'Burkina Faso': 'BF', 'Burundi': 'BI', 'Cambodia': 'KH',
+  'Cameroon': 'CM', 'Canada': 'CA', 'Central African Republic': 'CF', 'Chad': 'TD', 'Chile': 'CL',
+  'China': 'CN', 'Colombia': 'CO', 'Congo': 'CG', 'Costa Rica': 'CR', 'Croatia': 'HR',
+  'Cuba': 'CU', 'Cyprus': 'CY', 'Czech Republic': 'CZ', 'Denmark': 'DK', 'Djibouti': 'DJ',
+  'Dominican Republic': 'DO', 'DR Congo': 'CD', 'Ecuador': 'EC', 'Egypt': 'EG', 'El Salvador': 'SV',
+  'Equatorial Guinea': 'GQ', 'Eritrea': 'ER', 'Estonia': 'EE', 'Eswatini': 'SZ', 'Ethiopia': 'ET',
+  'Fiji': 'FJ', 'Finland': 'FI', 'France': 'FR', 'French Guiana': 'GF', 'Gabon': 'GA',
+  'Gambia': 'GM', 'Georgia': 'GE', 'Germany': 'DE', 'Ghana': 'GH', 'Greece': 'GR',
+  'Greenland': 'GL', 'Guatemala': 'GT', 'Guinea': 'GN', 'Guinea-Bissau': 'GW', 'Guyana': 'GY',
+  'Haiti': 'HT', 'Honduras': 'HN', 'Hungary': 'HU', 'Iceland': 'IS', 'India': 'IN',
+  'Indonesia': 'ID', 'Iran': 'IR', 'Iraq': 'IQ', 'Ireland': 'IE', 'Israel': 'IL',
+  'Italy': 'IT', 'Ivory Coast': 'CI', 'Jamaica': 'JM', 'Japan': 'JP', 'Jordan': 'JO',
+  'Kazakhstan': 'KZ', 'Kenya': 'KE', 'Kosovo': 'XK', 'Kuwait': 'KW', 'Kyrgyzstan': 'KG',
+  'Laos': 'LA', 'Latvia': 'LV', 'Lebanon': 'LB', 'Lesotho': 'LS', 'Liberia': 'LR',
+  'Libya': 'LY', 'Lithuania': 'LT', 'Luxembourg': 'LU', 'Madagascar': 'MG', 'Malawi': 'MW',
+  'Malaysia': 'MY', 'Mali': 'ML', 'Malta': 'MT', 'Mauritania': 'MR', 'Mexico': 'MX',
+  'Moldova': 'MD', 'Mongolia': 'MN', 'Montenegro': 'ME', 'Morocco': 'MA', 'Mozambique': 'MZ',
+  'Myanmar': 'MM', 'Namibia': 'NA', 'Nepal': 'NP', 'Netherlands': 'NL', 'New Zealand': 'NZ',
+  'Nicaragua': 'NI', 'Niger': 'NE', 'Nigeria': 'NG', 'North Korea': 'KP', 'North Macedonia': 'MK',
+  'Norway': 'NO', 'Oman': 'OM', 'Pakistan': 'PK', 'Palestine': 'PS', 'Panama': 'PA',
+  'Papua New Guinea': 'PG', 'Paraguay': 'PY', 'Peru': 'PE', 'Philippines': 'PH', 'Poland': 'PL',
+  'Portugal': 'PT', 'Puerto Rico': 'PR', 'Qatar': 'QA', 'Romania': 'RO', 'Russia': 'RU',
+  'Rwanda': 'RW', 'Saudi Arabia': 'SA', 'Senegal': 'SN', 'Serbia': 'RS', 'Sierra Leone': 'SL',
+  'Slovakia': 'SK', 'Slovenia': 'SI', 'Somalia': 'SO', 'South Africa': 'ZA', 'South Korea': 'KR',
+  'South Sudan': 'SS', 'Spain': 'ES', 'Sri Lanka': 'LK', 'Sudan': 'SD', 'Suriname': 'SR',
+  'Sweden': 'SE', 'Switzerland': 'CH', 'Syria': 'SY', 'Taiwan': 'TW', 'Tajikistan': 'TJ',
+  'Tanzania': 'TZ', 'Thailand': 'TH', 'Timor-Leste': '???', 'Togo': 'TG', 'Tunisia': 'TN',
+  'Turkey': 'TR', 'Turkmenistan': 'TM', 'Uganda': 'UG', 'Ukraine': 'UA', 
+  'United Arab Emirates': 'AE', 'United Kingdom': 'GB', 'United States': 'US', 'Uruguay': 'UY',
+  'Uzbekistan': 'UZ', 'Venezuela': 'VE', 'Vietnam': 'VN', 'Yemen': 'YE', 'Zambia': 'ZM',
+  'Zimbabwe': 'ZW'
+};
+
 const WorldMap: React.FC<WorldMapProps> = ({ countries, entries }) => {
   const navigate = useNavigate();
-  const [hoveredCountry, setHoveredCountry] = useState<string | null>(null);
   const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
-  const mapContainerRef = useRef<HTMLDivElement>(null);
+  const mapRef = useRef<HTMLDivElement>(null);
   
-  // Load and display the world map image
   useEffect(() => {
-    const mapContainer = mapContainerRef.current;
-    if (!mapContainer) return;
-  }, []);
+    if (!mapRef.current) return;
+
+    // Convert country names to ISO codes for jVectorMap
+    const visitedCountryCodes = countries
+      .map(country => countryToCode[country])
+      .filter(Boolean);
+
+    // Create color data object for visited countries
+    const colorData = visitedCountryCodes.reduce((acc, code) => {
+      acc[code] = '#FF9344';
+      return acc;
+    }, {} as Record<string, string>);
+
+    // Initialize jVectorMap
+    const $map = $(mapRef.current);
+    
+    // @ts-ignore - jVectorMap extends jQuery but TypeScript doesn't know about it
+    $map.vectorMap({
+      map: 'world_mill',
+      backgroundColor: 'transparent',
+      zoomOnScroll: true,
+      regionStyle: {
+        initial: {
+          fill: '#e2e8f0',
+          "fill-opacity": 1,
+          stroke: 'none',
+          "stroke-width": 0,
+          "stroke-opacity": 1
+        },
+        hover: {
+          "fill-opacity": 0.8,
+          cursor: 'pointer'
+        },
+        selected: {
+          fill: '#FF9344'
+        },
+        selectedHover: {}
+      },
+      series: {
+        regions: [{
+          values: colorData,
+          attribute: 'fill'
+        }]
+      },
+      onRegionClick: function(e: Event, code: string) {
+        // Find the country name from the code
+        const countryName = Object.keys(countryToCode).find(
+          name => countryToCode[name] === code
+        );
+        
+        if (countryName && entries[countryName]) {
+          setSelectedCountry(countryName);
+        }
+      }
+    });
+
+    // Cleanup
+    return () => {
+      // @ts-ignore - jVectorMap extends jQuery but TypeScript doesn't know about it
+      if ($map.vectorMap) {
+        $map.vectorMap('get', 'mapObject').remove();
+      }
+    };
+  }, [countries, entries]);
 
   return (
     <div className="relative w-full h-[60vh] bg-gray-50 rounded-lg overflow-hidden border">
-      {/* World Map Background */}
-      <div ref={mapContainerRef} className="absolute inset-0 flex items-center justify-center">
-        <img 
-          src="/lovable-uploads/e4df6ac5-3e36-4954-904c-59a7f252bb35.png" 
-          alt="World Map" 
-          className="w-full h-full object-contain"
-        />
-        
-        {/* Overlay for country highlights and pins */}
-        <div className="absolute inset-0 pointer-events-none">
-          {/* This is where we would add country highlights based on geolocation data */}
-          {/* Since we don't have exact coordinates, we'll use the simplified UI approach below */}
-        </div>
-      </div>
+      <div ref={mapRef} className="w-full h-full" />
       
-      {/* Country Selection UI */}
-      <div className="absolute inset-0 p-6 flex flex-col">
-        <div className="bg-white/80 backdrop-blur-sm rounded-lg p-4 shadow-sm max-w-[90%] mx-auto">
-          <h3 className="text-lg font-medium mb-3 text-gray-900">Your Travel Map</h3>
-          <p className="text-sm text-gray-600 mb-3">
-            You've visited {countries.length} {countries.length === 1 ? 'country' : 'countries'}!
-          </p>
-          
-          <div className="flex flex-wrap gap-2 mb-2 max-h-[15vh] overflow-y-auto p-1">
-            {countries.map(country => (
-              <Badge
-                key={country}
-                className={`cursor-pointer py-1 px-2 flex items-center gap-1 ${
-                  selectedCountry === country 
-                    ? 'bg-[#FF9344] hover:bg-[#FF9344]/90' 
-                    : 'bg-gray-100 hover:bg-gray-200 text-gray-800'
-                }`}
-                onClick={() => {
-                  if (selectedCountry === country) {
-                    setSelectedCountry(null);
-                  } else {
-                    setSelectedCountry(country);
-                  }
-                }}
+      {/* Selected Country Details */}
+      {selectedCountry && entries[selectedCountry] && (
+        <div className="absolute bottom-4 left-4 right-4 bg-white/90 backdrop-blur-sm rounded-lg shadow-sm p-4 max-w-[90%] mx-auto">
+          <h3 className="text-lg font-medium mb-2">{selectedCountry}</h3>
+          <div className="grid grid-cols-3 gap-2 mb-3">
+            {entries[selectedCountry].slice(0, 3).map(entry => (
+              <div 
+                key={entry.id} 
+                className="relative aspect-square rounded-md overflow-hidden cursor-pointer group"
+                onClick={() => navigate(`/edit-entry/${entry.id}`)}
               >
-                <MapPin className="h-3 w-3" />
-                <span>{country}</span>
-                <span className="text-xs">({entries[country].length})</span>
-              </Badge>
-            ))}
-          </div>
-        </div>
-        
-        {/* Selected Country Details */}
-        {selectedCountry && (
-          <div className="mt-auto bg-white/90 backdrop-blur-sm rounded-lg shadow-sm p-4 max-w-[90%] mx-auto">
-            <h3 className="text-lg font-medium mb-2">{selectedCountry}</h3>
-            <div className="grid grid-cols-3 gap-2 mb-3">
-              {entries[selectedCountry].slice(0, 3).map(entry => (
-                <div 
-                  key={entry.id} 
-                  className="relative aspect-square rounded-md overflow-hidden cursor-pointer group"
-                  onClick={() => navigate(`/edit-entry/${entry.id}`)}
-                >
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent z-10 opacity-0 group-hover:opacity-100 transition-opacity" />
-                  
-                  {entry.image_url ? (
-                    <img 
-                      src={entry.image_url} 
-                      alt={entry.title} 
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                      <span className="text-xs text-gray-400">No image</span>
-                    </div>
-                  )}
-                  
-                  <div className="absolute bottom-1 left-1 right-1 text-white text-xs z-20 opacity-0 group-hover:opacity-100 transition-opacity truncate">
-                    {entry.title}
-                  </div>
-                </div>
-              ))}
-              
-              {entries[selectedCountry].length > 3 && (
-                <div 
-                  className="aspect-square rounded-md overflow-hidden bg-gray-100 flex items-center justify-center cursor-pointer hover:bg-gray-200 transition-colors"
-                  onClick={() => navigate('/diary', { state: { filterCountry: selectedCountry } })}
-                >
-                  <span className="text-sm font-medium text-gray-700">+{entries[selectedCountry].length - 3} more</span>
-                </div>
-              )}
-            </div>
-            
-            <button 
-              className="text-sm text-[#27AD95] hover:underline w-full text-center"
-              onClick={() => navigate('/diary', { state: { filterCountry: selectedCountry } })}
-            >
-              See all {entries[selectedCountry].length} entries from {selectedCountry}
-            </button>
-          </div>
-        )}
-      </div>
-      
-      {/* Map Pins for Countries - Simplified Version */}
-      <div className="absolute inset-0 pointer-events-none">
-        {countries.map((country, index) => {
-          // This is a simplified approach without real coordinates
-          // In a real implementation, you would use actual geolocation data
-          const entry = entries[country][0]; // Get first entry for this country
-          
-          // Generate "random" but consistent positions based on country name
-          const hash = country.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
-          const posX = 10 + (hash % 80); // 10-90% width
-          const posY = 15 + ((hash * 7) % 70); // 15-85% height
-          
-          return (
-            <div 
-              key={country}
-              className={`absolute pointer-events-auto cursor-pointer ${selectedCountry === country ? 'z-50' : 'z-10'}`}
-              style={{ 
-                left: `${posX}%`, 
-                top: `${posY}%`,
-                transform: 'translate(-50%, -50%)'
-              }}
-              onClick={() => setSelectedCountry(country === selectedCountry ? null : country)}
-            >
-              <div className={`relative ${selectedCountry === country ? 'scale-125' : 'scale-100'} transition-transform`}>
-                {/* Pin */}
-                <div className="w-6 h-6 bg-[#FF9344] rounded-full flex items-center justify-center shadow-md">
-                  {entry.image_url ? (
-                    <img 
-                      src={entry.image_url} 
-                      alt={country}
-                      className="w-5 h-5 rounded-full object-cover"
-                    />
-                  ) : (
-                    <MapPin className="h-4 w-4 text-white" />
-                  )}
-                </div>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent z-10 opacity-0 group-hover:opacity-100 transition-opacity" />
                 
-                {/* Pin Stem */}
-                <div 
-                  className="absolute left-1/2 top-full h-3 w-1 bg-[#FF9344] -translate-x-1/2 shadow-sm" 
-                  style={{ clipPath: 'polygon(0% 0%, 100% 0%, 50% 100%)' }}
-                />
-                
-                {/* Country name on hover */}
-                {(hoveredCountry === country || selectedCountry === country) && (
-                  <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-white px-2 py-1 rounded shadow-sm text-xs whitespace-nowrap">
-                    {country} ({entries[country].length})
+                {entry.image_url ? (
+                  <img 
+                    src={entry.image_url} 
+                    alt={entry.title} 
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                    <span className="text-xs text-gray-400">No image</span>
                   </div>
                 )}
+                
+                <div className="absolute bottom-1 left-1 right-1 text-white text-xs z-20 opacity-0 group-hover:opacity-100 transition-opacity truncate">
+                  {entry.title}
+                </div>
               </div>
-            </div>
-          );
-        })}
-      </div>
+            ))}
+            
+            {entries[selectedCountry].length > 3 && (
+              <div 
+                className="aspect-square rounded-md overflow-hidden bg-gray-100 flex items-center justify-center cursor-pointer hover:bg-gray-200 transition-colors"
+                onClick={() => navigate('/diary', { state: { filterCountry: selectedCountry } })}
+              >
+                <span className="text-sm font-medium text-gray-700">+{entries[selectedCountry].length - 3} more</span>
+              </div>
+            )}
+          </div>
+          
+          <button 
+            className="text-sm text-[#27AD95] hover:underline w-full text-center"
+            onClick={() => navigate('/diary', { state: { filterCountry: selectedCountry } })}
+          >
+            See all {entries[selectedCountry].length} entries from {selectedCountry}
+          </button>
+        </div>
+      )}
     </div>
   );
 };
