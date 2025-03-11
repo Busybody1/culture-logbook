@@ -63,19 +63,18 @@ const FormField = ({
           value={value}
           onChange={onChange}
           placeholder={placeholder}
-          className={`${icon ? 'pl-8' : ''} pr-20`}
+          className={`${icon ? 'pl-8' : ''} pr-10`}
           rows={isTextarea ? 3 : undefined}
         />
-        <div className="absolute right-2 top-2.5 flex gap-1">
-          <Button
-            type="button"
-            size="icon"
-            variant="ghost"
-            onClick={onCopy}
-          >
-            <Copy className="h-4 w-4" />
-          </Button>
-        </div>
+        <Button
+          type="button"
+          size="icon"
+          variant="ghost"
+          onClick={onCopy}
+          className="absolute right-2 top-2 h-6 w-6 p-0.5 text-gray-500 hover:text-gray-700 hover:bg-transparent"
+        >
+          <Copy className="h-4 w-4" />
+        </Button>
       </div>
     </div>
   );
