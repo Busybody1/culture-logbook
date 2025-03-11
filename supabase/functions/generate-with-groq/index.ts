@@ -22,7 +22,7 @@ serve(async (req) => {
     let systemPrompt = '';
     switch (type) {
       case 'hashtags':
-        systemPrompt = "You are a social media expert. Generate relevant and trending hashtags for this content. Return only the hashtags separated by commas, without # symbols.";
+        systemPrompt = "You are a social media expert. Generate relevant and trending hashtags for this content. Return only the hashtags with # symbols, like '#example #another', separated by spaces. Format each hashtag with the # symbol and no spaces between words.";
         break;
       case 'caption':
         systemPrompt = "You are a social media content writer. Generate an engaging and natural-sounding caption for this content. Keep it concise and appealing.";

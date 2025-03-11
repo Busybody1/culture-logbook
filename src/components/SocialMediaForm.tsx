@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { MapPin } from 'lucide-react';
 import { useClipboard } from '@/hooks/useClipboard';
@@ -29,6 +28,11 @@ const SocialMediaForm = ({ platform, onUpdate, diaryData }: SocialMediaFormProps
     location: '',
     hashtags: '',
   });
+  const [isGenerating, setIsGenerating] = useState({
+    title: false,
+    caption: false,
+    hashtags: false
+  });
   const { copyToClipboard } = useClipboard();
   const { toast } = useToast();
 
@@ -39,13 +43,26 @@ const SocialMediaForm = ({ platform, onUpdate, diaryData }: SocialMediaFormProps
       [name]: value
     }));
 
-    onUpdate({
-      ...formData,
-      [name]: value,
-      hashtags: name === 'hashtags' 
-        ? value.split(',').map(tag => tag.trim().replace('#', ''))
-        : formData.hashtags.split(',').map(tag => tag.trim().replace('#', ''))
-    });
+    if (name === 'hashtags') {
+      // Convert hashtags string to array, keeping the # if present
+      const hashtagsArray = value.split(/[\s,]+/).filter(tag => tag.trim() !== '').map(tag => {
+        return tag.startsWith('#') ? tag.substring(1) : tag;
+      });
+      
+      onUpdate({
+        ...formData,
+        hashtags: hashtagsArray,
+        [name]: value
+      });
+    } else {
+      onUpdate({
+        ...formData,
+        hashtags: formData.hashtags.split(/[\s,]+/).filter(tag => tag.trim() !== '').map(tag => {
+          return tag.startsWith('#') ? tag.substring(1) : tag;
+        }),
+        [name]: value
+      });
+    }
   };
 
   const handleCopy = async (text: string, field: string) => {
@@ -60,6 +77,8 @@ const SocialMediaForm = ({ platform, onUpdate, diaryData }: SocialMediaFormProps
 
   const generateWithAI = async (field: 'title' | 'caption' | 'hashtags') => {
     if (!diaryData) return;
+
+    setIsGenerating(prev => ({ ...prev, [field]: true }));
 
     let prompt = '';
     switch (field) {
@@ -88,13 +107,26 @@ const SocialMediaForm = ({ platform, onUpdate, diaryData }: SocialMediaFormProps
         [field]: generatedText
       }));
 
-      onUpdate({
-        ...formData,
-        [field]: generatedText,
-        hashtags: field === 'hashtags' 
-          ? generatedText.split(',').map(tag => tag.trim().replace('#', ''))
-          : formData.hashtags.split(',').map(tag => tag.trim().replace('#', ''))
-      });
+      if (field === 'hashtags') {
+        // For hashtags, we need to convert the string with # symbols to an array without # symbols
+        const hashtagsArray = generatedText.split(/[\s,]+/).filter(tag => tag.trim() !== '').map(tag => {
+          return tag.startsWith('#') ? tag.substring(1) : tag;
+        });
+        
+        onUpdate({
+          ...formData,
+          hashtags: hashtagsArray,
+          [field]: generatedText
+        });
+      } else {
+        onUpdate({
+          ...formData,
+          [field]: generatedText,
+          hashtags: formData.hashtags.split(/[\s,]+/).filter(tag => tag.trim() !== '').map(tag => {
+            return tag.startsWith('#') ? tag.substring(1) : tag;
+          })
+        });
+      }
 
       toast({
         title: "Generated!",
@@ -107,6 +139,8 @@ const SocialMediaForm = ({ platform, onUpdate, diaryData }: SocialMediaFormProps
         description: "Failed to generate content. Please try again.",
         variant: "destructive",
       });
+    } finally {
+      setIsGenerating(prev => ({ ...prev, [field]: false }));
     }
   };
 
@@ -122,6 +156,7 @@ const SocialMediaForm = ({ platform, onUpdate, diaryData }: SocialMediaFormProps
           placeholder="Enter a title for your post..."
           onCopy={() => handleCopy(formData.title, 'Title')}
           onGenerate={() => generateWithAI('title')}
+          isGenerating={isGenerating.title}
         />
       )}
 
@@ -135,6 +170,7 @@ const SocialMediaForm = ({ platform, onUpdate, diaryData }: SocialMediaFormProps
         isTextarea={true}
         onCopy={() => handleCopy(formData.caption, 'Caption')}
         onGenerate={() => generateWithAI('caption')}
+        isGenerating={isGenerating.caption}
       />
 
       <FormField
@@ -154,9 +190,10 @@ const SocialMediaForm = ({ platform, onUpdate, diaryData }: SocialMediaFormProps
         label="Hashtags"
         value={formData.hashtags}
         onChange={handleChange}
-        placeholder="Enter hashtags separated by commas..."
+        placeholder="Enter hashtags separated by spaces..."
         onCopy={() => handleCopy(formData.hashtags, 'Hashtags')}
         onGenerate={() => generateWithAI('hashtags')}
+        isGenerating={isGenerating.hashtags}
       />
     </div>
   );
