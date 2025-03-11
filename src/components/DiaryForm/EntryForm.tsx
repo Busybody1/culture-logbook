@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -11,6 +10,7 @@ import { CalendarIcon, Star, StarOff, Image, X, Plus, Sparkle, MapPin } from 'lu
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { Label } from '@/components/ui/label';
+import { COUNTRIES } from '@/utils/countries';
 
 const MAX_IMAGES = 10;
 
@@ -46,12 +46,6 @@ const PREDEFINED_TAGS = [
   'Italian', 'Street Food', 'Fine Dining', 'Modern Art', 'History Museum', 
   'Science Museum', 'Japanese', 'Mexican', 'Brunch', 'Cocktails', 'Family Friendly',
   'Contemporary Art', 'Natural History', 'Temporary Exhibit'
-];
-
-const COUNTRIES = [
-  'United States', 'United Kingdom', 'France', 'Italy', 'Spain', 'Germany', 
-  'Japan', 'China', 'Australia', 'Canada', 'Mexico', 'Brazil', 'India',
-  'South Africa', 'Egypt', 'Greece', 'Thailand', 'Turkey', 'Portugal', 'Netherlands'
 ];
 
 const EntryForm: React.FC<EntryFormProps> = ({
