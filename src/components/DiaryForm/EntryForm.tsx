@@ -7,9 +7,10 @@ import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
-import { CalendarIcon, Star, StarOff, Image, X, Plus, Sparkle } from 'lucide-react';
+import { CalendarIcon, Star, StarOff, Image, X, Plus, Sparkle, MapPin } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
+import { Label } from '@/components/ui/label';
 
 const MAX_IMAGES = 10;
 
@@ -30,6 +31,10 @@ interface EntryFormProps {
   setImagePreviews: (previews: string[]) => void;
   isRestaurant: boolean;
   setIsRestaurant: (isRestaurant: boolean) => void;
+  location: string;
+  setLocation: (location: string) => void;
+  country: string;
+  setCountry: (country: string) => void;
   generateAICaption: () => Promise<void>;
   isGeneratingCaption: boolean;
   generatedCaption: string | null;
@@ -43,6 +48,12 @@ const PREDEFINED_TAGS = [
   'Contemporary Art', 'Natural History', 'Temporary Exhibit'
 ];
 
+const COUNTRIES = [
+  'United States', 'United Kingdom', 'France', 'Italy', 'Spain', 'Germany', 
+  'Japan', 'China', 'Australia', 'Canada', 'Mexico', 'Brazil', 'India',
+  'South Africa', 'Egypt', 'Greece', 'Thailand', 'Turkey', 'Portugal', 'Netherlands'
+];
+
 const EntryForm: React.FC<EntryFormProps> = ({
   title, setTitle,
   date, setDate,
@@ -52,6 +63,8 @@ const EntryForm: React.FC<EntryFormProps> = ({
   imageFiles, setImageFiles,
   imagePreviews, setImagePreviews,
   isRestaurant, setIsRestaurant,
+  location, setLocation,
+  country, setCountry,
   generateAICaption,
   isGeneratingCaption,
   generatedCaption,
@@ -136,33 +149,70 @@ const EntryForm: React.FC<EntryFormProps> = ({
         />
       </div>
 
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Date
+          </label>
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                variant={"outline"}
+                className={cn(
+                  "w-full justify-start text-left font-normal",
+                  !date && "text-muted-foreground"
+                )}
+              >
+                <CalendarIcon className="mr-2 h-4 w-4" />
+                {date ? format(date, "PPP") : <span>Pick a date</span>}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0" align="start">
+              <Calendar
+                mode="single"
+                selected={date}
+                onSelect={setDate}
+                initialFocus
+                className={cn("p-3 pointer-events-auto")}
+              />
+            </PopoverContent>
+          </Popover>
+        </div>
+
+        <div>
+          <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-1">
+            <div className="flex items-center">
+              <MapPin className="h-4 w-4 mr-1" />
+              <span>Location</span>
+            </div>
+          </label>
+          <Input
+            id="location"
+            placeholder="e.g. Rome, Paris, Tokyo"
+            value={location}
+            onChange={(e) => setLocation(e.target.value)}
+            className="w-full"
+          />
+        </div>
+      </div>
+
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Date
-        </label>
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button
-              variant={"outline"}
-              className={cn(
-                "w-full justify-start text-left font-normal",
-                !date && "text-muted-foreground"
-              )}
-            >
-              <CalendarIcon className="mr-2 h-4 w-4" />
-              {date ? format(date, "PPP") : <span>Pick a date</span>}
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-auto p-0" align="start">
-            <Calendar
-              mode="single"
-              selected={date}
-              onSelect={setDate}
-              initialFocus
-              className={cn("p-3 pointer-events-auto")}
-            />
-          </PopoverContent>
-        </Popover>
+        <Label htmlFor="country" className="block text-sm font-medium text-gray-700 mb-1">
+          Country
+        </Label>
+        <select
+          id="country"
+          value={country}
+          onChange={(e) => setCountry(e.target.value)}
+          className="w-full rounded-md border border-input bg-background px-3 py-2 text-base md:text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+        >
+          <option value="">Select a country</option>
+          {COUNTRIES.map((c) => (
+            <option key={c} value={c}>
+              {c}
+            </option>
+          ))}
+        </select>
       </div>
 
       <div>

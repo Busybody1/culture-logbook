@@ -11,10 +11,12 @@ export type Database = {
     Tables: {
       diary_entries: {
         Row: {
+          country: string | null
           created_at: string | null
           date: string
           id: string
           image_url: string | null
+          location: string | null
           notes: string | null
           rating: number | null
           tags: string[] | null
@@ -24,10 +26,12 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          country?: string | null
           created_at?: string | null
           date: string
           id?: string
           image_url?: string | null
+          location?: string | null
           notes?: string | null
           rating?: number | null
           tags?: string[] | null
@@ -37,10 +41,12 @@ export type Database = {
           user_id: string
         }
         Update: {
+          country?: string | null
           created_at?: string | null
           date?: string
           id?: string
           image_url?: string | null
+          location?: string | null
           notes?: string | null
           rating?: number | null
           tags?: string[] | null

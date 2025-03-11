@@ -11,6 +11,7 @@ import NotFound from "./pages/NotFound";
 import DiaryEntries from "./pages/DiaryEntries";
 import NewEntry from "./pages/NewEntry";
 import EditEntry from "./pages/EditEntry";
+import TravelMap from "./pages/TravelMap";
 
 const queryClient = new QueryClient();
 
@@ -27,6 +28,7 @@ const App = () => (
             <Route path="/diary" element={<DiaryEntries />} />
             <Route path="/new-entry" element={<NewEntry />} />
             <Route path="/edit-entry/:id" element={<EditEntry />} />
+            <Route path="/travel-map" element={<TravelMap />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

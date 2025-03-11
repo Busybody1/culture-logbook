@@ -15,6 +15,8 @@ export const useDiaryEntry = () => {
   const [isRestaurant, setIsRestaurant] = useState(true);
   const [isGeneratingCaption, setIsGeneratingCaption] = useState(false);
   const [generatedCaption, setGeneratedCaption] = useState<string | null>(null);
+  const [location, setLocation] = useState('');
+  const [country, setCountry] = useState('');
   
   const { user } = useAuth();
 
@@ -61,7 +63,9 @@ export const useDiaryEntry = () => {
         tags: selectedTags,
         type: isRestaurant ? 'restaurant' : 'museum',
         user_id: user!.id,
-        image_url: imagePreviews.length > 0 ? imagePreviews[0] : null
+        image_url: imagePreviews.length > 0 ? imagePreviews[0] : null,
+        location,
+        country
       };
 
       const { error } = await supabase
@@ -99,7 +103,9 @@ export const useDiaryEntry = () => {
         tags: selectedTags,
         type: isRestaurant ? 'restaurant' : 'museum',
         image_url: imagePreviews.length > 0 ? imagePreviews[0] : null,
-        updated_at: new Date().toISOString()
+        updated_at: new Date().toISOString(),
+        location,
+        country
       };
 
       const { error } = await supabase
@@ -185,6 +191,8 @@ export const useDiaryEntry = () => {
     generatedCaption,
     generateAICaption,
     handleSaveEntry,
-    handleUpdateEntry
+    handleUpdateEntry,
+    location, setLocation,
+    country, setCountry
   };
 };

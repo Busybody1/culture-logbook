@@ -15,6 +15,7 @@ export const useDiaryUtils = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedType, setSelectedType] = useState<'all' | 'restaurant' | 'museum'>('all');
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
+  const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchEntries = async () => {
@@ -52,7 +53,9 @@ export const useDiaryUtils = () => {
       filtered = filtered.filter(entry => 
         entry.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
         entry.notes?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        entry.tags?.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()))
+        entry.tags?.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        entry.location?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        entry.country?.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
     
@@ -66,8 +69,14 @@ export const useDiaryUtils = () => {
       );
     }
     
+    if (selectedCountry) {
+      filtered = filtered.filter(entry => 
+        entry.country?.toLowerCase() === selectedCountry.toLowerCase()
+      );
+    }
+    
     setFilteredEntries(filtered);
-  }, [searchTerm, selectedType, selectedTag, entries]);
+  }, [searchTerm, selectedType, selectedTag, selectedCountry, entries]);
 
   const getAllTags = () => {
     const tagSet = new Set<string>();
@@ -75,6 +84,16 @@ export const useDiaryUtils = () => {
       entry.tags?.forEach(tag => tagSet.add(tag));
     });
     return Array.from(tagSet);
+  };
+
+  const getAllCountries = () => {
+    const countrySet = new Set<string>();
+    entries.forEach(entry => {
+      if (entry.country) {
+        countrySet.add(entry.country);
+      }
+    });
+    return Array.from(countrySet);
   };
 
   const handleDelete = async (entryId: string) => {
@@ -148,7 +167,10 @@ export const useDiaryUtils = () => {
     setSelectedType,
     selectedTag,
     setSelectedTag,
+    selectedCountry,
+    setSelectedCountry,
     getAllTags,
+    getAllCountries,
     handleDelete,
     handleEdit,
     handleSeedData

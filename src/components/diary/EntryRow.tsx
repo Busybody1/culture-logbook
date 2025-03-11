@@ -3,7 +3,7 @@ import React from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { format } from 'date-fns';
-import { Star, Trash2, Pencil, ImageOff } from 'lucide-react';
+import { Star, Trash2, Pencil, ImageOff, MapPin } from 'lucide-react';
 
 interface EntryRowProps {
   entry: any;
@@ -38,6 +38,14 @@ const EntryRow: React.FC<EntryRowProps> = ({ entry, handleEdit, handleDelete }) 
                 </Badge>
               </div>
               <p className="text-sm text-gray-500 mb-2">{format(new Date(entry.date), 'MMMM d, yyyy')}</p>
+              
+              {entry.location && (
+                <div className="flex items-center text-sm text-gray-600 mb-2">
+                  <MapPin className="h-3 w-3 mr-1 text-[#FF9344]" />
+                  <span>{entry.location}</span>
+                  {entry.country && <span className="ml-1">({entry.country})</span>}
+                </div>
+              )}
             </div>
             <div className="flex items-center mb-2 md:mb-0">
               {Array.from({ length: 5 }).map((_, i) => (

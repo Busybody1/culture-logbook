@@ -2,7 +2,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Plus } from 'lucide-react';
+import { Plus, Globe } from 'lucide-react';
 import Header from '@/components/Header';
 import DiaryFilters from '@/components/diary/DiaryFilters';
 import EmptyState from '@/components/diary/EmptyState';
@@ -22,7 +22,10 @@ const DiaryEntries = () => {
     setSelectedType,
     selectedTag,
     setSelectedTag,
+    selectedCountry,
+    setSelectedCountry,
     getAllTags,
+    getAllCountries,
     handleDelete,
     handleEdit,
     handleSeedData
@@ -34,13 +37,22 @@ const DiaryEntries = () => {
       <div className="pt-24 pb-10 px-4 md:px-6 max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
           <h1 className="text-2xl font-bold text-gray-900">My Diary Entries</h1>
-          <Button 
-            onClick={() => navigate('/new-entry')}
-            className="bg-[#27AD95] hover:bg-[#27AD95]/90"
-          >
-            <Plus className="mr-2 h-4 w-4" />
-            New Entry
-          </Button>
+          <div className="flex gap-2">
+            <Button 
+              onClick={() => navigate('/travel-map')}
+              className="bg-[#FF9344] hover:bg-[#FF9344]/90"
+            >
+              <Globe className="mr-2 h-4 w-4" />
+              My Travels
+            </Button>
+            <Button 
+              onClick={() => navigate('/new-entry')}
+              className="bg-[#27AD95] hover:bg-[#27AD95]/90"
+            >
+              <Plus className="mr-2 h-4 w-4" />
+              New Entry
+            </Button>
+          </div>
         </div>
 
         <DiaryFilters
@@ -52,7 +64,10 @@ const DiaryEntries = () => {
           setViewMode={setViewMode}
           selectedTag={selectedTag}
           setSelectedTag={setSelectedTag}
+          selectedCountry={selectedCountry}
+          setSelectedCountry={setSelectedCountry}
           tags={getAllTags()}
+          countries={getAllCountries()}
         />
 
         {filteredEntries.length === 0 ? (

@@ -21,7 +21,9 @@ const NewEntry = () => {
     isGeneratingCaption,
     generatedCaption,
     generateAICaption,
-    handleSaveEntry
+    handleSaveEntry,
+    location, setLocation,
+    country, setCountry
   } = useDiaryEntry();
 
   const handleSaveAndNavigate = async () => {
@@ -62,6 +64,10 @@ const NewEntry = () => {
           setImagePreviews={setImagePreviews}
           isRestaurant={isRestaurant}
           setIsRestaurant={setIsRestaurant}
+          location={location}
+          setLocation={setLocation}
+          country={country}
+          setCountry={setCountry}
           generateAICaption={generateAICaption}
           isGeneratingCaption={isGeneratingCaption}
           generatedCaption={generatedCaption}

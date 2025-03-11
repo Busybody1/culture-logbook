@@ -27,7 +27,9 @@ const EditEntry = () => {
     generatedCaption,
     generateAICaption,
     handleSaveEntry,
-    handleUpdateEntry
+    handleUpdateEntry,
+    location, setLocation,
+    country, setCountry
   } = useDiaryEntry();
 
   useEffect(() => {
@@ -55,6 +57,8 @@ const EditEntry = () => {
           setRating(data.rating || 0);
           setSelectedTags(data.tags || []);
           setIsRestaurant(data.type === 'restaurant');
+          setLocation(data.location || '');
+          setCountry(data.country || '');
           
           // Handle image preview
           if (data.image_url) {
@@ -74,7 +78,7 @@ const EditEntry = () => {
     };
 
     fetchEntry();
-  }, [id, setTitle, setDate, setNotes, setRating, setSelectedTags, setIsRestaurant, setImagePreviews]);
+  }, [id, setTitle, setDate, setNotes, setRating, setSelectedTags, setIsRestaurant, setImagePreviews, setLocation, setCountry]);
 
   const handleSaveAndNavigate = async () => {
     if (!id) return;
@@ -131,6 +135,10 @@ const EditEntry = () => {
           setImagePreviews={setImagePreviews}
           isRestaurant={isRestaurant}
           setIsRestaurant={setIsRestaurant}
+          location={location}
+          setLocation={setLocation}
+          country={country}
+          setCountry={setCountry}
           generateAICaption={generateAICaption}
           isGeneratingCaption={isGeneratingCaption}
           generatedCaption={generatedCaption}
