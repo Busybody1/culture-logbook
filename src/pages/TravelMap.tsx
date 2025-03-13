@@ -260,23 +260,7 @@ const TravelMap = () => {
                   Countries You've Visited
                 </h2>
                 
-                {/* Debug information for development - this helps see what's happening */}
-                <div className="bg-gray-100 p-4 rounded-lg mb-4 text-sm">
-                  <h3 className="font-medium mb-2">Countries in database ({countriesInDb.length}):</h3>
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-                    {countriesInDb.map(country => (
-                      <div key={country} className="flex items-center">
-                        <span className={countryToCode[country] ? "text-green-600" : "text-red-600"}>
-                          {country}
-                        </span>
-                        {countryToCode[country] ? 
-                          <span className="ml-2 text-xs text-gray-500">✓ ({countryToCode[country]})</span> : 
-                          <span className="ml-2 text-xs text-red-500">✗ (no mapping)</span>
-                        }
-                      </div>
-                    ))}
-                  </div>
-                </div>
+                {/* Removed the debugging section that was showing countries in the database */}
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {Object.entries(groupedEntries).map(([country, countryEntries]) => (
