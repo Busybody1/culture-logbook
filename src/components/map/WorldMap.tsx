@@ -1,3 +1,4 @@
+
 // src/components/map/WorldMap.tsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -8,8 +9,10 @@ import {
   ZoomableGroup
 } from 'react-simple-maps';
 
+
 // Use a known working TopoJSON file
 const geoUrl = "https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json";
+
 
 // Interfaces for diary entries and component props
 interface Entry {
@@ -27,7 +30,6 @@ interface WorldMapProps {
 }
 
 // Define the country-to-ISO mapping here
-// (Make sure your diary entries' country names exactly match these keys)
 const countryToCode: Record<string, string> = {
   'Afghanistan': 'AFG', 'Albania': 'ALB', 'Algeria': 'DZA', 'Angola': 'AGO', 'Argentina': 'ARG',
   'Armenia': 'ARM', 'Australia': 'AUS', 'Austria': 'AUT', 'Azerbaijan': 'AZE', 'Bahamas': 'BHS',
@@ -66,19 +68,29 @@ const countryToCode: Record<string, string> = {
   'Zimbabwe': 'ZWE'
 };
 
+// Also create the reverse mapping for lookup by ISO code
+const codeToCountry: Record<string, string> = Object.entries(countryToCode).reduce(
+  (acc, [country, code]) => {
+    acc[code] = country;
+    return acc;
+  },
+  {} as Record<string, string>
+);
+
 const CustomWorldMap: React.FC<WorldMapProps> = ({ countries, entries }) => {
   const navigate = useNavigate();
   const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
   const [visitedCountryCodes, setVisitedCountryCodes] = useState<string[]>([]);
 
   useEffect(() => {
-    // Convert country names from props into 3-letter ISO codes using our dictionary
+
     const codes = countries
       .map(country => countryToCode[country])
       .filter(Boolean);
     
     console.log("Countries from diary:", countries);
     console.log("Mapped to ISO codes:", codes);
+
     
     setVisitedCountryCodes(codes);
   }, [countries]);
@@ -91,6 +103,7 @@ const CustomWorldMap: React.FC<WorldMapProps> = ({ countries, entries }) => {
     );
     
     console.log("Clicked country ISO:", countryCode, "mapped to:", countryName);
+
     
     if (countryName && entries[countryName]) {
       setSelectedCountry(countryName);
@@ -126,6 +139,7 @@ const CustomWorldMap: React.FC<WorldMapProps> = ({ countries, entries }) => {
                     key={geo.rsmKey}
                     geography={geo}
                     fill={isVisited ? "#FF9344" : "#e2e8f0"}
+
                     stroke="#FFFFFF"
                     strokeWidth={0.5}
                     onClick={() => handleCountryClick(geo)}
