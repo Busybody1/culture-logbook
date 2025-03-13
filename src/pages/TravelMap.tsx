@@ -91,6 +91,17 @@ const TravelMap = () => {
     fetchEntries();
   }, [user]);
 
+  // Debug current state
+  useEffect(() => {
+    console.log("TravelMap component state:");
+    console.log("- Number of entries:", entries.length);
+    console.log("- Countries from entries:", Object.keys(groupedEntries));
+    console.log("- Data being passed to WorldMap:", {
+      countries: Object.keys(groupedEntries),
+      entries: groupedEntries
+    });
+  }, [entries, groupedEntries]);
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />

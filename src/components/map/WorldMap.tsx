@@ -81,8 +81,17 @@ const CustomWorldMap: React.FC<WorldMapProps> = ({ countries, entries }) => {
   const [visitedCountryCodes, setVisitedCountryCodes] = useState<string[]>([]);
 
   useEffect(() => {
+    // Debug to see what countries are being received
+    console.log("Countries received by WorldMap component:", countries);
+    
     const codes = countries
-      .map(country => countryToCode[country])
+      .map(country => {
+        const code = countryToCode[country];
+        if (!code) {
+          console.warn(`No ISO code found for country: ${country}`);
+        }
+        return code;
+      })
       .filter(Boolean);
     
     console.log("Countries from diary:", countries);
@@ -118,9 +127,21 @@ const CustomWorldMap: React.FC<WorldMapProps> = ({ countries, entries }) => {
           <Geographies geography={geoUrl}>
             {({ geographies }) => {
               console.log("Total geographies loaded:", geographies.length);
+              
+              // Debug: Check if any visitedCountryCodes match the map data
+              const matchingGeos = geographies.filter(geo => 
+                visitedCountryCodes.includes(geo.properties.ISO_A3)
+              );
+              console.log(`Found ${matchingGeos.length} matching countries on the map`);
+              
               return geographies.map(geo => {
                 const countryCode = geo.properties.ISO_A3;
                 const isVisited = visitedCountryCodes.includes(countryCode);
+                
+                // Debug individual country matching
+                if (isVisited) {
+                  console.log(`Country matched: ${geo.properties.NAME} (${countryCode})`);
+                }
                 
                 return (
                   <Geography
@@ -202,3 +223,4 @@ const CustomWorldMap: React.FC<WorldMapProps> = ({ countries, entries }) => {
 };
 
 export default CustomWorldMap;
+
