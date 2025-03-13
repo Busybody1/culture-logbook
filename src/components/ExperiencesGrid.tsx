@@ -1,4 +1,5 @@
-import React from 'react';
+
+import React, { useState, useEffect } from 'react';
 
 const ExperiencesGrid = () => {
   // Use the provided Discord CDN images
@@ -20,6 +21,14 @@ const ExperiencesGrid = () => {
     'https://media.discordapp.net/attachments/1054759503859560518/1349090848587124928/8d557724-2086-4826-bbb6-41c921c37cec.JPG?ex=67d1d643&is=67d084c3&hm=c1e2c77fa560bebdb18f8cead2cf01b600080023cb08eb4914d54c2358332429&=&format=webp&width=995&height=1328'
   ];
 
+  // Fallback images in case Discord images don't load
+  const fallbackImages = [
+    '/lovable-uploads/e4df6ac5-3e36-4954-904c-59a7f252bb35.png',
+    '/lovable-uploads/557edcd2-bac8-4d4f-a070-6a2ed372847a.png',
+    '/lovable-uploads/56cc297b-dc89-4bd5-9255-dd56465e1c98.png',
+    '/lovable-uploads/6f30a6d2-b578-46f3-8c56-5559594ab8e8.png',
+  ];
+
   // Food descriptions for accessibility
   const descriptions = [
     'Premium roast beef with vegetables and potatoes in a rich gravy',
@@ -39,6 +48,30 @@ const ExperiencesGrid = () => {
     'Modern Asian fusion seafood dish'
   ];
 
+  // Track which images have loaded and which have failed
+  const [loadedStatus, setLoadedStatus] = useState<Record<number, boolean>>({});
+  
+  // Handle image load success
+  const handleImageLoad = (index: number) => {
+    setLoadedStatus(prev => ({
+      ...prev,
+      [index]: true
+    }));
+  };
+  
+  // Handle image load error
+  const handleImageError = (index: number) => {
+    setLoadedStatus(prev => ({
+      ...prev,
+      [index]: false
+    }));
+  };
+  
+  // Helper to get a fallback image
+  const getFallbackImage = (index: number) => {
+    return fallbackImages[index % fallbackImages.length];
+  };
+
   return (
     <section className="pt-8 pb-20 px-4 md:px-6 bg-white">
       <div className="max-w-7xl mx-auto">
@@ -50,134 +83,74 @@ const ExperiencesGrid = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
           {/* First column - varied sizes */}
           <div className="space-y-3 flex flex-col">
-            <div className="overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
-              <img 
-                src={images[0]} 
-                alt={descriptions[0]} 
-                className="w-full h-full object-cover"
-                loading="lazy"
-              />
-            </div>
-            <div className="overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 h-64">
-              <img 
-                src={images[1]} 
-                alt={descriptions[1]} 
-                className="w-full h-full object-cover"
-                loading="lazy"
-              />
-            </div>
-            <div className="overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 h-80">
-              <img 
-                src={images[2]} 
-                alt={descriptions[2]} 
-                className="w-full h-full object-cover"
-                loading="lazy"
-              />
-            </div>
-            <div className="overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 h-72">
-              <img 
-                src={images[3]} 
-                alt={descriptions[3]} 
-                className="w-full h-full object-cover"
-                loading="lazy"
-              />
-            </div>
-            <div className="overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 h-48">
-              <img 
-                src={images[12]} 
-                alt={descriptions[12]} 
-                className="w-full h-full object-cover"
-                loading="lazy"
-              />
-            </div>
+            {[0, 1, 2, 3, 12].map((imgIndex, index) => (
+              <div 
+                key={`col1-${index}`} 
+                className={`overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow ${
+                  index === 0 ? 'h-auto' : 
+                  index === 1 ? 'h-64' : 
+                  index === 2 ? 'h-80' : 
+                  index === 3 ? 'h-72' : 'h-48'
+                }`}
+              >
+                <img 
+                  src={loadedStatus[imgIndex] === false ? getFallbackImage(imgIndex) : images[imgIndex]} 
+                  alt={descriptions[imgIndex]} 
+                  className="w-full h-full object-cover"
+                  loading="lazy"
+                  onLoad={() => handleImageLoad(imgIndex)}
+                  onError={() => handleImageError(imgIndex)}
+                />
+              </div>
+            ))}
           </div>
 
           {/* Second column - different aspect ratios */}
           <div className="space-y-3 flex flex-col">
-            <div className="overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 h-80">
-              <img 
-                src={images[4]} 
-                alt={descriptions[4]} 
-                className="w-full h-full object-cover"
-                loading="lazy"
-              />
-            </div>
-            <div className="overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 h-56">
-              <img 
-                src={images[5]} 
-                alt={descriptions[5]} 
-                className="w-full h-full object-cover"
-                loading="lazy"
-              />
-            </div>
-            <div className="overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 h-60">
-              <img 
-                src={images[6]} 
-                alt={descriptions[6]} 
-                className="w-full h-full object-cover"
-                loading="lazy"
-              />
-            </div>
-            <div className="overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 h-70">
-              <img 
-                src={images[7]} 
-                alt={descriptions[7]} 
-                className="w-full h-full object-cover"
-                loading="lazy"
-              />
-            </div>
-            <div className="overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 h-64">
-              <img 
-                src={images[8]} 
-                alt={descriptions[8]} 
-                className="w-full h-full object-cover"
-                loading="lazy"
-              />
-            </div>
+            {[4, 5, 6, 7, 8].map((imgIndex, index) => (
+              <div 
+                key={`col2-${index}`} 
+                className={`overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow ${
+                  index === 0 ? 'h-80' : 
+                  index === 1 ? 'h-56' : 
+                  index === 2 ? 'h-60' : 
+                  index === 3 ? 'h-70' : 'h-64'
+                }`}
+              >
+                <img 
+                  src={loadedStatus[imgIndex] === false ? getFallbackImage(imgIndex) : images[imgIndex]} 
+                  alt={descriptions[imgIndex]} 
+                  className="w-full h-full object-cover"
+                  loading="lazy"
+                  onLoad={() => handleImageLoad(imgIndex)}
+                  onError={() => handleImageError(imgIndex)}
+                />
+              </div>
+            ))}
           </div>
 
           {/* Third column - mix of heights */}
           <div className="space-y-3 flex flex-col">
-            <div className="overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 h-72">
-              <img 
-                src={images[9]} 
-                alt={descriptions[9]} 
-                className="w-full h-full object-cover"
-                loading="lazy"
-              />
-            </div>
-            <div className="overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 h-56">
-              <img 
-                src={images[10]} 
-                alt={descriptions[10]} 
-                className="w-full h-full object-cover" 
-                loading="lazy"
-              />
-            </div>
-            <div className="overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 h-64">
-              <img 
-                src={images[11]} 
-                alt={descriptions[11]} 
-                className="w-full h-full object-cover"
-                loading="lazy" 
-              />
-            </div>
-            <div className="overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 h-80">
-              <img 
-                src={images[13]} 
-                alt={descriptions[13]} 
-                className="w-full h-full object-cover"
-                loading="lazy"
-              />
-            </div>
-            <div className="overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 h-60">
-              <img 
-                src={images[14]} 
-                alt={descriptions[14]} 
-                className="w-full h-full object-cover"
-                loading="lazy"
-              />
-            </div>
+            {[9, 10, 11, 13, 14].map((imgIndex, index) => (
+              <div 
+                key={`col3-${index}`} 
+                className={`overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow ${
+                  index === 0 ? 'h-72' : 
+                  index === 1 ? 'h-56' : 
+                  index === 2 ? 'h-64' : 
+                  index === 3 ? 'h-80' : 'h-60'
+                }`}
+              >
+                <img 
+                  src={loadedStatus[imgIndex] === false ? getFallbackImage(imgIndex) : images[imgIndex]}
+                  alt={descriptions[imgIndex]} 
+                  className="w-full h-full object-cover"
+                  loading="lazy"
+                  onLoad={() => handleImageLoad(imgIndex)}
+                  onError={() => handleImageError(imgIndex)}
+                />
+              </div>
+            ))}
           </div>
         </div>
       </div>
