@@ -1,3 +1,4 @@
+
 // src/components/map/WorldMap.tsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -36,15 +37,18 @@ const CustomWorldMap: React.FC<WorldMapProps> = ({ countries, entries }) => {
     // Debug to see what countries are being received
     console.log("Countries received by WorldMap component:", countries);
     
+    // Create a map of the codes
     const codes = countries
       .map(country => {
         const code = countryToCode[country];
         if (!code) {
           console.warn(`No ISO code found for country: ${country}`);
+        } else {
+          console.log(`Mapped country "${country}" to code "${code}"`);
         }
         return code;
       })
-      .filter(Boolean);
+      .filter(Boolean) as string[];
     
     console.log("Countries from diary:", countries);
     console.log("Mapped to ISO codes:", codes);
@@ -86,13 +90,21 @@ const CustomWorldMap: React.FC<WorldMapProps> = ({ countries, entries }) => {
               );
               console.log(`Found ${matchingGeos.length} matching countries on the map`);
               
+              if (matchingGeos.length === 0) {
+                // List all available countries on the map for debugging
+                console.log("Available countries on the map:", 
+                  geographies.map(geo => `${geo.properties.NAME} (${geo.properties.ISO_A3})`).slice(0, 10)
+                );
+                console.log("First 10 visitedCountryCodes:", visitedCountryCodes.slice(0, 10));
+              }
+              
               return geographies.map(geo => {
                 const countryCode = geo.properties.ISO_A3;
                 const isVisited = visitedCountryCodes.includes(countryCode);
                 
                 // Debug individual country matching
-                if (isVisited) {
-                  console.log(`Country matched: ${geo.properties.NAME} (${countryCode})`);
+                if (visitedCountryCodes.includes(countryCode)) {
+                  console.log(`Country matched on map: ${geo.properties.NAME} (${countryCode})`);
                 }
                 
                 return (

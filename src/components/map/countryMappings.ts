@@ -35,13 +35,29 @@ export const countryToCode: Record<string, string> = {
   'Turkey': 'TUR', 'Turkmenistan': 'TKM', 'Uganda': 'UGA', 'Ukraine': 'UKR', 
   'United Arab Emirates': 'ARE', 'United Kingdom': 'GBR', 'United States': 'USA', 'Uruguay': 'URY',
   'Uzbekistan': 'UZB', 'Venezuela': 'VEN', 'Vietnam': 'VNM', 'Yemen': 'YEM', 'Zambia': 'ZMB',
-  'Zimbabwe': 'ZWE'
+  'Zimbabwe': 'ZWE',
+  
+  // Additional mappings to handle potential variations in country names
+  'England': 'GBR',
+  'Scotland': 'GBR',
+  'Wales': 'GBR',
+  'Northern Ireland': 'GBR',
+  'UK': 'GBR',
+  'USA': 'USA',
+  'U.S.A.': 'USA',
+  'U.S.': 'USA',
+  'United States of America': 'USA',
+  'UAE': 'ARE',
+  'U.A.E.': 'ARE'
 };
 
 // Create the reverse mapping for lookup by ISO code
 export const codeToCountry: Record<string, string> = Object.entries(countryToCode).reduce(
   (acc, [country, code]) => {
-    acc[code] = country;
+    if (!acc[code] || country.length > acc[code].length) {
+      // Prefer the longer/more formal names for the reverse mapping
+      acc[code] = country;
+    }
     return acc;
   },
   {} as Record<string, string>

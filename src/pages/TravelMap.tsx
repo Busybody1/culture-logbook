@@ -36,21 +36,43 @@ const TravelMap = () => {
   const normalizeCountryName = (countryName: string | null): string | null => {
     if (!countryName) return null;
     
+    // Convert to title case for consistent formatting
+    const formattedName = countryName.trim();
+    
+    // Check if the country name exists directly in our mapping
+    if (countryToCode[formattedName]) {
+      return formattedName;
+    }
+    
     // Handle specific cases
     const normalizations: Record<string, string> = {
       'UK': 'United Kingdom',
       'U.K.': 'United Kingdom',
       'Great Britain': 'United Kingdom',
       'England': 'United Kingdom',
+      'Britain': 'United Kingdom',
       'USA': 'United States',
       'U.S.A.': 'United States',
       'U.S.': 'United States',
       'United States of America': 'United States',
+      'America': 'United States',
       'UAE': 'United Arab Emirates',
       'U.A.E.': 'United Arab Emirates',
+      'Thai': 'Thailand',
+      'Italia': 'Italy'
     };
     
-    return normalizations[countryName] || countryName;
+    // Try case-insensitive lookup
+    for (const [key, code] of Object.entries(countryToCode)) {
+      if (key.toLowerCase() === formattedName.toLowerCase()) {
+        console.log(`Normalized country name: "${formattedName}" to "${key}"`);
+        return key;
+      }
+    }
+    
+    const normalized = normalizations[formattedName] || formattedName;
+    console.log(`Country normalization: "${formattedName}" -> "${normalized}"`);
+    return normalized;
   };
   
   useEffect(() => {
@@ -80,13 +102,18 @@ const TravelMap = () => {
         }
         
         console.log("Fetched entries:", data?.length || 0, "entries");
-        console.log("Raw entries data:", data);
         
         // Normalize country names in data
-        const normalizedData = data?.map(entry => ({
-          ...entry,
-          country: normalizeCountryName(entry.country)
-        })) || [];
+        const normalizedData = data?.map(entry => {
+          const normalizedCountry = normalizeCountryName(entry.country);
+          if (entry.country && normalizedCountry !== entry.country) {
+            console.log(`Normalized: "${entry.country}" -> "${normalizedCountry}"`);
+          }
+          return {
+            ...entry,
+            country: normalizedCountry
+          };
+        }) || [];
         
         // Log countries after normalization
         console.log("Countries after normalization:", normalizedData.map(entry => entry.country).filter(Boolean));
@@ -105,7 +132,6 @@ const TravelMap = () => {
         }, {} as Record<string, Entry[]>);
         
         console.log("Countries with entries:", Object.keys(grouped));
-        console.log("Grouped entries:", grouped);
         
         // Verify countries against known mappings
         Object.keys(grouped).forEach(country => {
