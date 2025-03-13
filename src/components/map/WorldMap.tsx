@@ -2,10 +2,15 @@
 // src/components/map/WorldMap.tsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ComposableMap, Geographies, Geography } from 'react-simple-maps';
+import { 
+  ComposableMap, 
+  Geographies, 
+  Geography,
+  ZoomableGroup
+} from 'react-simple-maps';
 
-// TopoJSON URL for the world map (using an alternate URL for consistency)
-const geoUrl = "https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json";
+// TopoJSON URL for the world map
+const geoUrl = "https://raw.githubusercontent.com/deldersveld/topojson/master/world-countries.json";
 
 // Interfaces for diary entries and component props
 interface Entry {
@@ -24,41 +29,41 @@ interface WorldMapProps {
 
 // Define the country-to-ISO mapping here
 const countryToCode: Record<string, string> = {
-  'Afghanistan': 'AF', 'Albania': 'AL', 'Algeria': 'DZ', 'Angola': 'AO', 'Argentina': 'AR',
-  'Armenia': 'AM', 'Australia': 'AU', 'Austria': 'AT', 'Azerbaijan': 'AZ', 'Bahamas': 'BS',
-  'Bangladesh': 'BD', 'Belarus': 'BY', 'Belgium': 'BE', 'Belize': 'BZ', 'Benin': 'BJ',
-  'Bhutan': 'BT', 'Bolivia': 'BO', 'Bosnia and Herzegovina': 'BA', 'Botswana': 'BW', 'Brazil': 'BR',
-  'Brunei': 'BN', 'Bulgaria': 'BG', 'Burkina Faso': 'BF', 'Burundi': 'BI', 'Cambodia': 'KH',
-  'Cameroon': 'CM', 'Canada': 'CA', 'Central African Republic': 'CF', 'Chad': 'TD', 'Chile': 'CL',
-  'China': 'CN', 'Colombia': 'CO', 'Congo': 'CG', 'Costa Rica': 'CR', 'Croatia': 'HR',
-  'Cuba': 'CU', 'Cyprus': 'CY', 'Czech Republic': 'CZ', 'Denmark': 'DK', 'Djibouti': 'DJ',
-  'Dominican Republic': 'DO', 'DR Congo': 'CD', 'Ecuador': 'EC', 'Egypt': 'EG', 'El Salvador': 'SV',
-  'Equatorial Guinea': 'GQ', 'Eritrea': 'ER', 'Estonia': 'EE', 'Eswatini': 'SZ', 'Ethiopia': 'ET',
-  'Fiji': 'FJ', 'Finland': 'FI', 'France': 'FR', 'French Guiana': 'GF', 'Gabon': 'GA',
-  'Gambia': 'GM', 'Georgia': 'GE', 'Germany': 'DE', 'Ghana': 'GH', 'Greece': 'GR',
-  'Greenland': 'GL', 'Guatemala': 'GT', 'Guinea': 'GN', 'Guinea-Bissau': 'GW', 'Guyana': 'GY',
-  'Haiti': 'HT', 'Honduras': 'HN', 'Hungary': 'HU', 'Iceland': 'IS', 'India': 'IN',
-  'Indonesia': 'ID', 'Iran': 'IR', 'Iraq': 'IQ', 'Ireland': 'IE', 'Israel': 'IL',
-  'Italy': 'IT', 'Ivory Coast': 'CI', 'Jamaica': 'JM', 'Japan': 'JP', 'Jordan': 'JO',
-  'Kazakhstan': 'KZ', 'Kenya': 'KE', 'Kosovo': 'XK', 'Kuwait': 'KW', 'Kyrgyzstan': 'KG',
-  'Laos': 'LA', 'Latvia': 'LV', 'Lebanon': 'LB', 'Lesotho': 'LS', 'Liberia': 'LR',
-  'Libya': 'LY', 'Lithuania': 'LT', 'Luxembourg': 'LU', 'Madagascar': 'MG', 'Malawi': 'MW',
-  'Malaysia': 'MY', 'Mali': 'ML', 'Malta': 'MT', 'Mauritania': 'MR', 'Mexico': 'MX',
-  'Moldova': 'MD', 'Mongolia': 'MN', 'Montenegro': 'ME', 'Morocco': 'MA', 'Mozambique': 'MZ',
-  'Myanmar': 'MM', 'Namibia': 'NA', 'Nepal': 'NP', 'Netherlands': 'NL', 'New Zealand': 'NZ',
-  'Nicaragua': 'NI', 'Niger': 'NE', 'Nigeria': 'NG', 'North Korea': 'KP', 'North Macedonia': 'MK',
-  'Norway': 'NO', 'Oman': 'OM', 'Pakistan': 'PK', 'Palestine': 'PS', 'Panama': 'PA',
-  'Papua New Guinea': 'PG', 'Paraguay': 'PY', 'Peru': 'PE', 'Philippines': 'PH', 'Poland': 'PL',
-  'Portugal': 'PT', 'Puerto Rico': 'PR', 'Qatar': 'QA', 'Romania': 'RO', 'Russia': 'RU',
-  'Rwanda': 'RW', 'Saudi Arabia': 'SA', 'Senegal': 'SN', 'Serbia': 'RS', 'Sierra Leone': 'SL',
-  'Slovakia': 'SK', 'Slovenia': 'SI', 'Somalia': 'SO', 'South Africa': 'ZA', 'South Korea': 'KR',
-  'South Sudan': 'SS', 'Spain': 'ES', 'Sri Lanka': 'LK', 'Sudan': 'SD', 'Suriname': 'SR',
-  'Sweden': 'SE', 'Switzerland': 'CH', 'Syria': 'SY', 'Taiwan': 'TW', 'Tajikistan': 'TJ',
-  'Tanzania': 'TZ', 'Thailand': 'TH', 'Timor-Leste': 'TL', 'Togo': 'TG', 'Tunisia': 'TN',
-  'Turkey': 'TR', 'Turkmenistan': 'TM', 'Uganda': 'UG', 'Ukraine': 'UA', 
-  'United Arab Emirates': 'AE', 'United Kingdom': 'GB', 'United States': 'US', 'Uruguay': 'UY',
-  'Uzbekistan': 'UZ', 'Venezuela': 'VE', 'Vietnam': 'VN', 'Yemen': 'YE', 'Zambia': 'ZM',
-  'Zimbabwe': 'ZW'
+  'Afghanistan': 'AFG', 'Albania': 'ALB', 'Algeria': 'DZA', 'Angola': 'AGO', 'Argentina': 'ARG',
+  'Armenia': 'ARM', 'Australia': 'AUS', 'Austria': 'AUT', 'Azerbaijan': 'AZE', 'Bahamas': 'BHS',
+  'Bangladesh': 'BGD', 'Belarus': 'BLR', 'Belgium': 'BEL', 'Belize': 'BLZ', 'Benin': 'BEN',
+  'Bhutan': 'BTN', 'Bolivia': 'BOL', 'Bosnia and Herzegovina': 'BIH', 'Botswana': 'BWA', 'Brazil': 'BRA',
+  'Brunei': 'BRN', 'Bulgaria': 'BGR', 'Burkina Faso': 'BFA', 'Burundi': 'BDI', 'Cambodia': 'KHM',
+  'Cameroon': 'CMR', 'Canada': 'CAN', 'Central African Republic': 'CAF', 'Chad': 'TCD', 'Chile': 'CHL',
+  'China': 'CHN', 'Colombia': 'COL', 'Congo': 'COG', 'Costa Rica': 'CRI', 'Croatia': 'HRV',
+  'Cuba': 'CUB', 'Cyprus': 'CYP', 'Czech Republic': 'CZE', 'Denmark': 'DNK', 'Djibouti': 'DJI',
+  'Dominican Republic': 'DOM', 'DR Congo': 'COD', 'Ecuador': 'ECU', 'Egypt': 'EGY', 'El Salvador': 'SLV',
+  'Equatorial Guinea': 'GNQ', 'Eritrea': 'ERI', 'Estonia': 'EST', 'Eswatini': 'SWZ', 'Ethiopia': 'ETH',
+  'Fiji': 'FJI', 'Finland': 'FIN', 'France': 'FRA', 'French Guiana': 'GUF', 'Gabon': 'GAB',
+  'Gambia': 'GMB', 'Georgia': 'GEO', 'Germany': 'DEU', 'Ghana': 'GHA', 'Greece': 'GRC',
+  'Greenland': 'GRL', 'Guatemala': 'GTM', 'Guinea': 'GIN', 'Guinea-Bissau': 'GNB', 'Guyana': 'GUY',
+  'Haiti': 'HTI', 'Honduras': 'HND', 'Hungary': 'HUN', 'Iceland': 'ISL', 'India': 'IND',
+  'Indonesia': 'IDN', 'Iran': 'IRN', 'Iraq': 'IRQ', 'Ireland': 'IRL', 'Israel': 'ISR',
+  'Italy': 'ITA', 'Ivory Coast': 'CIV', 'Jamaica': 'JAM', 'Japan': 'JPN', 'Jordan': 'JOR',
+  'Kazakhstan': 'KAZ', 'Kenya': 'KEN', 'Kosovo': 'UNK', 'Kuwait': 'KWT', 'Kyrgyzstan': 'KGZ',
+  'Laos': 'LAO', 'Latvia': 'LVA', 'Lebanon': 'LBN', 'Lesotho': 'LSO', 'Liberia': 'LBR',
+  'Libya': 'LBY', 'Lithuania': 'LTU', 'Luxembourg': 'LUX', 'Madagascar': 'MDG', 'Malawi': 'MWI',
+  'Malaysia': 'MYS', 'Mali': 'MLI', 'Malta': 'MLT', 'Mauritania': 'MRT', 'Mexico': 'MEX',
+  'Moldova': 'MDA', 'Mongolia': 'MNG', 'Montenegro': 'MNE', 'Morocco': 'MAR', 'Mozambique': 'MOZ',
+  'Myanmar': 'MMR', 'Namibia': 'NAM', 'Nepal': 'NPL', 'Netherlands': 'NLD', 'New Zealand': 'NZL',
+  'Nicaragua': 'NIC', 'Niger': 'NER', 'Nigeria': 'NGA', 'North Korea': 'PRK', 'North Macedonia': 'MKD',
+  'Norway': 'NOR', 'Oman': 'OMN', 'Pakistan': 'PAK', 'Palestine': 'PSE', 'Panama': 'PAN',
+  'Papua New Guinea': 'PNG', 'Paraguay': 'PRY', 'Peru': 'PER', 'Philippines': 'PHL', 'Poland': 'POL',
+  'Portugal': 'PRT', 'Puerto Rico': 'PRI', 'Qatar': 'QAT', 'Romania': 'ROU', 'Russia': 'RUS',
+  'Rwanda': 'RWA', 'Saudi Arabia': 'SAU', 'Senegal': 'SEN', 'Serbia': 'SRB', 'Sierra Leone': 'SLE',
+  'Slovakia': 'SVK', 'Slovenia': 'SVN', 'Somalia': 'SOM', 'South Africa': 'ZAF', 'South Korea': 'KOR',
+  'South Sudan': 'SSD', 'Spain': 'ESP', 'Sri Lanka': 'LKA', 'Sudan': 'SDN', 'Suriname': 'SUR',
+  'Sweden': 'SWE', 'Switzerland': 'CHE', 'Syria': 'SYR', 'Taiwan': 'TWN', 'Tajikistan': 'TJK',
+  'Tanzania': 'TZA', 'Thailand': 'THA', 'Timor-Leste': 'TLS', 'Togo': 'TGO', 'Tunisia': 'TUN',
+  'Turkey': 'TUR', 'Turkmenistan': 'TKM', 'Uganda': 'UGA', 'Ukraine': 'UKR', 
+  'United Arab Emirates': 'ARE', 'United Kingdom': 'GBR', 'United States of America': 'USA', 'United States': 'USA', 'Uruguay': 'URY',
+  'Uzbekistan': 'UZB', 'Venezuela': 'VEN', 'Vietnam': 'VNM', 'Yemen': 'YEM', 'Zambia': 'ZMB',
+  'Zimbabwe': 'ZWE'
 };
 
 // Also create the reverse mapping for lookup by ISO code
@@ -82,14 +87,17 @@ const CustomWorldMap: React.FC<WorldMapProps> = ({ countries, entries }) => {
       .filter(Boolean);
     
     console.log("Countries:", countries);
-    console.log("Mapped to ISO codes:", codes);
+    console.log("Mapped to 3-letter ISO codes:", codes);
     
     setVisitedCountryCodes(codes);
   }, [countries]);
 
-  const handleCountryClick = (countryCode: string) => {
+  const handleCountryClick = (geo: any) => {
+    const countryCode = geo.properties.ISO_A3;
     // Find the country name from the ISO code
-    const countryName = codeToCountry[countryCode];
+    const countryName = Object.keys(countryToCode).find(
+      country => countryToCode[country] === countryCode
+    );
     
     console.log("Clicked country:", countryCode, "mapped to:", countryName);
     
@@ -105,45 +113,49 @@ const CustomWorldMap: React.FC<WorldMapProps> = ({ countries, entries }) => {
       <ComposableMap
         projection="geoMercator"
         projectionConfig={{
-          scale: 135,       // Lower scale zooms out
-          center: [0, 15], // Adjust center if needed
+          scale: 135,
+          center: [0, 30]
         }}
         style={{ width: "100%", height: "100%" }}
       >
-        <Geographies geography={geoUrl}>
-          {({ geographies }) => {
-            console.log("Total geographies:", geographies.length);
-            return geographies.map(geo => {
-              const isoCode = geo.properties.ISO_A2;
-              const isVisited = visitedCountryCodes.includes(isoCode);
-              
-              if (isVisited) {
-                console.log("Visited country:", isoCode, geo.properties.NAME);
-              }
+        <ZoomableGroup zoom={1}>
+          <Geographies geography={geoUrl}>
+            {({ geographies }) => {
+              console.log("Total geographies:", geographies.length);
+              return geographies.map(geo => {
+                const countryCode = geo.properties.ISO_A3;
+                const isVisited = visitedCountryCodes.includes(countryCode);
+                
+                if (isVisited) {
+                  console.log("Visited country on map:", countryCode, geo.properties.NAME);
+                }
 
-              return (
-                <Geography
-                  key={geo.rsmKey}
-                  geography={geo}
-                  fill={isVisited ? "#FF9344" : "#e2e8f0"} // Orange if visited
-                  stroke="#FFFFFF"
-                  onClick={() => handleCountryClick(isoCode)}
-                  style={{
-                    default: { outline: "none" },
-                    hover: {
-                      fill: isVisited ? "#FF7F00" : "#d0d0d0",
-                      outline: "none",
-                    },
-                    pressed: {
-                      fill: isVisited ? "#FF7F00" : "#d0d0d0",
-                      outline: "none",
-                    },
-                  }}
-                />
-              );
-            });
-          }}
-        </Geographies>
+                return (
+                  <Geography
+                    key={geo.rsmKey}
+                    geography={geo}
+                    fill={isVisited ? "#FF9344" : "#e2e8f0"} 
+                    stroke="#FFFFFF"
+                    strokeWidth={0.5}
+                    onClick={() => handleCountryClick(geo)}
+                    style={{
+                      default: { outline: "none" },
+                      hover: {
+                        fill: isVisited ? "#FF7F00" : "#d0d0d0",
+                        outline: "none",
+                        cursor: "pointer"
+                      },
+                      pressed: {
+                        fill: isVisited ? "#FF7F00" : "#d0d0d0",
+                        outline: "none"
+                      },
+                    }}
+                  />
+                );
+              });
+            }}
+          </Geographies>
+        </ZoomableGroup>
       </ComposableMap>
 
       {/* Selected Country Details */}
