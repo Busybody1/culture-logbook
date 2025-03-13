@@ -55,6 +55,8 @@ export const useDiaryEntry = () => {
     if (!validateForm()) return false;
     
     try {
+      console.log("Saving entry with country:", country);
+      
       const entryData = {
         title,
         date: date?.toISOString(),
@@ -68,12 +70,15 @@ export const useDiaryEntry = () => {
         country
       };
 
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from('diary_entries')
-        .insert([entryData]);
+        .insert([entryData])
+        .select();
 
       if (error) throw error;
 
+      console.log("Entry saved successfully:", data);
+      
       toast({
         title: "Entry saved",
         description: "Your diary entry has been saved successfully.",
@@ -95,6 +100,8 @@ export const useDiaryEntry = () => {
     if (!validateForm()) return false;
     
     try {
+      console.log("Updating entry with country:", country);
+      
       const entryData = {
         title,
         date: date?.toISOString(),
@@ -108,13 +115,16 @@ export const useDiaryEntry = () => {
         country
       };
 
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from('diary_entries')
         .update(entryData)
-        .eq('id', entryId);
+        .eq('id', entryId)
+        .select();
 
       if (error) throw error;
 
+      console.log("Entry updated successfully:", data);
+      
       toast({
         title: "Entry updated",
         description: "Your diary entry has been updated successfully.",

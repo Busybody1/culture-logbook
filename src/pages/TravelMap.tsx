@@ -58,6 +58,7 @@ const TravelMap = () => {
         }
         
         console.log("Fetched entries:", data?.length || 0, "entries");
+        console.log("Raw entries data:", data);
         setEntries(data || []);
         
         // Group entries by country
@@ -72,6 +73,7 @@ const TravelMap = () => {
         }, {} as Record<string, Entry[]>);
         
         console.log("Countries with entries:", Object.keys(grouped));
+        console.log("Grouped entries:", grouped);
         setGroupedEntries(grouped);
       } catch (error: any) {
         console.error('Error fetching entries:', error);
