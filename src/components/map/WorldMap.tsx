@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
@@ -26,10 +27,22 @@ interface WorldMapProps {
   entries: Record<string, Entry[]>;
 }
 
+// Map ISO3 codes to country ids from the topo JSON
+// This mapping is needed because the TopoJSON uses numeric IDs that don't match ISO codes
+const ISO_TO_ID_MAP: Record<string, string> = {
+  "GBR": "826", // United Kingdom
+  "THA": "764", // Thailand
+  "ITA": "380", // Italy
+  "TUR": "792", // Turkey
+  "JPN": "392", // Japan
+  // Add more mappings as needed
+};
+
 const CustomWorldMap: React.FC<WorldMapProps> = ({ countries, entries }) => {
   const navigate = useNavigate();
   const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
   const [visitedCountryCodes, setVisitedCountryCodes] = useState<string[]>([]);
+  const [visitedCountryIds, setVisitedCountryIds] = useState<string[]>([]);
 
   useEffect(() => {
     // Debug to see what countries are being received
@@ -52,32 +65,54 @@ const CustomWorldMap: React.FC<WorldMapProps> = ({ countries, entries }) => {
     console.log("Mapped to ISO codes:", codes);
     
     setVisitedCountryCodes(codes);
+    
+    // Map ISO codes to IDs that match the TopoJSON
+    const ids = codes
+      .map(code => {
+        const id = ISO_TO_ID_MAP[code];
+        if (id) {
+          console.log(`Mapped ISO code "${code}" to ID "${id}"`);
+        } else {
+          console.warn(`No ID mapping found for ISO code: ${code}`);
+        }
+        return id;
+      })
+      .filter(Boolean);
+    
+    console.log("Mapped to country IDs in TopoJSON:", ids);
+    setVisitedCountryIds(ids);
   }, [countries]);
 
   const handleCountryClick = (geo: any) => {
-    // Get the ISO code from the geography properties
-    const countryCode = geo.properties.ISO_A3;
-    console.log("Clicked country ISO:", countryCode, "Name:", geo.properties.NAME);
+    // Get the country ID from the geography
+    console.log("Clicked country ID:", geo.id, "All properties:", geo.properties);
     
-    // Find the country name from our mapping
-    const countryName = codeToCountry[countryCode];
-    console.log("Country name from ISO code:", countryName);
+    // Try to find the ISO code for this country
+    const countryId = geo.id;
+    let isoCode = null;
     
-    if (countryName && entries[countryName]) {
-      setSelectedCountry(countryName);
-    } else {
-      console.log("No diary entries for this country.");
-      // Try to find a close match using case-insensitive search
-      const possibleMatch = Object.keys(entries).find(
-        entryCountry => codeToCountry[countryCode]?.toLowerCase() === entryCountry.toLowerCase()
-      );
-      
-      if (possibleMatch) {
-        console.log(`Found possible match: ${possibleMatch}`);
-        setSelectedCountry(possibleMatch);
-      } else {
-        setSelectedCountry(null);
+    // Reverse lookup: Find ISO code from country ID
+    for (const [iso, id] of Object.entries(ISO_TO_ID_MAP)) {
+      if (id === countryId) {
+        isoCode = iso;
+        break;
       }
+    }
+    
+    console.log("Country ID:", countryId, "ISO Code (if found):", isoCode);
+    
+    if (isoCode) {
+      const countryName = codeToCountry[isoCode];
+      console.log("Country name from ISO code:", countryName);
+      
+      if (countryName && entries[countryName]) {
+        setSelectedCountry(countryName);
+      } else {
+        console.log("No diary entries for this country.");
+      }
+    } else {
+      console.log("Could not determine ISO code for clicked country.");
+      setSelectedCountry(null);
     }
   };
 
@@ -96,43 +131,39 @@ const CustomWorldMap: React.FC<WorldMapProps> = ({ countries, entries }) => {
             {({ geographies }) => {
               console.log("Total geographies loaded:", geographies.length);
               
-              // Log full structure of first geography to better understand the data
+              // Log a sample geography to understand its structure
               if (geographies.length > 0) {
                 const sampleGeo = geographies[0];
-                console.log("Complete geography structure:", JSON.stringify(sampleGeo));
-                console.log("Geography structure example:", {
+                console.log("Sample geography:", {
                   id: sampleGeo.id,
-                  rsmKey: sampleGeo.rsmKey,
-                  properties: sampleGeo.properties
+                  properties: sampleGeo.properties,
+                  type: sampleGeo.type
                 });
               }
               
-              // Log all visited country codes for debugging
-              console.log("All visited country codes:", visitedCountryCodes);
+              // Log all country IDs we're looking for
+              console.log("Visited country IDs to highlight:", visitedCountryIds);
               
-              // Debug matching - check each visited code against each geography
-              if (visitedCountryCodes.length > 0) {
-                console.log("Checking for matches between visited countries and map data...");
-                visitedCountryCodes.forEach(visitedCode => {
-                  const matchingGeo = geographies.find(geo => geo.properties.ISO_A3 === visitedCode);
+              // Debug matching - check each visited ID against each geography
+              if (visitedCountryIds.length > 0) {
+                console.log("Checking for matches between visited IDs and map data...");
+                visitedCountryIds.forEach(id => {
+                  const matchingGeo = geographies.find(geo => geo.id === id);
                   if (matchingGeo) {
-                    console.log(`✓ Found match for ${visitedCode} (${matchingGeo.properties.NAME})`);
+                    console.log(`✓ Found match for ID ${id} (${matchingGeo.properties.name})`);
                   } else {
-                    console.log(`✗ No match found for ${visitedCode}`);
+                    console.log(`✗ No match found for ID ${id}`);
                   }
                 });
               }
               
               return geographies.map(geo => {
-                // Get the country code from properties
-                const countryCode = geo.properties.ISO_A3;
-                
-                // Check if this is a visited country
-                const isVisited = visitedCountryCodes.includes(countryCode);
+                // Check if this is a visited country by ID
+                const isVisited = visitedCountryIds.includes(geo.id);
                 
                 // Debug colored countries
                 if (isVisited) {
-                  console.log(`Highlighting country: ${geo.properties.NAME} (${countryCode})`);
+                  console.log(`Highlighting country: ${geo.properties.name} (ID: ${geo.id})`);
                 }
                 
                 return (
