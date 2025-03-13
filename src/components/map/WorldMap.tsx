@@ -9,8 +9,10 @@ import {
   ZoomableGroup
 } from 'react-simple-maps';
 
-// TopoJSON URL for the world map
-const geoUrl = "https://raw.githubusercontent.com/deldersveld/topojson/master/world-countries.json";
+
+// Use a known working TopoJSON file
+const geoUrl = "https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json";
+
 
 // Interfaces for diary entries and component props
 interface Entry {
@@ -81,30 +83,32 @@ const CustomWorldMap: React.FC<WorldMapProps> = ({ countries, entries }) => {
   const [visitedCountryCodes, setVisitedCountryCodes] = useState<string[]>([]);
 
   useEffect(() => {
-    // Convert country names from props into ISO codes using our dictionary
+
     const codes = countries
       .map(country => countryToCode[country])
       .filter(Boolean);
     
-    console.log("Countries:", countries);
-    console.log("Mapped to 3-letter ISO codes:", codes);
+    console.log("Countries from diary:", countries);
+    console.log("Mapped to ISO codes:", codes);
+
     
     setVisitedCountryCodes(codes);
   }, [countries]);
 
   const handleCountryClick = (geo: any) => {
     const countryCode = geo.properties.ISO_A3;
-    // Find the country name from the ISO code
+    // Find the matching country name from our mapping
     const countryName = Object.keys(countryToCode).find(
       country => countryToCode[country] === countryCode
     );
     
-    console.log("Clicked country:", countryCode, "mapped to:", countryName);
+    console.log("Clicked country ISO:", countryCode, "mapped to:", countryName);
+
     
     if (countryName && entries[countryName]) {
       setSelectedCountry(countryName);
     } else {
-      console.log("No entries found for this country");
+      console.log("No diary entries for this country.");
     }
   };
 
@@ -113,28 +117,29 @@ const CustomWorldMap: React.FC<WorldMapProps> = ({ countries, entries }) => {
       <ComposableMap
         projection="geoMercator"
         projectionConfig={{
-          scale: 135,
-          center: [0, 30]
+          scale: 135,       // Lower scale zooms out so the entire world is visible
+          center: [0, 15]  // Adjust center if needed
         }}
         style={{ width: "100%", height: "100%" }}
       >
         <ZoomableGroup zoom={1}>
           <Geographies geography={geoUrl}>
             {({ geographies }) => {
-              console.log("Total geographies:", geographies.length);
+              console.log("Total geographies loaded:", geographies.length);
               return geographies.map(geo => {
                 const countryCode = geo.properties.ISO_A3;
                 const isVisited = visitedCountryCodes.includes(countryCode);
                 
                 if (isVisited) {
-                  console.log("Visited country on map:", countryCode, geo.properties.NAME);
+                  console.log("Visited country rendered:", countryCode, geo.properties.NAME);
                 }
-
+                
                 return (
                   <Geography
                     key={geo.rsmKey}
                     geography={geo}
-                    fill={isVisited ? "#FF9344" : "#e2e8f0"} 
+                    fill={isVisited ? "#FF9344" : "#e2e8f0"}
+
                     stroke="#FFFFFF"
                     strokeWidth={0.5}
                     onClick={() => handleCountryClick(geo)}
@@ -148,7 +153,7 @@ const CustomWorldMap: React.FC<WorldMapProps> = ({ countries, entries }) => {
                       pressed: {
                         fill: isVisited ? "#FF7F00" : "#d0d0d0",
                         outline: "none"
-                      },
+                      }
                     }}
                   />
                 );
