@@ -1,5 +1,3 @@
-
-// src/components/map/WorldMap.tsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
@@ -98,46 +96,38 @@ const CustomWorldMap: React.FC<WorldMapProps> = ({ countries, entries }) => {
             {({ geographies }) => {
               console.log("Total geographies loaded:", geographies.length);
               
-              // Debug the first few geographies to understand their structure
+              // Log full structure of first geography to better understand the data
               if (geographies.length > 0) {
                 const sampleGeo = geographies[0];
+                console.log("Complete geography structure:", JSON.stringify(sampleGeo));
                 console.log("Geography structure example:", {
                   id: sampleGeo.id,
                   rsmKey: sampleGeo.rsmKey,
-                  properties: {
-                    NAME: sampleGeo.properties.NAME,
-                    ISO_A3: sampleGeo.properties.ISO_A3,
-                    name: sampleGeo.properties.name
+                  properties: sampleGeo.properties
+                });
+              }
+              
+              // Log all visited country codes for debugging
+              console.log("All visited country codes:", visitedCountryCodes);
+              
+              // Debug matching - check each visited code against each geography
+              if (visitedCountryCodes.length > 0) {
+                console.log("Checking for matches between visited countries and map data...");
+                visitedCountryCodes.forEach(visitedCode => {
+                  const matchingGeo = geographies.find(geo => geo.properties.ISO_A3 === visitedCode);
+                  if (matchingGeo) {
+                    console.log(`✓ Found match for ${visitedCode} (${matchingGeo.properties.NAME})`);
+                  } else {
+                    console.log(`✗ No match found for ${visitedCode}`);
                   }
                 });
               }
               
-              // Debug: Check if any visitedCountryCodes match the map data
-              const matchingGeos = geographies.filter(geo => {
-                const geoCode = geo.properties.ISO_A3;
-                if (visitedCountryCodes.includes(geoCode)) {
-                  console.log(`Found matching country: ${geo.properties.NAME} (${geoCode})`);
-                  return true;
-                }
-                return false;
-              });
-              
-              console.log(`Found ${matchingGeos.length} matching countries on the map`);
-              
-              if (matchingGeos.length === 0 && visitedCountryCodes.length > 0) {
-                // Log available country codes for debugging
-                console.log("Available country codes on the map (first 10):", 
-                  geographies.slice(0, 10).map(geo => ({
-                    name: geo.properties.NAME,
-                    code: geo.properties.ISO_A3
-                  }))
-                );
-                console.log("Visited country codes (first 10):", visitedCountryCodes.slice(0, 10));
-              }
-              
               return geographies.map(geo => {
-                // Get the ISO code from properties
+                // Get the country code from properties
                 const countryCode = geo.properties.ISO_A3;
+                
+                // Check if this is a visited country
                 const isVisited = visitedCountryCodes.includes(countryCode);
                 
                 // Debug colored countries
@@ -173,7 +163,6 @@ const CustomWorldMap: React.FC<WorldMapProps> = ({ countries, entries }) => {
         </ZoomableGroup>
       </ComposableMap>
 
-      {/* Selected Country Details */}
       {selectedCountry && entries[selectedCountry] && (
         <div className="absolute bottom-4 left-4 right-4 bg-white/90 backdrop-blur-sm rounded-lg shadow-sm p-4 max-w-[90%] mx-auto">
           <h3 className="text-lg font-medium mb-2">{selectedCountry}</h3>
