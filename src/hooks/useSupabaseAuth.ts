@@ -1,7 +1,7 @@
 
 import { useEffect, useState } from 'react';
 import { User } from '@supabase/supabase-js';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/lib/supabase';
 import { useNavigate } from 'react-router-dom';
 import { toast } from '@/hooks/use-toast';
 
@@ -97,25 +97,17 @@ export function useSupabaseAuth() {
           data: {
             full_name: fullName,
           },
-          emailRedirectTo: window.location.origin + '/auth'
+          emailRedirectTo: `${window.location.origin}/auth`
         }
       });
 
       if (signUpError) throw signUpError;
-
-      // Create user profile
-      const { error: profileError } = await supabase
-        .from('user_profiles')
-        .insert([{ email, full_name: fullName }]);
-
-      if (profileError) throw profileError;
 
       toast({
         title: "Account created successfully",
         description: "Welcome to Culture Vulture! Please check your email to verify your account.",
       });
       
-      navigate('/diary');
     } catch (error) {
       toast({
         title: "Error creating account",

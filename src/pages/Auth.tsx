@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { User, Lock, Mail, ArrowLeft } from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/lib/supabase';
 
 const Auth = () => {
   const navigate = useNavigate();
@@ -128,7 +128,7 @@ const Auth = () => {
           data: {
             full_name: signupName,
           },
-          emailRedirectTo: window.location.origin + '/auth'
+          emailRedirectTo: `${window.location.origin}/auth`
         },
       });
 
