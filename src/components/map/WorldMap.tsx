@@ -1,5 +1,6 @@
+
 // src/components/map/WorldMap.tsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ComposableMap, Geographies, Geography } from 'react-simple-maps';
 
@@ -21,7 +22,7 @@ interface WorldMapProps {
   entries: Record<string, Entry[]>;
 }
 
-// Option A: Define the country-to-ISO mapping here
+// Define the country-to-ISO mapping here
 const countryToCode: Record<string, string> = {
   'Afghanistan': 'AF', 'Albania': 'AL', 'Algeria': 'DZ', 'Angola': 'AO', 'Argentina': 'AR',
   'Armenia': 'AM', 'Australia': 'AU', 'Austria': 'AT', 'Azerbaijan': 'AZ', 'Bahamas': 'BS',
@@ -60,21 +61,42 @@ const countryToCode: Record<string, string> = {
   'Zimbabwe': 'ZW'
 };
 
+// Also create the reverse mapping for lookup by ISO code
+const codeToCountry: Record<string, string> = Object.entries(countryToCode).reduce(
+  (acc, [country, code]) => {
+    acc[code] = country;
+    return acc;
+  },
+  {} as Record<string, string>
+);
+
 const CustomWorldMap: React.FC<WorldMapProps> = ({ countries, entries }) => {
   const navigate = useNavigate();
   const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
+  const [visitedCountryCodes, setVisitedCountryCodes] = useState<string[]>([]);
 
-  // Convert country names from props into ISO codes using our dictionary
-  const visitedCountryCodes = countries
-    .map(country => countryToCode[country])
-    .filter(Boolean);
+  useEffect(() => {
+    // Convert country names from props into ISO codes using our dictionary
+    const codes = countries
+      .map(country => countryToCode[country])
+      .filter(Boolean);
+    
+    console.log("Countries:", countries);
+    console.log("Mapped to ISO codes:", codes);
+    
+    setVisitedCountryCodes(codes);
+  }, [countries]);
 
   const handleCountryClick = (countryCode: string) => {
-    const countryName = Object.keys(countryToCode).find(
-      name => countryToCode[name] === countryCode
-    );
+    // Find the country name from the ISO code
+    const countryName = codeToCountry[countryCode];
+    
+    console.log("Clicked country:", countryCode, "mapped to:", countryName);
+    
     if (countryName && entries[countryName]) {
       setSelectedCountry(countryName);
+    } else {
+      console.log("No entries found for this country");
     }
   };
 
@@ -89,10 +111,15 @@ const CustomWorldMap: React.FC<WorldMapProps> = ({ countries, entries }) => {
         style={{ width: "100%", height: "100%" }}
       >
         <Geographies geography={geoUrl}>
-          {({ geographies }) =>
-            geographies.map(geo => {
+          {({ geographies }) => {
+            console.log("Total geographies:", geographies.length);
+            return geographies.map(geo => {
               const isoCode = geo.properties.ISO_A2;
               const isVisited = visitedCountryCodes.includes(isoCode);
+              
+              if (isVisited) {
+                console.log("Visited country:", isoCode, geo.properties.NAME);
+              }
 
               return (
                 <Geography
@@ -114,8 +141,8 @@ const CustomWorldMap: React.FC<WorldMapProps> = ({ countries, entries }) => {
                   }}
                 />
               );
-            })
-          }
+            });
+          }}
         </Geographies>
       </ComposableMap>
 

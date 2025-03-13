@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -28,6 +29,7 @@ const TravelMap = () => {
   const [entries, setEntries] = useState<Entry[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [groupedEntries, setGroupedEntries] = useState<Record<string, Entry[]>>({});
+  const [error, setError] = useState<string | null>(null);
   
   useEffect(() => {
     const fetchEntries = async () => {
@@ -38,6 +40,9 @@ const TravelMap = () => {
 
       try {
         setIsLoading(true);
+        setError(null);
+        
+        console.log("Fetching entries for user:", user.id);
         
         const { data, error } = await supabase
           .from('diary_entries')
@@ -46,8 +51,13 @@ const TravelMap = () => {
           .not('country', 'is', null)
           .order('date', { ascending: false });
         
-        if (error) throw error;
+        if (error) {
+          console.error('Error fetching entries:', error);
+          setError(`Failed to fetch entries: ${error.message}`);
+          throw error;
+        }
         
+        console.log("Fetched entries:", data?.length || 0, "entries");
         setEntries(data || []);
         
         // Group entries by country
@@ -61,9 +71,11 @@ const TravelMap = () => {
           return acc;
         }, {} as Record<string, Entry[]>);
         
+        console.log("Countries with entries:", Object.keys(grouped));
         setGroupedEntries(grouped);
-      } catch (error) {
+      } catch (error: any) {
         console.error('Error fetching entries:', error);
+        setError(error.message || 'Failed to load entries');
         toast({
           title: "Error loading travel data",
           description: "We couldn't load your travel data. Please try again.",
@@ -93,6 +105,20 @@ const TravelMap = () => {
             Back to Diary
           </Button>
         </div>
+
+        {error && (
+          <div className="bg-red-50 border border-red-200 text-red-700 p-4 rounded-lg mb-6">
+            <h3 className="font-medium">Error loading map data</h3>
+            <p className="text-sm">{error}</p>
+            <Button 
+              variant="outline" 
+              className="mt-2 text-xs"
+              onClick={() => window.location.reload()}
+            >
+              Try Again
+            </Button>
+          </div>
+        )}
 
         {isLoading ? (
           <div className="animate-pulse">
