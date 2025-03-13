@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -9,6 +8,10 @@ import WorldMap from '@/components/map/WorldMap';
 import { toast } from '@/hooks/use-toast';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { MapIcon } from 'lucide-react';
+import { fixLeafletIcon } from '@/lib/fixLeafletIcon';
+
+// Fix Leaflet icon issues
+fixLeafletIcon();
 
 interface Entry {
   id: string;

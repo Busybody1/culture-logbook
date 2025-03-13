@@ -1,16 +1,12 @@
-
-import React, { useEffect, useRef, useState } from 'react';
+// src/components/map/WorldMap.tsx
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MapPin } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
-import $ from 'jquery';
-import 'jvectormap-next';
-import 'jvectormap-next/jquery-jvectormap.css';
+import { ComposableMap, Geographies, Geography } from 'react-simple-maps';
 
-// We need to import the map data - we'll create this file next
-import '@/lib/jquery-jvectormap-world-mill';
+// TopoJSON URL for the world map (using an alternate URL for consistency)
+const geoUrl = "https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json";
 
-// Define interfaces for our component props and data
+// Interfaces for diary entries and component props
 interface Entry {
   id: string;
   title: string;
@@ -25,7 +21,7 @@ interface WorldMapProps {
   entries: Record<string, Entry[]>;
 }
 
-// Map of country names to ISO country codes (required for jVectorMap)
+// Option A: Define the country-to-ISO mapping here
 const countryToCode: Record<string, string> = {
   'Afghanistan': 'AF', 'Albania': 'AL', 'Algeria': 'DZ', 'Angola': 'AO', 'Argentina': 'AR',
   'Armenia': 'AM', 'Australia': 'AU', 'Austria': 'AT', 'Azerbaijan': 'AZ', 'Bahamas': 'BS',
@@ -57,88 +53,72 @@ const countryToCode: Record<string, string> = {
   'Slovakia': 'SK', 'Slovenia': 'SI', 'Somalia': 'SO', 'South Africa': 'ZA', 'South Korea': 'KR',
   'South Sudan': 'SS', 'Spain': 'ES', 'Sri Lanka': 'LK', 'Sudan': 'SD', 'Suriname': 'SR',
   'Sweden': 'SE', 'Switzerland': 'CH', 'Syria': 'SY', 'Taiwan': 'TW', 'Tajikistan': 'TJ',
-  'Tanzania': 'TZ', 'Thailand': 'TH', 'Timor-Leste': '???', 'Togo': 'TG', 'Tunisia': 'TN',
+  'Tanzania': 'TZ', 'Thailand': 'TH', 'Timor-Leste': 'TL', 'Togo': 'TG', 'Tunisia': 'TN',
   'Turkey': 'TR', 'Turkmenistan': 'TM', 'Uganda': 'UG', 'Ukraine': 'UA', 
   'United Arab Emirates': 'AE', 'United Kingdom': 'GB', 'United States': 'US', 'Uruguay': 'UY',
   'Uzbekistan': 'UZ', 'Venezuela': 'VE', 'Vietnam': 'VN', 'Yemen': 'YE', 'Zambia': 'ZM',
   'Zimbabwe': 'ZW'
 };
 
-const WorldMap: React.FC<WorldMapProps> = ({ countries, entries }) => {
+const CustomWorldMap: React.FC<WorldMapProps> = ({ countries, entries }) => {
   const navigate = useNavigate();
   const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
-  const mapRef = useRef<HTMLDivElement>(null);
-  
-  useEffect(() => {
-    if (!mapRef.current) return;
 
-    // Convert country names to ISO codes for jVectorMap
-    const visitedCountryCodes = countries
-      .map(country => countryToCode[country])
-      .filter(Boolean);
+  // Convert country names from props into ISO codes using our dictionary
+  const visitedCountryCodes = countries
+    .map(country => countryToCode[country])
+    .filter(Boolean);
 
-    // Create color data object for visited countries
-    const colorData = visitedCountryCodes.reduce((acc, code) => {
-      acc[code] = '#FF9344';
-      return acc;
-    }, {} as Record<string, string>);
-
-    // Initialize jVectorMap
-    const $map = $(mapRef.current);
-    
-    // @ts-ignore - jVectorMap extends jQuery but TypeScript doesn't know about it
-    $map.vectorMap({
-      map: 'world_mill',
-      backgroundColor: 'transparent',
-      zoomOnScroll: true,
-      regionStyle: {
-        initial: {
-          fill: '#e2e8f0',
-          "fill-opacity": 1,
-          stroke: 'none',
-          "stroke-width": 0,
-          "stroke-opacity": 1
-        },
-        hover: {
-          "fill-opacity": 0.8,
-          cursor: 'pointer'
-        },
-        selected: {
-          fill: '#FF9344'
-        },
-        selectedHover: {}
-      },
-      series: {
-        regions: [{
-          values: colorData,
-          attribute: 'fill'
-        }]
-      },
-      onRegionClick: function(e: Event, code: string) {
-        // Find the country name from the code
-        const countryName = Object.keys(countryToCode).find(
-          name => countryToCode[name] === code
-        );
-        
-        if (countryName && entries[countryName]) {
-          setSelectedCountry(countryName);
-        }
-      }
-    });
-
-    // Cleanup
-    return () => {
-      // @ts-ignore - jVectorMap extends jQuery but TypeScript doesn't know about it
-      if ($map.vectorMap) {
-        $map.vectorMap('get', 'mapObject').remove();
-      }
-    };
-  }, [countries, entries]);
+  const handleCountryClick = (countryCode: string) => {
+    const countryName = Object.keys(countryToCode).find(
+      name => countryToCode[name] === countryCode
+    );
+    if (countryName && entries[countryName]) {
+      setSelectedCountry(countryName);
+    }
+  };
 
   return (
     <div className="relative w-full h-[60vh] bg-gray-50 rounded-lg overflow-hidden border">
-      <div ref={mapRef} className="w-full h-full" />
-      
+      <ComposableMap
+        projection="geoMercator"
+        projectionConfig={{
+          scale: 135,       // Lower scale zooms out
+          center: [0, 15], // Adjust center if needed
+        }}
+        style={{ width: "100%", height: "100%" }}
+      >
+        <Geographies geography={geoUrl}>
+          {({ geographies }) =>
+            geographies.map(geo => {
+              const isoCode = geo.properties.ISO_A2;
+              const isVisited = visitedCountryCodes.includes(isoCode);
+
+              return (
+                <Geography
+                  key={geo.rsmKey}
+                  geography={geo}
+                  fill={isVisited ? "#FF9344" : "#e2e8f0"} // Orange if visited
+                  stroke="#FFFFFF"
+                  onClick={() => handleCountryClick(isoCode)}
+                  style={{
+                    default: { outline: "none" },
+                    hover: {
+                      fill: isVisited ? "#FF7F00" : "#d0d0d0",
+                      outline: "none",
+                    },
+                    pressed: {
+                      fill: isVisited ? "#FF7F00" : "#d0d0d0",
+                      outline: "none",
+                    },
+                  }}
+                />
+              );
+            })
+          }
+        </Geographies>
+      </ComposableMap>
+
       {/* Selected Country Details */}
       {selectedCountry && entries[selectedCountry] && (
         <div className="absolute bottom-4 left-4 right-4 bg-white/90 backdrop-blur-sm rounded-lg shadow-sm p-4 max-w-[90%] mx-auto">
@@ -151,7 +131,6 @@ const WorldMap: React.FC<WorldMapProps> = ({ countries, entries }) => {
                 onClick={() => navigate(`/edit-entry/${entry.id}`)}
               >
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent z-10 opacity-0 group-hover:opacity-100 transition-opacity" />
-                
                 {entry.image_url ? (
                   <img 
                     src={entry.image_url} 
@@ -163,23 +142,22 @@ const WorldMap: React.FC<WorldMapProps> = ({ countries, entries }) => {
                     <span className="text-xs text-gray-400">No image</span>
                   </div>
                 )}
-                
                 <div className="absolute bottom-1 left-1 right-1 text-white text-xs z-20 opacity-0 group-hover:opacity-100 transition-opacity truncate">
                   {entry.title}
                 </div>
               </div>
             ))}
-            
             {entries[selectedCountry].length > 3 && (
               <div 
                 className="aspect-square rounded-md overflow-hidden bg-gray-100 flex items-center justify-center cursor-pointer hover:bg-gray-200 transition-colors"
                 onClick={() => navigate('/diary', { state: { filterCountry: selectedCountry } })}
               >
-                <span className="text-sm font-medium text-gray-700">+{entries[selectedCountry].length - 3} more</span>
+                <span className="text-sm font-medium text-gray-700">
+                  +{entries[selectedCountry].length - 3} more
+                </span>
               </div>
             )}
           </div>
-          
           <button 
             className="text-sm text-[#27AD95] hover:underline w-full text-center"
             onClick={() => navigate('/diary', { state: { filterCountry: selectedCountry } })}
@@ -192,4 +170,4 @@ const WorldMap: React.FC<WorldMapProps> = ({ countries, entries }) => {
   );
 };
 
-export default WorldMap;
+export default CustomWorldMap;

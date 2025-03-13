@@ -1,0 +1,10 @@
+/* Ensure the map container takes full height */
+.leaflet-container {
+    height: 100%;
+    width: 100%;
+  }
+  
+  /* Fix for icon issues */
+  .leaflet-default-icon-path {
+    background-image: url(https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png);
+  }
