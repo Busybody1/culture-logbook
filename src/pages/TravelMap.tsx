@@ -10,6 +10,7 @@ import { toast } from '@/hooks/use-toast';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { MapIcon } from 'lucide-react';
 import { fixLeafletIcon } from '@/lib/fixLeafletIcon';
+import { countryToCode } from '@/components/map/countryMappings';
 
 // Fix Leaflet icon issues
 fixLeafletIcon();
@@ -30,6 +31,27 @@ const TravelMap = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [groupedEntries, setGroupedEntries] = useState<Record<string, Entry[]>>({});
   const [error, setError] = useState<string | null>(null);
+  
+  // Function to normalize country names to match mapping
+  const normalizeCountryName = (countryName: string | null): string | null => {
+    if (!countryName) return null;
+    
+    // Handle specific cases
+    const normalizations: Record<string, string> = {
+      'UK': 'United Kingdom',
+      'U.K.': 'United Kingdom',
+      'Great Britain': 'United Kingdom',
+      'England': 'United Kingdom',
+      'USA': 'United States',
+      'U.S.A.': 'United States',
+      'U.S.': 'United States',
+      'United States of America': 'United States',
+      'UAE': 'United Arab Emirates',
+      'U.A.E.': 'United Arab Emirates',
+    };
+    
+    return normalizations[countryName] || countryName;
+  };
   
   useEffect(() => {
     const fetchEntries = async () => {
@@ -59,10 +81,20 @@ const TravelMap = () => {
         
         console.log("Fetched entries:", data?.length || 0, "entries");
         console.log("Raw entries data:", data);
-        setEntries(data || []);
+        
+        // Normalize country names in data
+        const normalizedData = data?.map(entry => ({
+          ...entry,
+          country: normalizeCountryName(entry.country)
+        })) || [];
+        
+        // Log countries after normalization
+        console.log("Countries after normalization:", normalizedData.map(entry => entry.country).filter(Boolean));
+        
+        setEntries(normalizedData);
         
         // Group entries by country
-        const grouped = (data || []).reduce((acc, entry) => {
+        const grouped = (normalizedData).reduce((acc, entry) => {
           if (entry.country) {
             if (!acc[entry.country]) {
               acc[entry.country] = [];
@@ -74,6 +106,16 @@ const TravelMap = () => {
         
         console.log("Countries with entries:", Object.keys(grouped));
         console.log("Grouped entries:", grouped);
+        
+        // Verify countries against known mappings
+        Object.keys(grouped).forEach(country => {
+          if (!countryToCode[country]) {
+            console.warn(`Warning: No ISO code mapping found for country "${country}"`);
+          } else {
+            console.log(`Country "${country}" maps to code "${countryToCode[country]}"`);
+          }
+        });
+        
         setGroupedEntries(grouped);
       } catch (error: any) {
         console.error('Error fetching entries:', error);
