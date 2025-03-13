@@ -57,15 +57,30 @@ const CustomWorldMap: React.FC<WorldMapProps> = ({ countries, entries }) => {
   }, [countries]);
 
   const handleCountryClick = (geo: any) => {
+    // Get the ISO code from the geography properties
+    // react-simple-maps uses ISO_A3 for 3-letter country codes
     const countryCode = geo.properties.ISO_A3;
-    const countryName = codeToCountry[countryCode];
+    console.log("Clicked country ISO:", countryCode);
     
-    console.log("Clicked country ISO:", countryCode, "mapped to:", countryName);
+    // Find the country name from our mapping
+    const countryName = codeToCountry[countryCode];
+    console.log("Country name from ISO code:", countryName);
     
     if (countryName && entries[countryName]) {
       setSelectedCountry(countryName);
     } else {
       console.log("No diary entries for this country.");
+      // Try to find a close match using case-insensitive search
+      const possibleMatch = Object.keys(entries).find(
+        entryCountry => codeToCountry[countryCode]?.toLowerCase() === entryCountry.toLowerCase()
+      );
+      
+      if (possibleMatch) {
+        console.log(`Found possible match: ${possibleMatch}`);
+        setSelectedCountry(possibleMatch);
+      } else {
+        setSelectedCountry(null);
+      }
     }
   };
 
@@ -90,22 +105,20 @@ const CustomWorldMap: React.FC<WorldMapProps> = ({ countries, entries }) => {
               );
               console.log(`Found ${matchingGeos.length} matching countries on the map`);
               
-              if (matchingGeos.length === 0) {
-                // List all available countries on the map for debugging
-                console.log("Available countries on the map:", 
-                  geographies.map(geo => `${geo.properties.NAME} (${geo.properties.ISO_A3})`).slice(0, 10)
+              if (matchingGeos.length === 0 && visitedCountryCodes.length > 0) {
+                // Log available country codes for debugging
+                console.log("Available countries on the map (first 10):", 
+                  geographies.slice(0, 10).map(geo => ({
+                    name: geo.properties.NAME,
+                    code: geo.properties.ISO_A3
+                  }))
                 );
-                console.log("First 10 visitedCountryCodes:", visitedCountryCodes.slice(0, 10));
+                console.log("Visited country codes (first 10):", visitedCountryCodes.slice(0, 10));
               }
               
               return geographies.map(geo => {
                 const countryCode = geo.properties.ISO_A3;
                 const isVisited = visitedCountryCodes.includes(countryCode);
-                
-                // Debug individual country matching
-                if (visitedCountryCodes.includes(countryCode)) {
-                  console.log(`Country matched on map: ${geo.properties.NAME} (${countryCode})`);
-                }
                 
                 return (
                   <Geography
