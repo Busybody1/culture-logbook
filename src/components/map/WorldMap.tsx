@@ -9,10 +9,8 @@ import {
   ZoomableGroup
 } from 'react-simple-maps';
 
-
 // Use a known working TopoJSON file
 const geoUrl = "https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json";
-
 
 // Interfaces for diary entries and component props
 interface Entry {
@@ -83,27 +81,21 @@ const CustomWorldMap: React.FC<WorldMapProps> = ({ countries, entries }) => {
   const [visitedCountryCodes, setVisitedCountryCodes] = useState<string[]>([]);
 
   useEffect(() => {
-
     const codes = countries
       .map(country => countryToCode[country])
       .filter(Boolean);
     
     console.log("Countries from diary:", countries);
     console.log("Mapped to ISO codes:", codes);
-
     
     setVisitedCountryCodes(codes);
   }, [countries]);
 
   const handleCountryClick = (geo: any) => {
     const countryCode = geo.properties.ISO_A3;
-    // Find the matching country name from our mapping
-    const countryName = Object.keys(countryToCode).find(
-      country => countryToCode[country] === countryCode
-    );
+    const countryName = codeToCountry[countryCode];
     
     console.log("Clicked country ISO:", countryCode, "mapped to:", countryName);
-
     
     if (countryName && entries[countryName]) {
       setSelectedCountry(countryName);
@@ -117,12 +109,12 @@ const CustomWorldMap: React.FC<WorldMapProps> = ({ countries, entries }) => {
       <ComposableMap
         projection="geoMercator"
         projectionConfig={{
-          scale: 135,       // Lower scale zooms out so the entire world is visible
-          center: [0, 15]  // Adjust center if needed
+          scale: 135,
+          center: [0, 15]
         }}
         style={{ width: "100%", height: "100%" }}
       >
-        <ZoomableGroup zoom={1}>
+        <ZoomableGroup>
           <Geographies geography={geoUrl}>
             {({ geographies }) => {
               console.log("Total geographies loaded:", geographies.length);
@@ -130,16 +122,11 @@ const CustomWorldMap: React.FC<WorldMapProps> = ({ countries, entries }) => {
                 const countryCode = geo.properties.ISO_A3;
                 const isVisited = visitedCountryCodes.includes(countryCode);
                 
-                if (isVisited) {
-                  console.log("Visited country rendered:", countryCode, geo.properties.NAME);
-                }
-                
                 return (
                   <Geography
                     key={geo.rsmKey}
                     geography={geo}
                     fill={isVisited ? "#FF9344" : "#e2e8f0"}
-
                     stroke="#FFFFFF"
                     strokeWidth={0.5}
                     onClick={() => handleCountryClick(geo)}
