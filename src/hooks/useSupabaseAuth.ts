@@ -1,7 +1,7 @@
 
 import { useEffect, useState } from 'react';
 import { User } from '@supabase/supabase-js';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/integrations/supabase/client';
 import { useNavigate } from 'react-router-dom';
 import { toast } from '@/hooks/use-toast';
 
@@ -11,6 +11,42 @@ export function useSupabaseAuth() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    // Handle hash fragment from Supabase redirect
+    const handleHashRedirect = async () => {
+      const hash = window.location.hash;
+      
+      if (hash && hash.includes('access_token')) {
+        // Clear the hash from the URL without reloading
+        window.history.replaceState(null, '', window.location.pathname);
+        
+        try {
+          // Set the session from the URL hash
+          const { data, error } = await supabase.auth.getSession();
+          
+          if (error) throw error;
+          
+          if (data?.session) {
+            setUser(data.session.user);
+            toast({
+              title: "Authentication successful",
+              description: "You have been successfully authenticated.",
+            });
+            navigate('/diary');
+          }
+        } catch (error) {
+          console.error("Error handling redirect:", error);
+          toast({
+            title: "Authentication error",
+            description: error instanceof Error ? error.message : "An error occurred during authentication",
+            variant: "destructive",
+          });
+        }
+      }
+    };
+
+    // Check for URL params first
+    handleHashRedirect();
+
     // Check active sessions and sets the user
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null);
@@ -26,7 +62,7 @@ export function useSupabaseAuth() {
     });
 
     return () => subscription.unsubscribe();
-  }, []);
+  }, [navigate]);
 
   const signIn = async (email: string, password: string) => {
     try {
@@ -57,6 +93,12 @@ export function useSupabaseAuth() {
       const { error: signUpError } = await supabase.auth.signUp({
         email,
         password,
+        options: {
+          data: {
+            full_name: fullName,
+          },
+          emailRedirectTo: window.location.origin + '/auth'
+        }
       });
 
       if (signUpError) throw signUpError;

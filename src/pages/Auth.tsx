@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
@@ -9,6 +10,7 @@ import { supabase } from '@/integrations/supabase/client';
 
 const Auth = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   
@@ -21,6 +23,54 @@ const Auth = () => {
   const [signupEmail, setSignupEmail] = useState('');
   const [signupPassword, setSignupPassword] = useState('');
   const [signupConfirmPassword, setSignupConfirmPassword] = useState('');
+  const [activeTab, setActiveTab] = useState('login');
+
+  useEffect(() => {
+    // Check URL hash for access token (this happens after email verification)
+    const handleHashRedirect = async () => {
+      const hash = window.location.hash;
+      
+      if (hash && hash.includes('access_token')) {
+        setIsLoading(true);
+        // Clear the hash from the URL without triggering a reload
+        window.history.replaceState(null, '', window.location.pathname);
+        
+        try {
+          // Set the session from the URL hash
+          const { data, error } = await supabase.auth.getSession();
+          
+          if (error) throw error;
+          
+          if (data?.session) {
+            toast({
+              title: "Authentication successful",
+              description: "You have been successfully authenticated.",
+            });
+            navigate('/diary');
+          }
+        } catch (error) {
+          console.error("Error handling redirect:", error);
+          toast({
+            title: "Authentication error",
+            description: error instanceof Error ? error.message : "An error occurred during authentication",
+            variant: "destructive",
+          });
+        } finally {
+          setIsLoading(false);
+        }
+      }
+    };
+    
+    // Check for URL params from the signup confirmation
+    handleHashRedirect();
+    
+    // Set active tab if specified in URL
+    const searchParams = new URLSearchParams(location.search);
+    const tab = searchParams.get('tab');
+    if (tab === 'signup') {
+      setActiveTab('signup');
+    }
+  }, [location, navigate, toast]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -43,7 +93,7 @@ const Auth = () => {
           title: "Successfully logged in",
           description: "Welcome back to Culture Vulture!",
         });
-        navigate('/');
+        navigate('/diary');
       }
     } catch (error) {
       toast({
@@ -123,7 +173,7 @@ const Auth = () => {
             <p className="text-gray-600 mt-2">Your personal culinary journey begins here</p>
           </div>
           
-          <Tabs defaultValue="login" className="w-full">
+          <Tabs defaultValue={activeTab} value={activeTab} onValueChange={setActiveTab} className="w-full">
             <TabsList className="grid w-full grid-cols-2 mb-8">
               <TabsTrigger value="login">Log In</TabsTrigger>
               <TabsTrigger value="signup">Sign Up</TabsTrigger>
