@@ -10,7 +10,7 @@ import { toast } from '@/hooks/use-toast';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { MapIcon } from 'lucide-react';
 import { fixLeafletIcon } from '@/lib/fixLeafletIcon';
-import { countryToCode } from '@/components/map/countryMappings';
+import { countryToCode, codeToCountry } from '@/components/map/countryMappings';
 
 // Fix Leaflet icon issues
 fixLeafletIcon();
@@ -31,6 +31,7 @@ const TravelMap = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [groupedEntries, setGroupedEntries] = useState<Record<string, Entry[]>>({});
   const [error, setError] = useState<string | null>(null);
+  const [countriesInDb, setCountriesInDb] = useState<string[]>([]);
   
   // Function to normalize country names to match mapping
   const normalizeCountryName = (countryName: string | null): string | null => {
@@ -88,6 +89,41 @@ const TravelMap = () => {
         
         console.log("Fetching entries for user:", user.id);
         
+        // First, let's log all unique countries in the database for this user
+        const { data: countriesData, error: countriesError } = await supabase
+          .from('diary_entries')
+          .select('country')
+          .eq('user_id', user.id)
+          .not('country', 'is', null);
+          
+        if (countriesError) {
+          console.error('Error fetching countries:', countriesError);
+          throw countriesError;
+        }
+        
+        const uniqueCountries = [...new Set(countriesData.map(entry => entry.country).filter(Boolean))];
+        console.log("RAW COUNTRIES IN DATABASE:", uniqueCountries);
+        setCountriesInDb(uniqueCountries);
+        
+        // Log which countries have mappings
+        uniqueCountries.forEach(country => {
+          if (country && countryToCode[country]) {
+            console.log(`Country "${country}" has mapping: ${countryToCode[country]}`);
+          } else if (country) {
+            console.log(`Country "${country}" has NO MAPPING in countryToCode`);
+            
+            // Try case-insensitive search
+            const matchKey = Object.keys(countryToCode).find(
+              key => key.toLowerCase() === country.toLowerCase()
+            );
+            
+            if (matchKey) {
+              console.log(`...but found case-insensitive match: "${matchKey}" -> ${countryToCode[matchKey]}`);
+            }
+          }
+        });
+        
+        // Now fetch the actual entries
         const { data, error } = await supabase
           .from('diary_entries')
           .select('id, title, image_url, location, country, date')
@@ -164,11 +200,12 @@ const TravelMap = () => {
     console.log("TravelMap component state:");
     console.log("- Number of entries:", entries.length);
     console.log("- Countries from entries:", Object.keys(groupedEntries));
+    console.log("- Countries in database:", countriesInDb);
     console.log("- Data being passed to WorldMap:", {
       countries: Object.keys(groupedEntries),
       entries: groupedEntries
     });
-  }, [entries, groupedEntries]);
+  }, [entries, groupedEntries, countriesInDb]);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -222,6 +259,25 @@ const TravelMap = () => {
                   <span className="h-5 w-1 bg-[#FF9344] rounded-full"></span>
                   Countries You've Visited
                 </h2>
+                
+                {/* Debug information for development - this helps see what's happening */}
+                <div className="bg-gray-100 p-4 rounded-lg mb-4 text-sm">
+                  <h3 className="font-medium mb-2">Countries in database ({countriesInDb.length}):</h3>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                    {countriesInDb.map(country => (
+                      <div key={country} className="flex items-center">
+                        <span className={countryToCode[country] ? "text-green-600" : "text-red-600"}>
+                          {country}
+                        </span>
+                        {countryToCode[country] ? 
+                          <span className="ml-2 text-xs text-gray-500">✓ ({countryToCode[country]})</span> : 
+                          <span className="ml-2 text-xs text-red-500">✗ (no mapping)</span>
+                        }
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {Object.entries(groupedEntries).map(([country, countryEntries]) => (
                     <Card key={country} className="overflow-hidden hover:shadow-md transition-shadow">
