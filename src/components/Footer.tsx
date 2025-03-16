@@ -1,6 +1,7 @@
 
 import React from 'react';
-import { Facebook, Instagram, Twitter } from 'lucide-react';
+import { Youtube, ExternalLink } from 'lucide-react';
+import { Icon } from '@/components/ui/icon';
 
 const Footer = () => {
   return (
@@ -25,14 +26,30 @@ const Footer = () => {
       
       <div className="max-w-7xl mx-auto relative z-10">
         <div className="flex justify-center space-x-8">
-          <a href="#" className="text-text hover:text-accent transition-all duration-300 hover:scale-110 transform">
-            <Facebook className="w-6 h-6" />
+          <a href="https://youtube.com/@shakitaytay" target="_blank" rel="noopener noreferrer" className="text-text hover:text-accent transition-all duration-300 hover:scale-110 transform">
+            <Youtube className="w-6 h-6" />
           </a>
-          <a href="#" className="text-text hover:text-accent transition-all duration-300 hover:scale-110 transform">
-            <Instagram className="w-6 h-6" />
+          <a href="https://www.tiktok.com/@shakitaytay" target="_blank" rel="noopener noreferrer" className="text-text hover:text-accent transition-all duration-300 hover:scale-110 transform">
+            <svg 
+              xmlns="http://www.w3.org/2000/svg" 
+              className="w-6 h-6"
+              viewBox="0 0 24 24" 
+              fill="none" 
+              stroke="currentColor" 
+              strokeWidth="2" 
+              strokeLinecap="round" 
+              strokeLinejoin="round"
+            >
+              <path d="M9 12a4 4 0 1 0 0 8 4 4 0 0 0 0-8z"></path>
+              <path d="M15 8a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"></path>
+              <path d="M15 2v20"></path>
+              <path d="M9 16v6"></path>
+              <path d="M9 20H4"></path>
+              <path d="M14 8h7"></path>
+            </svg>
           </a>
-          <a href="#" className="text-text hover:text-accent transition-all duration-300 hover:scale-110 transform">
-            <Twitter className="w-6 h-6" />
+          <a href="https://the-culture-vulture.beehiiv.com/" target="_blank" rel="noopener noreferrer" className="text-text hover:text-accent transition-all duration-300 hover:scale-110 transform">
+            <ExternalLink className="w-6 h-6" />
           </a>
         </div>
         <p className="text-center mt-8 text-slate-950 animate-fade-in">
