@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -6,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { User, Lock, Mail, ArrowLeft } from 'lucide-react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/integrations/supabase/client';
 
 const Auth = () => {
   const navigate = useNavigate();
@@ -30,7 +29,7 @@ const Auth = () => {
     const handleHashRedirect = async () => {
       const hash = window.location.hash;
       
-      if (hash && hash.includes('access_token')) {
+      if (hash && (hash.includes('access_token') || hash.includes('error'))) {
         setIsLoading(true);
         // Clear the hash from the URL without triggering a reload
         window.history.replaceState(null, '', window.location.pathname);

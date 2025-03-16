@@ -1,7 +1,7 @@
 
 import { useEffect, useState } from 'react';
 import { User } from '@supabase/supabase-js';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/integrations/supabase/client';
 import { useNavigate } from 'react-router-dom';
 import { toast } from '@/hooks/use-toast';
 
@@ -15,12 +15,12 @@ export function useSupabaseAuth() {
     const handleHashRedirect = async () => {
       const hash = window.location.hash;
       
-      if (hash && hash.includes('access_token')) {
+      if (hash && (hash.includes('access_token') || hash.includes('error'))) {
         // Clear the hash from the URL without reloading
         window.history.replaceState(null, '', window.location.pathname);
         
         try {
-          // Set the session from the URL hash
+          // Process the hash for authentication
           const { data, error } = await supabase.auth.getSession();
           
           if (error) throw error;
