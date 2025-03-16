@@ -3,10 +3,12 @@ import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 import { DiaryEntry } from '@/types/database';
 import { toast } from '@/hooks/use-toast';
+import { useAuth } from '@/contexts/AuthContext';
 
 export function useDiaryEntries() {
   const [entries, setEntries] = useState<DiaryEntry[]>([]);
   const [loading, setLoading] = useState(true);
+  const { user } = useAuth();
 
   useEffect(() => {
     fetchEntries();
@@ -45,10 +47,20 @@ export function useDiaryEntries() {
 
   const createEntry = async (entry: Omit<DiaryEntry, 'id' | 'user_id' | 'created_at'>) => {
     try {
+      if (!user) {
+        toast({
+          title: "Authentication required",
+          description: "You must be logged in to create entries",
+          variant: "destructive",
+        });
+        return null;
+      }
+
       // Ensure type is properly typed for insertion
       const insertData = {
         ...entry,
         date: entry.date instanceof Date ? entry.date.toISOString() : entry.date,
+        user_id: user.id // Add the user_id from the authentication context
       };
 
       const { data, error } = await supabase
