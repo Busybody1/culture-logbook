@@ -24,7 +24,7 @@ const Newsletter = () => {
     setIsLoading(true);
     
     try {
-      const response = await fetch('https://api.beehiiv.com/v2/publications/{PUBLICATION_ID}/subscriptions', {
+      const response = await fetch('https://api.beehiiv.com/v2/publications/pub_decaf087-e30b-467f-abcc-f56379e7a1ed/subscriptions', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
