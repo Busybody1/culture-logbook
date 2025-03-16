@@ -10,6 +10,8 @@ export interface DiaryEntry {
   tags: string[];
   image_url?: string;
   created_at: Date;
+  location?: string;
+  country?: string;
 }
 
 export interface UserProfile {
