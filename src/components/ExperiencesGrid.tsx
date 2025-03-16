@@ -1,5 +1,5 @@
-
 import React, { useState, useEffect } from 'react';
+import { AspectRatio } from '@/components/ui/aspect-ratio';
 
 const ExperiencesGrid = () => {
   // Use relative paths to images in the public/images/experiences folder
@@ -86,21 +86,23 @@ const ExperiencesGrid = () => {
             {[0, 1, 2, 3, 12].map((imgIndex, index) => (
               <div 
                 key={`col1-${index}`} 
-                className={`overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow ${
+                className={`overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow bg-gray-100 ${
                   index === 0 ? 'h-auto' : 
                   index === 1 ? 'h-64' : 
                   index === 2 ? 'h-80' : 
                   index === 3 ? 'h-72' : 'h-48'
                 }`}
               >
-                <img 
-                  src={loadedStatus[imgIndex] === false ? getFallbackImage(imgIndex) : images[imgIndex]} 
-                  alt={descriptions[imgIndex]} 
-                  className="w-full h-full object-cover"
-                  loading="lazy"
-                  onLoad={() => handleImageLoad(imgIndex)}
-                  onError={() => handleImageError(imgIndex)}
-                />
+                <div className="w-full h-full flex items-center justify-center">
+                  <img 
+                    src={loadedStatus[imgIndex] === false ? getFallbackImage(imgIndex) : images[imgIndex]} 
+                    alt={descriptions[imgIndex]} 
+                    className="h-full w-auto max-w-full object-contain"
+                    loading="lazy"
+                    onLoad={() => handleImageLoad(imgIndex)}
+                    onError={() => handleImageError(imgIndex)}
+                  />
+                </div>
               </div>
             ))}
           </div>
@@ -110,21 +112,23 @@ const ExperiencesGrid = () => {
             {[4, 5, 6, 7, 8].map((imgIndex, index) => (
               <div 
                 key={`col2-${index}`} 
-                className={`overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow ${
+                className={`overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow bg-gray-100 ${
                   index === 0 ? 'h-80' : 
                   index === 1 ? 'h-56' : 
                   index === 2 ? 'h-60' : 
                   index === 3 ? 'h-70' : 'h-64'
                 }`}
               >
-                <img 
-                  src={loadedStatus[imgIndex] === false ? getFallbackImage(imgIndex) : images[imgIndex]} 
-                  alt={descriptions[imgIndex]} 
-                  className="w-full h-full object-cover"
-                  loading="lazy"
-                  onLoad={() => handleImageLoad(imgIndex)}
-                  onError={() => handleImageError(imgIndex)}
-                />
+                <div className="w-full h-full flex items-center justify-center">
+                  <img 
+                    src={loadedStatus[imgIndex] === false ? getFallbackImage(imgIndex) : images[imgIndex]} 
+                    alt={descriptions[imgIndex]} 
+                    className="h-full w-auto max-w-full object-contain"
+                    loading="lazy"
+                    onLoad={() => handleImageLoad(imgIndex)}
+                    onError={() => handleImageError(imgIndex)}
+                  />
+                </div>
               </div>
             ))}
           </div>
@@ -134,21 +138,23 @@ const ExperiencesGrid = () => {
             {[9, 10, 11, 13, 14].map((imgIndex, index) => (
               <div 
                 key={`col3-${index}`} 
-                className={`overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow ${
+                className={`overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow bg-gray-100 ${
                   index === 0 ? 'h-72' : 
                   index === 1 ? 'h-56' : 
                   index === 2 ? 'h-64' : 
                   index === 3 ? 'h-80' : 'h-60'
                 }`}
               >
-                <img 
-                  src={loadedStatus[imgIndex] === false ? getFallbackImage(imgIndex) : images[imgIndex]}
-                  alt={descriptions[imgIndex]} 
-                  className="w-full h-full object-cover"
-                  loading="lazy"
-                  onLoad={() => handleImageLoad(imgIndex)}
-                  onError={() => handleImageError(imgIndex)}
-                />
+                <div className="w-full h-full flex items-center justify-center">
+                  <img 
+                    src={loadedStatus[imgIndex] === false ? getFallbackImage(imgIndex) : images[imgIndex]} 
+                    alt={descriptions[imgIndex]} 
+                    className="h-full w-auto max-w-full object-contain"
+                    loading="lazy"
+                    onLoad={() => handleImageLoad(imgIndex)}
+                    onError={() => handleImageError(imgIndex)}
+                  />
+                </div>
               </div>
             ))}
           </div>
