@@ -4,7 +4,7 @@ import { LucideProps } from 'lucide-react';
 
 export interface IconProps extends Omit<LucideProps, 'ref'> {
   name?: string;
-  iconNode?: object;
+  iconNode?: React.ReactNode;
 }
 
 export const Icon = ({ iconNode, ...props }: IconProps) => {
