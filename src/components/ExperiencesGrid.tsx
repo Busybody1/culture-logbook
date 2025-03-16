@@ -1,5 +1,7 @@
+
 import React, { useState, useEffect } from 'react';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
+import { cn } from '@/lib/utils';
 
 const ExperiencesGrid = () => {
   // Use relative paths to images in the public/images/experiences folder
@@ -86,75 +88,63 @@ const ExperiencesGrid = () => {
             {[0, 1, 2, 3, 12].map((imgIndex, index) => (
               <div 
                 key={`col1-${index}`} 
-                className={`overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow bg-gray-100 ${
-                  index === 0 ? 'h-auto' : 
-                  index === 1 ? 'h-64' : 
-                  index === 2 ? 'h-80' : 
-                  index === 3 ? 'h-72' : 'h-48'
-                }`}
+                className={cn(
+                  "overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow",
+                  "relative aspect-[3/4]" // Use a fixed portrait aspect ratio
+                )}
               >
-                <div className="w-full h-full flex items-center justify-center">
-                  <img 
-                    src={loadedStatus[imgIndex] === false ? getFallbackImage(imgIndex) : images[imgIndex]} 
-                    alt={descriptions[imgIndex]} 
-                    className="h-full w-auto max-w-full object-contain"
-                    loading="lazy"
-                    onLoad={() => handleImageLoad(imgIndex)}
-                    onError={() => handleImageError(imgIndex)}
-                  />
-                </div>
+                <img 
+                  src={loadedStatus[imgIndex] === false ? getFallbackImage(imgIndex) : images[imgIndex]} 
+                  alt={descriptions[imgIndex]} 
+                  className="absolute inset-0 w-full h-full object-cover"
+                  loading="lazy"
+                  onLoad={() => handleImageLoad(imgIndex)}
+                  onError={() => handleImageError(imgIndex)}
+                />
               </div>
             ))}
           </div>
 
-          {/* Second column - different aspect ratios */}
+          {/* Second column - same portrait aspect ratio */}
           <div className="space-y-3 flex flex-col">
             {[4, 5, 6, 7, 8].map((imgIndex, index) => (
               <div 
                 key={`col2-${index}`} 
-                className={`overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow bg-gray-100 ${
-                  index === 0 ? 'h-80' : 
-                  index === 1 ? 'h-56' : 
-                  index === 2 ? 'h-60' : 
-                  index === 3 ? 'h-70' : 'h-64'
-                }`}
+                className={cn(
+                  "overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow",
+                  "relative aspect-[3/4]" // Use a fixed portrait aspect ratio
+                )}
               >
-                <div className="w-full h-full flex items-center justify-center">
-                  <img 
-                    src={loadedStatus[imgIndex] === false ? getFallbackImage(imgIndex) : images[imgIndex]} 
-                    alt={descriptions[imgIndex]} 
-                    className="h-full w-auto max-w-full object-contain"
-                    loading="lazy"
-                    onLoad={() => handleImageLoad(imgIndex)}
-                    onError={() => handleImageError(imgIndex)}
-                  />
-                </div>
+                <img 
+                  src={loadedStatus[imgIndex] === false ? getFallbackImage(imgIndex) : images[imgIndex]} 
+                  alt={descriptions[imgIndex]} 
+                  className="absolute inset-0 w-full h-full object-cover"
+                  loading="lazy"
+                  onLoad={() => handleImageLoad(imgIndex)}
+                  onError={() => handleImageError(imgIndex)}
+                />
               </div>
             ))}
           </div>
 
-          {/* Third column - mix of heights */}
+          {/* Third column - same portrait aspect ratio */}
           <div className="space-y-3 flex flex-col">
             {[9, 10, 11, 13, 14].map((imgIndex, index) => (
               <div 
                 key={`col3-${index}`} 
-                className={`overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow bg-gray-100 ${
-                  index === 0 ? 'h-72' : 
-                  index === 1 ? 'h-56' : 
-                  index === 2 ? 'h-64' : 
-                  index === 3 ? 'h-80' : 'h-60'
-                }`}
+                className={cn(
+                  "overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow",
+                  "relative aspect-[3/4]" // Use a fixed portrait aspect ratio
+                )}
               >
-                <div className="w-full h-full flex items-center justify-center">
-                  <img 
-                    src={loadedStatus[imgIndex] === false ? getFallbackImage(imgIndex) : images[imgIndex]} 
-                    alt={descriptions[imgIndex]} 
-                    className="h-full w-auto max-w-full object-contain"
-                    loading="lazy"
-                    onLoad={() => handleImageLoad(imgIndex)}
-                    onError={() => handleImageError(imgIndex)}
-                  />
-                </div>
+                <img 
+                  src={loadedStatus[imgIndex] === false ? getFallbackImage(imgIndex) : images[imgIndex]} 
+                  alt={descriptions[imgIndex]} 
+                  className="absolute inset-0 w-full h-full object-cover"
+                  loading="lazy"
+                  onLoad={() => handleImageLoad(imgIndex)}
+                  onError={() => handleImageError(imgIndex)}
+                />
               </div>
             ))}
           </div>
