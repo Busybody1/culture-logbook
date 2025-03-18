@@ -1,8 +1,8 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 
 const Newsletter = () => {
   const [email, setEmail] = useState('');
@@ -24,33 +24,23 @@ const Newsletter = () => {
     setIsLoading(true);
     
     try {
-      const response = await fetch('https://api.beehiiv.com/v2/publications/pub_decaf087-e30b-467f-abcc-f56379e7a1ed/subscriptions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer wap5M073ReXuD0XPwfFBeU2P21FWjvwVfeIyqRVY0fQ4mebsb80lkUTKvLkoS0ni',
-        },
-        body: JSON.stringify({
-          email,
-          reactivate_existing: true,
-          send_welcome_email: true,
-          utm_source: 'website',
-          utm_medium: 'organic',
-          utm_campaign: 'footer_signup'
-        }),
+      const { data, error } = await supabase.functions.invoke('beehiiv-subscribe', {
+        body: { email }
       });
       
-      const data = await response.json();
-      
-      if (response.ok) {
-        toast({
-          title: "Success!",
-          description: "You've been subscribed to our newsletter.",
-        });
-        setEmail('');
-      } else {
-        throw new Error(data.message || 'Failed to subscribe');
+      if (error) {
+        throw new Error(error.message || 'Error calling subscription service');
       }
+      
+      if (data.error) {
+        throw new Error(data.error || 'Failed to subscribe');
+      }
+      
+      toast({
+        title: "Success!",
+        description: "You've been subscribed to our newsletter.",
+      });
+      setEmail('');
     } catch (error) {
       console.error('Newsletter subscription error:', error);
       toast({
