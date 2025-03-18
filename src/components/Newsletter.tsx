@@ -28,7 +28,7 @@ const Newsletter = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${import.meta.env.VITE_BEEHIIV_API_KEY || 'YOUR_BEEHIIV_API_KEY'}`,
+          'Authorization': 'Bearer wap5M073ReXuD0XPwfFBeU2P21FWjvwVfeIyqRVY0fQ4mebsb80lkUTKvLkoS0ni',
         },
         body: JSON.stringify({
           email,
