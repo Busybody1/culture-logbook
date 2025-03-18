@@ -27,6 +27,20 @@ serve(async (req) => {
       );
     }
 
+    const apiKey = Deno.env.get("BEEHIIV_API_KEY");
+    if (!apiKey) {
+      console.error("BEEHIIV_API_KEY is not set in environment variables");
+      return new Response(
+        JSON.stringify({ error: "API key configuration error" }),
+        { 
+          status: 500, 
+          headers: { ...corsHeaders, "Content-Type": "application/json" } 
+        }
+      );
+    }
+
+    console.log("Making request to Beehiiv API with email:", email);
+    
     // Make the request to the Beehiiv API
     const response = await fetch(
       "https://api.beehiiv.com/v2/publications/pub_decaf087-e30b-467f-abcc-f56379e7a1ed/subscriptions",
@@ -34,7 +48,7 @@ serve(async (req) => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${Deno.env.get("BEEHIIV_API_KEY")}`,
+          "Authorization": `Bearer ${apiKey}`,
         },
         body: JSON.stringify({
           email,
@@ -48,6 +62,7 @@ serve(async (req) => {
     );
 
     const data = await response.json();
+    console.log("Beehiiv API response:", JSON.stringify(data));
 
     // Return the response from the Beehiiv API
     return new Response(
