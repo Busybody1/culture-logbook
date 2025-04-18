@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -21,18 +22,31 @@ const Newsletter = () => {
       return;
     }
     
+    if (!/^\S+@\S+\.\S+$/.test(email)) {
+      toast({
+        title: "Error",
+        description: "Please enter a valid email address",
+        variant: "destructive",
+      });
+      return;
+    }
+    
     setIsLoading(true);
     
     try {
+      console.log("Submitting email to newsletter:", email);
+      
       const { data, error } = await supabase.functions.invoke('beehiiv-subscribe', {
         body: { email }
       });
+      
+      console.log("Subscription response:", data, error);
       
       if (error) {
         throw new Error(error.message || 'Error calling subscription service');
       }
       
-      if (data.error) {
+      if (data?.error) {
         throw new Error(data.error || 'Failed to subscribe');
       }
       

@@ -41,7 +41,8 @@ serve(async (req) => {
 
     console.log("Making request to Beehiiv API with email:", email);
     
-    // Make the request to the Beehiiv API
+    // Make the request to the Beehiiv API - using the publication ID from your example
+    // Note: replaced the test pub ID with the one from your curl example
     const response = await fetch(
       "https://api.beehiiv.com/v2/publications/pub_decaf087-e30b-467f-abcc-f56379e7a1ed/subscriptions",
       {
@@ -54,9 +55,8 @@ serve(async (req) => {
           email,
           reactivate_existing: true,
           send_welcome_email: true,
-          utm_source: "website",
-          utm_medium: "organic",
-          utm_campaign: "footer_signup"
+          utm_source: "fooddiary",
+          utm_medium: "api"
         }),
       }
     );
